@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Ordem de Serviço</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+   
+    <style>
+        .titulo {
+            background-color: #596d9b;
+            color: white;
+            padding: 10px;
+            margin-bottom: 0px;
+            border-radius: 4px;
+        }
+        #osForm {
+            background-color: #D9E2EF;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .nav-tabs {
+            justify-content: center;
+        }
+        .nav-tabs .nav-item {
+            margin-bottom: -1px;
+        }
+        .nav-tabs .nav-link {
+            border: 1px solid #ddd;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            color: #000;
+            margin-right: 2px;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: blue; /*Muda cor*/
+            color: #fff;
+        }
+        .sub-nav {
+            display: flex;
+            justify-content: center;
+            background-color: #f8f9fa;
+            padding: 10px 0;
+        }
+        .sub-nav a {
+            margin: 0 10px;
+            color: #000;
+            text-decoration: none;
+        }
+        .sub-nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="container mt-3">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">Menu</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="cliente.html">Cliente</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="produto.html">Produto</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="cadastra_os.html">Cadastra OS</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="consulta_os.html">Consulta OS</a>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const page = window.location.pathname.split("/").pop();
+            const navLinks = document.querySelectorAll(".nav-link");
+            navLinks.forEach(link => {
+                if(link.getAttribute("href") === page) {
+                    link.classList.add("active");
+                }
+            });
+        });
+    </script>
+
+    <div class="container mt-5">
+        <h2 class="titulo">Cadastra Ordem de Serviço</h2>
+        <form id="osForm">
+            <div class="mb-3">
+                <label for="os" class="form-label">Número da Ordem de Serviço</label>
+                <input type="text" class="form-control" id="os" name="os" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="data_abertura" class="form-label">Data de Abertura</label>
+                <input type="date" class="form-control" id="data_abertura" name="data_abertura" required>
+            </div>
+            <div class="mb-3">
+                <label for="nome_consumidor" class="form-label">Nome do Consumidor</label>
+                <input type="text" class="form-control" id="nome_consumidor" name="nome_consumidor" required maxlength="50">
+            </div>
+            <div class="mb-3">
+                <label for="cpf_consumidor" class="form-label">CPF do Consumidor</label>
+                <input type="text" class="form-control" id="cpf_consumidor" name="cpf_consumidor" required maxlength="11">
+            </div>
+            <div class="mb-3">
+                <label for="produto_codigo" class="form-label">Produto</label>
+                <select class="form-control" id="produto_codigo" name="produto_codigo" required>
+                    <!-- produto -->
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Gravar</button>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            function carregarProdutos() {
+                $.ajax({
+                    url: '../controller/produto/listar_produtos.php',
+                    method: 'GET',
+                    success: function(data) {
+                        var produtos = JSON.parse(data);
+                        produtos.forEach(function(produto) {
+                            $('#produto_codigo').append('<option value="'+produto.codigo+'">'+produto.descricao+'</option>');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+
+            carregarProdutos();
+
+            $('#osForm').on('submit', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '../controller/os/cadastrar_os.php',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        $('#osForm')[0].reset();
+                        $('#modalMensagem').text(response);
+                        $('#modalCadastro').modal('show');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- modal confirma -->
+    <div class="modal fade" id="modalCadastro" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCadastroLabel">Cadastro de Ordem de Serviço</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMensagem"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
