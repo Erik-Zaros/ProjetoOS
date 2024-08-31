@@ -1,5 +1,5 @@
 # ProjetoOS
-## Este projeto tem como objetivo criar telas para o usuário cadastrar clientes, produtos e ordens de serviços em garantia, além de permitir a finalização dessas ordens de serviços em garantia.
+## Este projeto visa desenvolver uma interface de usuário para o cadastro de clientes, produtos e ordens de serviço em garantia. Além disso, permitirá a finalização das ordens de serviço em garantia, oferecendo uma gestão completa e eficiente desses processos.
 
 ---
 
