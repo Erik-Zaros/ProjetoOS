@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../public/img/tc_2009.ico" type="image/x-icon">
+    <title>Cadastro de Ordem de Serviço</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../public/css/cadastra_os.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container mt-3">
+        <ul class="nav nav-tabs">
+            <li class="nav-item"><a class="nav-link" href="menu.html">MENU</a></li>
+            <li class="nav-item"><a class="nav-link" href="cliente.html">CLIENTE</a></li>
+            <li class="nav-item"><a class="nav-link" href="produto.html">PRODUTO</a></li>
+            <li class="nav-item"><a class="nav-link" href="cadastra_os.html">CADASTRA OS</a></li>
+            <li class="nav-item"><a class="nav-link" href="consulta_os.html">CONSULTA OS</a></li>
+        </ul>
+    </div>
+
+    <div class="container mt-5">
+        <h2 class="titulo">Cadastra Ordem de Serviço</h2>
+        <form id="osForm">
+            <div class="mb-3">
+                <label for="os" class="form-label">Número da Ordem de Serviço</label>
+                <input type="text" class="form-control" id="os" name="os" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="data_abertura" class="form-label">Data de Abertura</label>
+                <input type="date" class="form-control" id="data_abertura" name="data_abertura" required>
+            </div>
+            <div class="mb-3">
+                <label for="nome_consumidor" class="form-label">Nome do Consumidor</label>
+                <input type="text" class="form-control" id="nome_consumidor" name="nome_consumidor" required maxlength="50">
+            </div>
+            <div class="mb-3">
+                <label for="cpf_consumidor" class="form-label">CPF do Consumidor</label>
+                <input type="text" class="form-control" id="cpf_consumidor" name="cpf_consumidor" required maxlength="11">
+            </div>
+            <div class="mb-3">
+                <label for="produto_id" class="form-label">Produto</label>
+                <select class="form-control" id="produto_id" name="produto_id" required>
+
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Gravar</button>
+        </form>
+    </div>
+
+    <div class="modal ade" id="modalCadastro" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCadastroLabel">Cadastro de Ordem de Serviço</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMensagem"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+   <script src="../public/ajax/os.js"></script>
+</body>
+</html>

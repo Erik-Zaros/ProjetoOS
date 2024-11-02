@@ -1,0 +1,52 @@
+.titulo {
+    background-color: #596d9b;
+    color: white;
+    padding: 10px; 
+    margin-bottom: 0px;
+    border-radius: 4px;
+}
+
+#clienteForm {
+    background-color: #D9E2EF;
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.nav-tabs {
+    justify-content: center;
+}
+
+.nav-tabs .nav-item {
+    margin-bottom: -1px;
+}
+
+.nav-tabs .nav-link {
+    border: 1px solid #ddd;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    color: #000;
+    margin-right: 2px;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: green; /*Muda cor Header*/
+    color: #fff ;
+}
+
+.sub-nav {
+    display: flex;
+    justify-content: center;
+    background-color: #f8f9fa;
+    padding: 10px 0;
+}
+
+.sub-nav a {
+    margin: 0 10px;
+    color: #000;
+    text-decoration: none;
+}
+
+.sub-nav a:hover {
+    text-decoration: underline;
+}
