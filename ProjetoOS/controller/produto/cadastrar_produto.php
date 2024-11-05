@@ -5,7 +5,7 @@ include '../../model/conexao.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $codigo = $_POST['codigo'] ?? '';
     $descricao = $_POST['descricao'] ?? '';
-    $ativo = isset($_POST['ativo']) ? 1 : 0;
+    $ativo = ($_POST['ativo']) ? 1 : 0;
 
     if (!empty($codigo) && !empty($descricao)) {
         $valida_produto = "SELECT * FROM tbl_produto WHERE codigo = '$codigo' AND descricao = '$descricao'";
