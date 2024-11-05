@@ -26,9 +26,19 @@ $(document).ready(function () {
             method: 'POST',
             data: $(this).serialize(),
             success: function (response) {
-                alert('Cliente cadastrado com sucesso!');
-                $('#clienteForm')[0].reset();
-                carregarClientes();
+    
+                    let res = JSON.parse(response);
+    
+                    if (res.status === 'error') {
+                        alert(res.message);
+                    } else {
+                        alert(res.message);
+                        $('#clienteForm')[0].reset();
+                        carregarClientes();
+                    }
+            },
+            error: function () {
+                alert('Erro Interação Servidor');
             }
         });
     });
@@ -56,10 +66,17 @@ $(document).ready(function () {
                             numero: $('#numero').val()
                         },
                         success: function (response) {
-                            alert('Cliente atualizado com sucesso!');
-                            $('#clienteForm')[0].reset();
-                            $('#cpf').prop('disabled', false);
-                            carregarClientes();
+
+                            let res = JSON.parse(response);
+    
+                            if (res.status === 'error') {
+                                alert(res.message);
+                            } else {
+                                alert(res.message);
+                                $('#clienteForm')[0].reset();
+                                $('#cpf').prop('disabled', false);
+                                carregarClientes();
+                            }
                         }
                     });
                 });

@@ -27,6 +27,10 @@ try {
     } else {
         $stmt = $conn->prepare("INSERT INTO tbl_cliente (nome, cpf) VALUES (?, ?)");
         $stmt->bind_param("ss", $nome_consumidor, $cpf_consumidor);
+        if (!$stmt->execute()) {
+            throw new Exception("Erro ao cadastrar o cliente");
+        }
+        $cliente_id = $conn->insert_id;
     }
 
     $stmt = $conn->prepare("INSERT INTO tbl_os (data_abertura, nome_consumidor, cpf_consumidor, produto_id, cliente_id) VALUES (?, ?, ?, ?, ?)");

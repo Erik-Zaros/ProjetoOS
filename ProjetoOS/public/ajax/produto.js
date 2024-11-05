@@ -52,9 +52,16 @@ $(document).ready(function () {
             method: 'POST',
             data: formData,
             success: function (response) {
-                alert('Produto cadastrado com sucesso!');
-                $('#produtoForm')[0].reset();
-                carregarProdutos();
+
+                let res = JSON.parse(response);
+
+                if (res.status === 'success') {
+                    alert(res.message);
+                    $('#produtoForm')[0].reset();
+                    carregarProdutos();
+                } else {
+                    alert(res.message);
+                }
             },
             error: function (xhr, status, error) {
                 console.error(xhr.responseText);
