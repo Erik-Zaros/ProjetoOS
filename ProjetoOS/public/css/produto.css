@@ -6,6 +6,10 @@
     border-radius: 4px;
 }
 
+thead, tbody {
+	text-align: center;
+}
+
 #produtoForm {
     background-color: #D9E2EF;
     padding: 20px;
