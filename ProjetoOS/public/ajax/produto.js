@@ -96,9 +96,15 @@ $(document).ready(function () {
                             ativo: $('#ativo').is(':checked') ? 1 : 0
                         },
                         success: function (response) {
-                            alert('Produto atualizado com sucesso!');
-                            $('#produtoForm')[0].reset();
-                            carregarProdutos();
+				let res = JSON.parse(response);
+
+				if (res.status === 'success') {
+					alert(res.message);
+					$('#produtoForm')[0].reset();
+					carregarProdutos();
+				} else {
+					alert(res.message);
+				}
                         },
                         error: function (xhr, status, error) {
                             console.error(xhr.responseText);
@@ -109,3 +115,4 @@ $(document).ready(function () {
         });
     });
 });
+

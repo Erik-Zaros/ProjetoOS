@@ -8,12 +8,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $descricao = $_POST['descricao'];
     $ativo = ($_POST['ativo']) ? 1 : 0;
 
-    $sql = "UPDATE tbl_produto SET codigo = '$codigo', descricao = '$descricao', ativo = '$ativo' WHERE id = '$id'";
+    $valida_produto = "SELECT * FROM tbl_produto WHERE codigo = '$codigo' AND descricao = '$descricao'";
+    $result = $conn->query($valida_produto);
 
-    if ($conn->query($sql) === TRUE) {
-        echo json_encode(['success' => true, 'message' => 'Produto atualizado com sucesso.']);
+    if ($result->num_rows > 0) {
+        echo json_encode(['status' => 'error', 'message' => 'Não é possível editar. Já existe um produto com esse código e descrição.']);
     } else {
-        echo json_encode(['success' => false, 'error' => 'Erro ao atualizar o produto: ' . $conn->error]);
+        $sql = "UPDATE tbl_produto SET codigo = '$codigo', descricao = '$descricao', ativo = '$ativo' WHERE id = '$id'";
+
+        if ($conn->query($sql) === TRUE) {
+            echo json_encode(['status' => 'success', 'message' => 'Produto atualizado com Sucesso.']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Erro ao atualizar o produto: ' . $conn->error]);
+        }
     }
 }
 
