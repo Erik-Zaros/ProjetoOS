@@ -9,7 +9,7 @@ Este sistema é baseado em um fluxo simplificado de abertura de Ordem de Serviç
 - Esta é a tela principal do sistema, onde o usuário é recebido com um gráfico de pizza que indica a quantidade atual de registros de clientes, produtos e ordens de serviço.
 - Para exibir o gráfico de pizza, foi utilizada a biblioteca "Highcharts". No arquivo `grafico_pizza.php`, estão contidas as queries SQL para obter os dados de clientes, produtos e ordens de serviço. No arquivo `menu.js`, há a configuração do gráfico, além de uma chamada AJAX para obter os dados. Além disso, é possível gerar um arquivo CSV com todos os clientes, produtos e ordens de serviço cadastrados no sistema.
 
-![image](https://github.com/user-attachments/assets/5753593f-173b-44a4-8de7-71a78553e114)
+![image](https://github.com/user-attachments/assets/286e6b03-14c7-4894-8681-b104d6803cab)
 
 ## CLIENTE
 - Arquivo: cliente.html
