@@ -18,7 +18,9 @@ $(document).ready(function () {
             }
         });
     }
+
     carregarClientes();
+
     $('#clienteForm').on('submit', function (e) {
         e.preventDefault();
         $.ajax({
@@ -26,16 +28,30 @@ $(document).ready(function () {
             method: 'POST',
             data: $(this).serialize(),
             success: function (response) {
-    
-                    let res = JSON.parse(response);
-    
-                    if (res.status === 'error') {
-                        alert(res.message);
-                    } else {
-                        alert(res.message);
-                        $('#clienteForm')[0].reset();
-                        carregarClientes();
-                    }
+
+                let res = JSON.parse(response);
+
+                let alerta = $('#alerta');
+                let mensagem = $('#alerta-message');
+
+                if (res.status === 'error') {
+                    alerta.removeClass('alert-success').addClass('alert-danger');
+                    mensagem.text(res.message);
+                } else {
+                    alerta.removeClass('alert-danger').addClass('alert-success');
+                    mensagem.text(res.message);
+                }
+
+                alerta.show();
+
+                setTimeout(function () {
+                  alerta.fadeOut();
+                }, 6000);
+
+                if (res.status === 'success') {
+                    $('#clienteForm')[0].reset();
+                    carregarClientes();
+                }
             },
             error: function () {
                 alert('Erro Interação Servidor');
@@ -68,11 +84,25 @@ $(document).ready(function () {
                         success: function (response) {
 
                             let res = JSON.parse(response);
-    
+
+                            let alerta = $('#alerta');
+                            let mensagem = $('#alerta-message');
+
                             if (res.status === 'error') {
-                                alert(res.message);
+                                alerta.removeClass('alert-success').addClass('alert-danger');
+                                mensagem.text(res.message);
                             } else {
-                                alert(res.message);
+                                alerta.removeClass('alert-danger').addClass('alert-success');
+                                mensagem.text(res.message);
+                            }
+
+                            alerta.show();
+
+                            setTimeout(function () {
+                                alerta.fadeOut();
+                            }, 6000);
+
+                            if (res.status === 'success') {
                                 $('#clienteForm')[0].reset();
                                 $('#cpf').prop('disabled', false);
                                 carregarClientes();
