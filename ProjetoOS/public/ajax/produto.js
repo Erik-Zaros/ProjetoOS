@@ -55,12 +55,26 @@ $(document).ready(function () {
 
                 let res = JSON.parse(response);
 
+                let alerta = $('#alerta');
+                let mensagem = $('#alerta-message');
+
+                if (res.status === 'error') {
+                    alerta.removeClass('alert-success').addClass('alert-danger');
+                    mensagem.text(res.message);
+                } else {
+                    alerta.removeClass('alert-danger').addClass('alert-success');
+                    mensagem.text(res.message);
+                }
+
+                alerta.show();
+
+                setTimeout(function () {
+                    alerta.fadeOut();
+                }, 6000);
+
                 if (res.status === 'success') {
-                    alert(res.message);
                     $('#produtoForm')[0].reset();
                     carregarProdutos();
-                } else {
-                    alert(res.message);
                 }
             },
             error: function (xhr, status, error) {
@@ -96,15 +110,29 @@ $(document).ready(function () {
                             ativo: $('#ativo').is(':checked') ? 1 : 0
                         },
                         success: function (response) {
-				let res = JSON.parse(response);
+                            let res = JSON.parse(response);
 
-				if (res.status === 'success') {
-					alert(res.message);
-					$('#produtoForm')[0].reset();
-					carregarProdutos();
-				} else {
-					alert(res.message);
-				}
+                            let alerta = $('#alerta');
+                            let mensagem = $('#alerta-message');
+
+                            if (res.status === 'error') {
+                                alerta.removeClass('alert-success').addClass('alert-danger');
+                                mensagem.text(res.message);
+                            } else {
+                                alerta.removeClass('alert-danger').addClass('alert-success');
+                                mensagem.text(res.message);
+                            }
+
+                            alerta.show();
+
+                            setTimeout(function () {
+                                alerta.fadeOut();
+                            }, 6000);
+
+                            if (res.status === 'success') {
+                                $('#produtoForm')[0].reset();
+                                carregarProdutos();
+                            }
                         },
                         error: function (xhr, status, error) {
                             console.error(xhr.responseText);

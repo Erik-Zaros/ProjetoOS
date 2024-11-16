@@ -18,7 +18,7 @@ if ($result->num_rows > 0) {
     if ($conn->query($sql) === TRUE) {
         echo json_encode(['status' => 'success', 'message' => 'Cliente Cadastrado com Sucesso!']);
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Erro ao cadastrar cliente: ' . $conn->error]);
+        echo json_encode(['status' => 'error', 'message' => 'Erro ao Cadastrar Cliente: ' . $conn->error]);
     }
 }
 

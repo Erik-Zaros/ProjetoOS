@@ -40,6 +40,8 @@ if (!empty($conditions)) {
     $sql .= " AND " . implode(" AND ", $conditions);
 }
 
+$sql .= " ORDER BY tbl_os.os ASC";
+
 $stmt = $conn->prepare($sql);
 if (!empty($params)) {
     $stmt->bind_param($types, ...$params);
@@ -64,3 +66,4 @@ echo json_encode($ordens);
 
 $conn->close();
 ?>
+

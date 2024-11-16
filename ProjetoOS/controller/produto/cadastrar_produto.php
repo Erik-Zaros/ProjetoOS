@@ -15,10 +15,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo json_encode(['status' => 'error', 'message' => 'Produto já cadastrado com esse código e descrição!']);
         } else {
             $sql = "INSERT INTO tbl_produto (codigo, descricao, ativo) VALUES ('$codigo', '$descricao', $ativo)";
+
             if ($conn->query($sql) === TRUE) {
                 echo json_encode(['status' => 'success', 'message' => 'Produto Cadastrado com Sucesso!']);
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Erro ao cadastrar produto: ' . $conn->error]);
+                echo json_encode(['status' => 'error', 'message' => 'Erro ao Cadastrar Produto: ' . $conn->error]);
             }
         }
     }
