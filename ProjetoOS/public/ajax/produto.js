@@ -30,8 +30,12 @@ $(document).ready(function () {
                     `);
                 });
             },
-            error: function (xhr, status, error) {
-                console.error(xhr.responseText);
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro!',
+                    text: 'Erro ao carregar os produtos.',
+                });
             }
         });
     }
@@ -52,33 +56,31 @@ $(document).ready(function () {
             method: 'POST',
             data: formData,
             success: function (response) {
-
                 let res = JSON.parse(response);
 
-                let alerta = $('#alerta');
-                let mensagem = $('#alerta-message');
-
                 if (res.status === 'error') {
-                    alerta.removeClass('alert-success').addClass('alert-danger');
-                    mensagem.text(res.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erro!',
+                        text: res.message,
+                    });
                 } else {
-                    alerta.removeClass('alert-danger').addClass('alert-success');
-                    mensagem.text(res.message);
-                }
-
-                alerta.show();
-
-                setTimeout(function () {
-                    alerta.fadeOut();
-                }, 6000);
-
-                if (res.status === 'success') {
-                    $('#produtoForm')[0].reset();
-                    carregarProdutos();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sucesso!',
+                        text: res.message,
+                    }).then(() => {
+                        $('#produtoForm')[0].reset();
+                        carregarProdutos();
+                    });
                 }
             },
-            error: function (xhr, status, error) {
-                console.error(xhr.responseText);
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro!',
+                    text: 'Erro ao cadastrar produto.',
+                });
             }
         });
     });
@@ -112,35 +114,33 @@ $(document).ready(function () {
                         success: function (response) {
                             let res = JSON.parse(response);
 
-                            let alerta = $('#alerta');
-                            let mensagem = $('#alerta-message');
-
                             if (res.status === 'error') {
-                                alerta.removeClass('alert-success').addClass('alert-danger');
-                                mensagem.text(res.message);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Erro!',
+                                    text: res.message,
+                                });
                             } else {
-                                alerta.removeClass('alert-danger').addClass('alert-success');
-                                mensagem.text(res.message);
-                            }
-
-                            alerta.show();
-
-                            setTimeout(function () {
-                                alerta.fadeOut();
-                            }, 6000);
-
-                            if (res.status === 'success') {
-                                $('#produtoForm')[0].reset();
-                                carregarProdutos();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Sucesso!',
+                                    text: res.message,
+                                }).then(() => {
+                                    $('#produtoForm')[0].reset();
+                                    carregarProdutos();
+                                });
                             }
                         },
-                        error: function (xhr, status, error) {
-                            console.error(xhr.responseText);
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Erro!',
+                                text: 'Erro ao editar produto.',
+                            });
                         }
                     });
                 });
-            },
+            }
         });
     });
 });
-

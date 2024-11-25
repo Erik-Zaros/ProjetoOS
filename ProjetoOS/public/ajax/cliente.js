@@ -28,36 +28,35 @@ $(document).ready(function () {
             method: 'POST',
             data: $(this).serialize(),
             success: function (response) {
-
                 let res = JSON.parse(response);
 
-                let alerta = $('#alerta');
-                let mensagem = $('#alerta-message');
-
                 if (res.status === 'error') {
-                    alerta.removeClass('alert-success').addClass('alert-danger');
-                    mensagem.text(res.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erro!',
+                        text: res.message,
+                    });
                 } else {
-                    alerta.removeClass('alert-danger').addClass('alert-success');
-                    mensagem.text(res.message);
-                }
-
-                alerta.show();
-
-                setTimeout(function () {
-                  alerta.fadeOut();
-                }, 6000);
-
-                if (res.status === 'success') {
-                    $('#clienteForm')[0].reset();
-                    carregarClientes();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sucesso!',
+                        text: res.message,
+                    }).then(() => {
+                        $('#clienteForm')[0].reset();
+                        carregarClientes();
+                    });
                 }
             },
             error: function () {
-                alert('Erro Interação Servidor');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro!',
+                    text: 'Erro de interação com o servidor.',
+                });
             }
         });
     });
+
     $(document).on('click', '.editar', function () {
         var cpf = $(this).data('cpf');
         $.ajax({
@@ -85,28 +84,30 @@ $(document).ready(function () {
 
                             let res = JSON.parse(response);
 
-                            let alerta = $('#alerta');
-                            let mensagem = $('#alerta-message');
-
                             if (res.status === 'error') {
-                                alerta.removeClass('alert-success').addClass('alert-danger');
-                                mensagem.text(res.message);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Erro!',
+                                    text: res.message,
+                                });
                             } else {
-                                alerta.removeClass('alert-danger').addClass('alert-success');
-                                mensagem.text(res.message);
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Sucesso!',
+                                    text: res.message,
+                                }).then(() => {
+                                    $('#clienteForm')[0].reset();
+                                    $('#cpf').prop('disabled', false);
+                                    carregarClientes();
+                                });
                             }
-
-                            alerta.show();
-
-                            setTimeout(function () {
-                                alerta.fadeOut();
-                            }, 6000);
-
-                            if (res.status === 'success') {
-                                $('#clienteForm')[0].reset();
-                                $('#cpf').prop('disabled', false);
-                                carregarClientes();
-                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Erro!',
+                                text: 'Erro ao editar cliente.',
+                            });
                         }
                     });
                 });

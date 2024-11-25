@@ -26,11 +26,12 @@ function carregarDadosOS(os) {
         data: { os: os },
         dataType: 'json',
         success: function (data) {
-            console.log('Dados recebidos:', data);
-
             if (data.error) {
-                console.error('Erro retornado pelo servidor:', data.error);
-                alert('Erro ao carregar OS: ' + data.error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: 'Erro ao carregar OS: ' + data.error,
+                });
                 return;
             }
 
@@ -47,10 +48,11 @@ function carregarDadosOS(os) {
             });
         },
         error: function (xhr, status, error) {
-            console.error('Erro ao carregar OS:', error);
-            console.error('Status:', status);
-            console.error('Resposta:', xhr.responseText);
-            alert('Erro ao carregar dados da OS!');
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Erro ao carregar dados da OS!',
+            });
         }
     });
 }
@@ -73,14 +75,19 @@ function carregarProdutos(produtoSelecionado = null) {
                     }
                 });
             } catch (e) {
-                console.error('Erro ao processar dados dos produtos:', e);
-                console.log('Dados recebidos:', data);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: 'Erro ao processar os dados dos produtos.',
+                });
             }
         },
         error: function (xhr, status, error) {
-            console.error('Erro ao carregar produtos:', error);
-            console.error('Status:', status);
-            console.error('Resposta:', xhr.responseText);
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Erro ao carregar produtos!',
+            });
         }
     });
 }
@@ -91,15 +98,20 @@ function editarOS(os) {
         method: 'POST',
         data: $('#osForm').serialize(),
         success: function (response) {
-            $('#modalMensagem').text(response);
-            $('#modalCadastro').modal('show');
-            $('#modalCadastro').on('hidden.bs.modal', function () {
+            Swal.fire({
+                icon: 'success',
+                title: 'Ordem de Serviço Atualizada!',
+                text: response,
+            }).then(() => {
                 window.location.href = 'consulta_os.html';
             });
         },
         error: function (xhr, status, error) {
-            console.error('Erro ao editar OS:', error);
-            alert('Erro ao editar a ordem de serviço');
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Erro ao editar a ordem de serviço!',
+            });
         }
     });
 }
@@ -113,13 +125,21 @@ $(document).ready(function () {
                 method: 'POST',
                 data: $(this).serialize(),
                 success: function (response) {
-                    $('#osForm')[0].reset();
-                    $('#modalMensagem').text(response);
-                    $('#modalCadastro').modal('show');
-                    carregarProdutos();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Ordem de Serviço Cadastrada!',
+                        text: response,
+                    }).then(() => {
+                        $('#osForm')[0].reset();
+                        carregarProdutos();
+                    });
                 },
                 error: function (xhr, status, error) {
-                    console.error('Erro ao cadastrar OS:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erro',
+                        text: 'Erro ao cadastrar OS!',
+                    });
                 }
             });
         });
@@ -154,7 +174,11 @@ $(document).ready(function () {
                 });
             },
             error: function (xhr, status, error) {
-                console.error('Erro ao carregar ordens de serviço:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: 'Erro ao carregar ordens de serviço!',
+                });
             }
         });
     }
@@ -189,7 +213,11 @@ $(document).ready(function () {
                 });
             },
             error: function (xhr, status, error) {
-                console.error('Erro ao aplicar filtros:', xhr.responseText);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: 'Erro ao aplicar os filtros!',
+                });
             }
         });
     });
@@ -201,22 +229,37 @@ $(document).ready(function () {
 
     $(document).on('click', '.finalizar-os', function () {
         var os = $(this).data('os');
-        if (confirm(`Deseja finalizar a ordem de serviço ${os}?`)) {
-            var button = $(this);
-            $.ajax({
-                url: '../controller/os/finalizar_os.php',
-                method: 'POST',
-                data: { os: os },
-                success: function (response) {
-                    $('#mensagemModal').text(`Ordem de serviço ${os} finalizada com sucesso!`);
-                    $('#confirmacaoModal').modal('show');
-                    button.remove();
-                    carregarOs();
-                },
-                error: function (xhr, status, error) {
-                    console.error('Erro ao finalizar OS:', xhr.responseText);
-                }
-            });
-        }
+        Swal.fire({
+            title: `Deseja finalizar a ordem de serviço ${os}?`,
+            text: 'Essa ação não pode ser desfeita.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim, finalizar!',
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../controller/os/finalizar_os.php',
+                    method: 'POST',
+                    data: { os: os },
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Finalizado!',
+                            text: response,
+                        }).then(() => {
+                            carregarOs();
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erro',
+                            text: 'Erro ao finalizar a OS!',
+                        });
+                    }
+                });
+            }
+        });
     });
 });

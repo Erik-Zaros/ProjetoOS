@@ -68,19 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    $.ajax({
-        url: '../controller/menu/grafico_pizza.php',
-        method: 'GET',
-        dataType: 'json',
-        success: function (response) {
-            carregarGraficoPizza(response);
-        },
-        error: function (error) {
-            console.error("Erro ao carregar os dados do gráfico: ", error);
-        }
-    });
-
-    // Animação do gráfico
     (function (H) {
         H.seriesTypes.pie.prototype.animate = function (init) {
             const series = this,
@@ -142,4 +129,29 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         };
     }(Highcharts));
+
+    $.ajax({
+        url: '../controller/menu/grafico_pizza.php',
+        method: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            carregarGraficoPizza(response);
+        },
+        error: function (error) {
+            console.error("Erro ao carregar os dados do gráfico: ", error);
+        }
+    });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const alerta = urlParams.get('alerta');
+
+    if (alerta === 'true') {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Atenção',
+            text: 'É necessário cadastrar pelo menos um Cliente, Produto e Ordem de Serviço para gerar o arquivo Excel.',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#007bff',
+        });
+    }
 });

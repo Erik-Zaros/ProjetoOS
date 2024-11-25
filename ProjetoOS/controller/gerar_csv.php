@@ -1,9 +1,24 @@
 <?php
-
 session_start();
 ob_start();
 
 include '../model/conexao.php';
+
+$query_verifica = "SELECT 
+        (SELECT COUNT(*) FROM tbl_cliente) AS total_clientes,
+        (SELECT COUNT(*) FROM tbl_produto) AS total_produtos,
+        (SELECT COUNT(*) FROM tbl_os) AS total_ordens_servico";
+$result_verifica = $conn->query($query_verifica);
+
+if ($result_verifica) {
+    $dados = $result_verifica->fetch_assoc();
+
+    if ($dados['total_clientes'] == 0 || $dados['total_produtos'] == 0 || $dados['total_ordens_servico'] == 0) {
+        $_SESSION['msg'] = "É necessário cadastrar pelo menos um cliente, produto e ordem de serviço para gerar o arquivo.";
+        header("Location: ../view/menu.html?alerta=true");
+        exit();
+    }
+}
 
 $query = "SELECT
     tbl_os.os AS ordem_servico, 
