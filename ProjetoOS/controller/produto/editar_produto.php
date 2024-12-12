@@ -8,7 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $descricao = $_POST['descricao'];
     $ativo = ($_POST['ativo']) ? 1 : 0;
 
-    $valida_produto = "SELECT * FROM tbl_produto WHERE codigo = '$codigo' AND descricao = '$descricao'";
+    $valida_produto = "SELECT codigo, descricao
+                       FROM tbl_produto 
+                       WHERE codigo = '$codigo' AND descricao = '$descricao' AND id != '$id'";
     $result = $conn->query($valida_produto);
 
     if ($result->num_rows > 0) {

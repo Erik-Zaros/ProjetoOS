@@ -7,7 +7,7 @@ $nome = $_POST['nome'];
 $endereco = $_POST['endereco'];
 $numero = $_POST['numero'];
 
-$valida_cpf = "SELECT * FROM tbl_cliente WHERE cpf = '$cpf'";
+$valida_cpf = "SELECT cpf FROM tbl_cliente WHERE cpf = '$cpf'";
 $result = $conn->query($valida_cpf);
 
 if ($result->num_rows > 0) {

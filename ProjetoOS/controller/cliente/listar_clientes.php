@@ -2,7 +2,7 @@
 
 include '../../model/conexao.php';
 
-$sql = "SELECT * FROM tbl_cliente";
+$sql = "SELECT cpf, nome, endereco, numero FROM tbl_cliente";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
