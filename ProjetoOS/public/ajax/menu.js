@@ -7,6 +7,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    document.getElementById("sidebarToggle").addEventListener("click", function () {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.classList.toggle("d-none");
+    });
+
     function carregarGraficoPizza(dados) {
         const clientes = Number(dados.clientes) || 0;
         const produtos = Number(dados.produtos) || 0;
@@ -31,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             tooltip: {
                 headerFormat: '',
-                pointFormat: 
+                pointFormat:
                     '<span style="color:{point.color}">\u25cf</span> ' +
                     '{point.name}: <b>{point.y}</b> ({point.percentage:.1f}%)'
             },
@@ -130,15 +135,68 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     }(Highcharts));
 
+    function carregarGraficoColunas(dados) {
+        const clientes = Number(dados.clientes) || 0;
+        const produtos = Number(dados.produtos) || 0;
+        const ordensServico = Number(dados.ordens_servico) || 0;
+
+        Highcharts.chart('grafico-colunas', {
+            chart: {
+                type: 'column',
+                animation: {
+                    duration: 700
+                }
+            },
+            title: {
+                text: 'Resumo de Registros'
+            },
+            xAxis: {
+                categories: ['Clientes', 'Produtos', 'Ordens de Serviço'],
+                title: {
+                    text: null
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Quantidade',
+                    align: 'high'
+                }
+            },
+            tooltip: {
+                valueSuffix: ' registros'
+            },
+            plotOptions: {
+                column: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series: [{
+                name: 'Registros',
+                data: [clientes, produtos, ordensServico],
+                color: '#007bff'
+            }]
+        });
+    }
+
     $.ajax({
         url: '../controller/menu/grafico_pizza.php',
         method: 'GET',
         dataType: 'json',
         success: function (response) {
             carregarGraficoPizza(response);
+            carregarGraficoColunas(response);
         },
         error: function (error) {
-            console.error("Erro ao carregar os dados do gráfico: ", error);
+            console.error("Erro ao carregar os dados dos gráficos: ", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro!',
+                text: 'Não foi possível carregar os dados dos gráficos.',
+                confirmButtonColor: '#007bff'
+            });
         }
     });
 
@@ -151,7 +209,7 @@ document.addEventListener("DOMContentLoaded", function () {
             title: 'Atenção',
             text: 'É necessário cadastrar pelo menos um Cliente, Produto e Ordem de Serviço para gerar o arquivo Excel.',
             confirmButtonText: 'OK',
-            confirmButtonColor: '#007bff',
+            confirmButtonColor: '#007bff'
         });
     }
 });

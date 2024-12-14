@@ -6,6 +6,11 @@ document.addEventListener("DOMContentLoaded", function () {
             link.classList.add("active");
         }
     });
+
+    document.getElementById("sidebarToggle").addEventListener("click", function () {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.classList.toggle("d-none");
+    });
 });
 
 $(document).ready(function () {

@@ -7,6 +7,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    document.getElementById("sidebarToggle").addEventListener("click", function () {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.classList.toggle("d-none");
+    });
+
     const urlParams = new URLSearchParams(window.location.search);
     const osParam = urlParams.get('os');
 
