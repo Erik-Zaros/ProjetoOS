@@ -1,55 +1,35 @@
-.titulo {
-    background-color: #596d9b;
-    color: white;
-    padding: 10px;
-    margin-bottom: 20px;
+body {
+    background-color: #f3f6fe !important;
 }
 
-#osForm {
-    background-color: #D9E2EF;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
+.sidebar-transition {
+    transition: margin-left 0.8s ease-in-out;
 }
 
-.nav-tabs {
-    justify-content: center;
+#sidebar {
+    background-color: #403F68;
 }
 
-.nav-tabs .nav-item {
-    margin-bottom: -1px;
+.nav-link {
+    font-size: 1rem;
 }
 
-.nav-tabs .nav-link {
-    border: 1px solid #ddd;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    color: #000;
-    margin-right: 2px;
+.nav-link .bi {
+    margin-right: 18px;
 }
 
-.nav-tabs .nav-link.active {
-    background-color: red; /*Muda cor Header*/
-    color: #fff;
+.nav-link.active {
+    background-color: #4b5fab !important;
+    color: #ffffff !important;
 }
 
-.sub-nav {
-    display: flex;
-    justify-content: center;
-    background-color: #f8f9fa;
-    padding: 10px 0;
+.card-sharp {
+    background-color: #fff;
+    border-radius: 0;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.sub-nav a {
-    margin: 0 10px;
-    color: #000;
-    text-decoration: none;
-}
-
-.sub-nav a:hover {
-    text-decoration: underline;
-}
-
-.container {
-	text-align: center;
+.card-sharp h5 {
+    font-weight: bold;
+    color: #343A40;
 }

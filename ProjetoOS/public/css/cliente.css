@@ -1,56 +1,49 @@
-.titulo {
+body {
+    background-color: #f3f6fe;
+}
+
+.sidebar-transition {
+    transition: margin-left 0.8s ease-in-out;
+}
+
+#sidebar {
+    background-color: #403F68;
+}
+
+#sidebarToggle {
+    transition: all 0.5s ease;
+}
+
+.nav-link.active {
+    background-color: #4b5fab !important;
+    color: #ffffff !important;
+}
+
+.nav-link .bi {
+    margin-right: 18px;
+}
+
+.card-header {
+    font-weight: bold;
+    background-color: #596d9b !important;
+    color: #ffffff;
+    border-radius: 0.25rem 0.25rem 0 0;
+}
+
+.table {
+    background-color: #ffffff;
+    text-align: center;
+}
+
+.table th {
     background-color: #596d9b;
-    color: white;
-    padding: 10px; 
-    margin-bottom: 0px;
-    border-radius: 4px;
+    color: #ffffff;
 }
 
-thead, tbody {
-	text-align: center;
-} 
-
-#clienteForm {
-    background-color: #D9E2EF;
-    padding: 20px;
-    border-radius: 4px;
-    margin-bottom: 20px;
+.table td {
+    vertical-align: middle;
 }
 
-.nav-tabs {
-    justify-content: center;
-}
-
-.nav-tabs .nav-item {
-    margin-bottom: -1px;
-}
-
-.nav-tabs .nav-link {
-    border: 1px solid #ddd;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    color: #000;
-    margin-right: 2px;
-}
-
-.nav-tabs .nav-link.active {
-    background-color: green; /*Muda cor Header*/
-    color: #fff ;
-}
-
-.sub-nav {
-    display: flex;
-    justify-content: center;
-    background-color: #f8f9fa;
-    padding: 10px 0;
-}
-
-.sub-nav a {
-    margin: 0 10px;
-    color: #000;
-    text-decoration: none;
-}
-
-.sub-nav a:hover {
-    text-decoration: underline;
+.table .btn {
+    padding: 5px 10px;
 }
