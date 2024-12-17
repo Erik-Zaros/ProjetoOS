@@ -21,19 +21,27 @@ $(document).ready(function () {
             dataType: 'json',
             success: function (data) {
                 $('#produtosTable tbody').empty();
-                data.forEach(function (produto) {
-                    var ativo = produto.ativo == 1 ? 'Sim' : 'Não';
+                if (data.length > 0) {
+                    data.forEach(function (produto) {
+                        var ativo = produto.ativo == 1 ? 'Sim' : 'Não';
+                        $('#produtosTable tbody').append(`
+                            <tr data-codigo="${produto.codigo}">
+                                <td>${produto.codigo}</td>
+                                <td>${produto.descricao}</td>
+                                <td>${ativo}</td>
+                                <td>
+                                    <button class='btn btn-primary editar-produto' data-codigo='${produto.codigo}'>Editar</button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                } else {
                     $('#produtosTable tbody').append(`
                         <tr>
-                            <td>${produto.codigo}</td>
-                            <td>${produto.descricao}</td>
-                            <td>${ativo}</td>
-                            <td>
-                                <button class='btn btn-primary editar-produto' data-codigo='${produto.codigo}'>Editar</button>
-                            </td>
+                            <td colspan="4" class="text-center">NENHUM PRODUTO CADASTRADO</td>
                         </tr>
                     `);
-                });
+                }
             },
             error: function () {
                 Swal.fire({
