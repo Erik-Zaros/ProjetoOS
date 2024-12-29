@@ -102,20 +102,29 @@ function editarOS(os) {
         url: '../controller/os/editar_os.php',
         method: 'POST',
         data: $('#osForm').serialize(),
+        dataType: 'json',
         success: function (response) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Ordem de Serviço Atualizada!',
-                text: response,
-            }).then(() => {
-                window.location.href = 'consulta_os.html';
-            });
+            if (response.status === "error") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: response.message,
+                });
+            } else if (response.status === "success") {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sucesso',
+                    text: response.message,
+                }).then(() => {
+                    window.location.href = 'consulta_os.html';
+                });
+            }
         },
         error: function (xhr, status, error) {
             Swal.fire({
                 icon: 'error',
                 title: 'Erro',
-                text: 'Erro ao editar a ordem de serviço!',
+                text: 'Erro ao tentar editar a ordem de serviço.',
             });
         }
     });

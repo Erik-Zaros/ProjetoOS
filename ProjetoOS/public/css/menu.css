@@ -15,7 +15,7 @@ body {
 }
 
 .nav-link .bi {
-    margin-right: 20px;
+    margin-right: 10px;
 }
 
 .nav-link.active {
@@ -32,4 +32,8 @@ body {
 .card-sharp h5 {
     font-weight: bold;
     color: #343A40;
+}
+
+i {
+	color: #fac927;
 }

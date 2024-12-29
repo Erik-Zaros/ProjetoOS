@@ -11,6 +11,22 @@ $produto_id = $_POST['produto_id'];
 $conn->begin_transaction();
 
 try {
+    $stmt = $conn->prepare("SELECT finalizada FROM tbl_os WHERE os = ?");
+    $stmt->bind_param("i", $os);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        if ($row['finalizada'] == 1) {
+            echo json_encode(["status" => "error", "message" => "Ordem de serviço finalizada. Não é possível editar!"]);
+            exit;
+        }
+    } else {
+        echo json_encode(["status" => "error", "message" => "Ordem de serviço não encontrada."]);
+        exit;
+    }
+
     $stmt = $conn->prepare("SELECT id, nome FROM tbl_cliente WHERE cpf = ?");
     $stmt->bind_param("s", $cpf_consumidor);
     $stmt->execute();
@@ -31,9 +47,11 @@ try {
         
         if (!$stmt->execute()) {
             if ($conn->errno == 1062) {
-                throw new Exception("CPF já cadastrado para outro cliente");
+                echo json_encode(["status" => "error", "message" => "CPF já cadastrado para outro cliente."]);
+                exit;
             }
-            throw new Exception("Erro ao cadastrar cliente");
+            echo json_encode(["status" => "error", "message" => "Erro ao cadastrar cliente."]);
+            exit;
         }
         $cliente_id = $conn->insert_id;
     }
@@ -48,15 +66,16 @@ try {
     $stmt->bind_param("sssiii", $data_abertura, $nome_consumidor, $cpf_consumidor, $produto_id, $cliente_id, $os);
     
     if (!$stmt->execute()) {
-        throw new Exception("Erro ao atualizar ordem de serviço");
+        echo json_encode(["status" => "error", "message" => "Erro ao atualizar ordem de serviço."]);
+        exit;
     }
 
     $conn->commit();
-    echo "Ordem de serviço atualizada com sucesso!";
+    echo json_encode(["status" => "success", "message" => "Ordem de Serviço Atualizada!"]);
 
 } catch (Exception $e) {
     $conn->rollback();
-    echo $e->getMessage();
+    echo json_encode(["status" => "error", "message" => $e->getMessage()]);
 }
 
 $conn->close();

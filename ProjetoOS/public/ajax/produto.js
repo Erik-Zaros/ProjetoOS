@@ -38,7 +38,7 @@ $(document).ready(function () {
                 } else {
                     $('#produtosTable tbody').append(`
                         <tr>
-                            <td colspan="4" class="text-center">NENHUM PRODUTO CADASTRADO</td>
+                            <td colspan="5" class="text-center">NENHUM PRODUTO CADASTRADO</td>
                         </tr>
                     `);
                 }

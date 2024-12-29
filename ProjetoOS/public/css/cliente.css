@@ -20,7 +20,7 @@ body {
 }
 
 .nav-link .bi {
-    margin-right: 20px;
+    margin-right: 10px;
 }
 
 .card-header {
@@ -46,4 +46,8 @@ body {
 
 .table .btn {
     padding: 5px 10px;
+}
+
+i {
+	color: #fac927;
 }
