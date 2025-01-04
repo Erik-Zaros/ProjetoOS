@@ -1,18 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const page = window.location.pathname.split("/").pop();
-    const navLinks = document.querySelectorAll(".nav-link");
-    navLinks.forEach(link => {
-        if (link.getAttribute("href") === page) {
-            link.classList.add("active");
-        }
-    });
-
-    document.getElementById("sidebarToggle").addEventListener("click", function () {
-        const sidebar = document.getElementById("sidebar");
-        sidebar.classList.toggle("d-none");
-    });
-});
-
 function carregarClientes() {
     $.ajax({
         url: '../controller/cliente/listar_clientes.php',
@@ -20,14 +5,19 @@ function carregarClientes() {
         dataType: 'json',
         success: function (data) {
             $('#clientesTable tbody').empty();
-            if (data.length > 0) {
+            if (Array.isArray(data) && data.length > 0) {
                 data.forEach(function (cliente) {
+                    const cepFormatado = cliente.cep ? cliente.cep.replace(/(\d{5})(\d{3})/, '$1-$2') : '';
                     $('#clientesTable tbody').append(`
                         <tr>
-                            <td>${cliente.cpf}</td>
-                            <td>${cliente.nome}</td>
-                            <td>${cliente.endereco}</td>
-                            <td>${cliente.numero}</td>
+                            <td>${cliente.cpf || ''}</td>
+                            <td>${cliente.nome || ''}</td>
+                            <td>${cepFormatado}</td>
+                            <td>${cliente.endereco || ''}</td>
+                            <td>${cliente.bairro || ''}</td>
+                            <td>${cliente.numero || ''}</td>
+                            <td>${cliente.cidade || ''}</td>
+                            <td>${cliente.estado || ''}</td>
                             <td>
                                 <button class="btn btn-primary editar" data-cpf="${cliente.cpf}">Editar</button>
                             </td>
@@ -37,12 +27,12 @@ function carregarClientes() {
             } else {
                 $('#clientesTable tbody').append(`
                     <tr>
-                        <td colspan="5" class="text-center">NENHUM CLIENTE CADASTRADO</td>
+                        <td colspan="9" class="text-center">NENHUM CLIENTE CADASTRADO</td>
                     </tr>
                 `);
             }
         },
-        error: function () {
+        error: function (xhr, status, error) {
             Swal.fire({
                 icon: 'error',
                 title: 'Erro!',
@@ -55,12 +45,55 @@ function carregarClientes() {
 $(document).ready(function () {
     carregarClientes();
 
+    $('#buscarCep').on('click', function () {
+        const cep = $('#cep').val().replace('-', '');
+        if (cep.length === 8) {
+            $.ajax({
+                url: '../controller/cep/busca_cep.php',
+                method: 'POST',
+                data: { cep: cep },
+                success: function (data) {
+                    const endereco = JSON.parse(data);
+                    if (!endereco.erro) {
+                        $('#logradouro').val(endereco.logradouro || '');
+                        $('#bairro').val(endereco.bairro || '');
+                        $('#cidade').val(endereco.localidade || '');
+                        $('#estado').val(endereco.uf || '');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erro!',
+                            text: 'CEP inválido!',
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erro!',
+                        text: 'Erro ao buscar CEP.',
+                    });
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro!',
+                text: 'CEP deve ter 8 dígitos.',
+            });
+        }
+    });
+
     $('#clienteForm').on('submit', function (e) {
         e.preventDefault();
+        const cepSemHifen = $('#cep').val().replace('-', '');
+        const formData = $(this).serializeArray();
+        formData.push({ name: 'cep', value: cepSemHifen });
+
         $.ajax({
             url: '../controller/cliente/cadastrar_cliente.php',
             method: 'POST',
-            data: $(this).serialize(),
+            data: $.param(formData),
             success: function (response) {
                 let res = JSON.parse(response);
 
@@ -81,77 +114,81 @@ $(document).ready(function () {
                     });
                 }
             },
-            error: function () {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erro!',
-                    text: 'Erro de interação com o servidor.',
-                });
-            }
         });
     });
 
     $(document).on('click', '.editar', function () {
-        var cpf = $(this).data('cpf');
-        $.ajax({
-            url: '../controller/cliente/buscar_cliente.php',
-            method: 'GET',
-            data: { cpf: cpf },
-            success: function (data) {
-                var cliente = JSON.parse(data);
-                $('#cpf').val(cliente.cpf).prop('disabled', true);
-                $('#nome').val(cliente.nome);
-                $('#endereco').val(cliente.endereco);
-                $('#numero').val(cliente.numero);
-                $('#clienteForm').off('submit').on('submit', function (e) {
-                    e.preventDefault();
-                    $.ajax({
-                        url: '../controller/cliente/editar_cliente.php',
-                        method: 'POST',
-                        data: {
-                            cpf: cliente.cpf,
-                            nome: $('#nome').val(),
-                            endereco: $('#endereco').val(),
-                            numero: $('#numero').val()
-                        },
-                        success: function (response) {
-                            let res = JSON.parse(response);
+    var cpf = $(this).data('cpf');
+    $.ajax({
+        url: '../controller/cliente/buscar_cliente.php',
+        method: 'GET',
+        data: { cpf: cpf },
+        success: function (data) {
+            var cliente = JSON.parse(data);
 
-                            if (res.status === 'error') {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Erro!',
-                                    text: res.message,
-                                });
-                            } else {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Sucesso!',
-                                    text: res.message,
-                                }).then(() => {
-                                    carregarClientes();
-                                    $('#clienteForm')[0].reset();
-                                    $('#cpf').prop('disabled', false);
-                                });
-                            }
-                        },
-                        error: function () {
+            $('#cpf').val(cliente.cpf).prop('disabled', true);
+            $('#nome').val(cliente.nome || '');
+            $('#cep').val(cliente.cep ? cliente.cep.replace(/(\d{5})(\d{3})/, '$1-$2') : '');
+            $('#logradouro').val(cliente.endereco || '');
+            $('#bairro').val(cliente.bairro || '');
+            $('#numero').val(cliente.numero || '');
+            $('#cidade').val(cliente.cidade || '');
+            $('#estado').val(cliente.estado || '');
+
+            $('#clienteForm').off('submit').on('submit', function (e) {
+                e.preventDefault();
+                const cepSemHifen = $('#cep').val().replace('-', '');
+                $.ajax({
+                    url: '../controller/cliente/editar_cliente.php',
+                    method: 'POST',
+                    data: {
+                        cpf: cliente.cpf,
+                        nome: $('#nome').val(),
+                        cep: cepSemHifen,
+                        endereco: $('#logradouro').val(),
+                        bairro: $('#bairro').val(),
+                        numero: $('#numero').val(),
+                        cidade: $('#cidade').val(),
+                        estado: $('#estado').val()
+                    },
+                    success: function (response) {
+                        let res = JSON.parse(response);
+
+                        if (res.status === 'error') {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Erro!',
-                                text: 'Erro ao editar cliente.',
+                                text: res.message,
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Sucesso!',
+                                text: res.message,
+                            }).then(() => {
+                                carregarClientes();
+                                $('#clienteForm')[0].reset();
+                                $('#cpf').prop('disabled', false);
                             });
                         }
-                    });
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erro!',
+                            text: 'Erro ao editar cliente.',
+                        });
+                    }
                 });
-            },
-            error: function () {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erro!',
-                    text: 'Erro ao buscar cliente.',
-                });
-            }
-        });
+            });
+        },
+        error: function (xhr, status, error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro!',
+                text: 'Erro ao buscar cliente.',
+            });
+        }
     });
+});
 });

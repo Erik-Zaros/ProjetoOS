@@ -1,0 +1,41 @@
+body {
+    background-color: #f3f6fe !important;
+}
+
+.sidebar-transition {
+    transition: margin-left 0.8s ease-in-out;
+}
+
+#sidebar {
+    background-color: #403F68;
+}
+
+#sidebarToggle {
+    transition: all 0.5s ease;
+}
+
+.nav-link {
+    font-size: 1rem;
+}
+
+.nav-link .bi {
+    margin-right: 10px;
+}
+
+.nav-link.active {
+    background-color: #4b5fab !important;
+    color: #ffffff !important;
+}
+
+.nav-link {
+    font-size: 1rem;
+}
+
+.nav-link .bi {
+    margin-right: 10px;
+}
+
+i {
+    color: #fac927;
+}
+    

@@ -4,11 +4,11 @@ include '../../model/conexao.php';
 
 header('Content-Type: application/json');
 
-$sql = "SELECT cpf, nome, endereco, numero FROM tbl_cliente";
+$sql = "SELECT cpf, nome, cep, endereco, bairro, numero, cidade, estado FROM tbl_cliente";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
-    $clientes = array();
+    $clientes = [];
     while ($row = $result->fetch_assoc()) {
         $clientes[] = $row;
     }

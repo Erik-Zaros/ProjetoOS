@@ -5,8 +5,12 @@ CREATE TABLE tbl_cliente (
     id INT AUTO_INCREMENT UNIQUE PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     cpf VARCHAR(14) UNIQUE NOT NULL,
+    cep VARCHAR(10),
     endereco VARCHAR(255),
-    numero VARCHAR(10)
+    bairro VARCHAR(255),
+    numero VARCHAR(10),
+    cidade VARCHAR(255),
+    estado VARCHAR(10)
 );
 
 CREATE TABLE tbl_produto (

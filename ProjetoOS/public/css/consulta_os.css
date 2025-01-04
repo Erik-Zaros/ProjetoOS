@@ -1,28 +1,3 @@
-body {
-    background-color: #f3f6fe;
-}
-
-.sidebar-transition {
-    transition: margin-left 0.8s ease-in-out;
-}
-
-#sidebar {
-    background-color: #403F68;
-}
-
-#sidebarToggle {
-    transition: all 0.5s ease;
-}
-
-.nav-link.active {
-    background-color: #4b5fab !important;
-    color: #ffffff !important;
-}
-
-.nav-link .bi {
-    margin-right: 10px;
-}
-
 .card-header {
     font-weight: bold;
     background-color: #596d9b !important;
@@ -42,8 +17,4 @@ body {
 
 .table td {
     vertical-align: middle;
-}
-
-i {
-	color: #fac927;
 }
