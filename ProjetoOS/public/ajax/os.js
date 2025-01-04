@@ -1,28 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const page = window.location.pathname.split("/").pop();
-    const navLinks = document.querySelectorAll(".nav-link");
-    navLinks.forEach(link => {
-        if (link.getAttribute("href") === page) {
-            link.classList.add("active");
-        }
-    });
-
-    document.getElementById("sidebarToggle").addEventListener("click", function () {
-        const sidebar = document.getElementById("sidebar");
-        sidebar.classList.toggle("d-none");
-    });
-
     const urlParams = new URLSearchParams(window.location.search);
     const osParam = urlParams.get('os');
+    const page = window.location.pathname.split("/").pop();
 
-    if (page === 'cadastra_os.html') {
+    if (page === 'cadastra_os.php') {
         if (osParam) {
             carregarDadosOS(osParam);
         } else {
             carregarProdutos();
         }
     }
-});
 
 function carregarDadosOS(os) {
     $.ajax({
@@ -116,7 +103,7 @@ function editarOS(os) {
                     title: 'Sucesso',
                     text: response.message,
                 }).then(() => {
-                    window.location.href = 'consulta_os.html';
+                    window.location.href = 'consulta_os.php';
                 });
             }
         },
@@ -159,7 +146,7 @@ $(document).ready(function () {
         });
     }
 
-    if (window.location.pathname.includes('consulta_os.html')) {
+    if (window.location.pathname.includes('consulta_os.php')) {
         carregarOs();
     }
 
@@ -175,7 +162,7 @@ $(document).ready(function () {
                     var finalizarButton = os.finalizada ? '' : '<button class="btn btn-success finalizar-os" data-os="' + os.os + '">Finalizar</button>';
                     $('#osTable tbody').append(`
                         <tr>
-                            <td><a href="cadastra_os.html?os=${os.os}">${os.os}</a></td>
+                            <td><a href="cadastra_os.php?os=${os.os}">${os.os}</a></td>
                             <td>${os.cliente}</td>
                             <td>${os.produto}</td>
                             <td>${os.data_abertura}</td>
@@ -214,7 +201,7 @@ $(document).ready(function () {
                     var finalizarButton = os.finalizada ? '' : '<button class="btn btn-success finalizar-os" data-os="' + os.os + '">Finalizar</button>';
                     $('#osTable tbody').append(`
                             <tr>
-                                <td><a href="cadastra_os.html?os=${os.os}">${os.os}</a></td>
+                                <td><a href="cadastra_os.php?os=${os.os}">${os.os}</a></td>
                                 <td>${os.cliente}</td>
                                 <td>${os.produto}</td>
                                 <td>${os.data_abertura}</td>
@@ -276,4 +263,5 @@ $(document).ready(function () {
             }
         });
     });
+});
 });

@@ -1,18 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const page = window.location.pathname.split("/").pop();
-    const navLinks = document.querySelectorAll(".nav-link");
-    navLinks.forEach(link => {
-        if (link.getAttribute("href") === page) {
-            link.classList.add("active");
-        }
-    });
-});
-
-document.getElementById("sidebarToggle").addEventListener("click", function () {
-    const sidebar = document.getElementById("sidebar");
-    sidebar.classList.toggle("d-none");
-});
-
 $(document).ready(function () {
     function carregarProdutos() {
         $.ajax({
@@ -38,7 +23,7 @@ $(document).ready(function () {
                 } else {
                     $('#produtosTable tbody').append(`
                         <tr>
-                            <td colspan="5" class="text-center">NENHUM PRODUTO CADASTRADO</td>
+                            <td colspan="9" class="text-center">NENHUM PRODUTO CADASTRADO</td>
                         </tr>
                     `);
                 }
