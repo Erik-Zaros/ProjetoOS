@@ -1,14 +1,14 @@
 <?php
 
-	$localhost = 'localhost';
-	$username = 'root';
-	$password = '';
-	$database = 'ProjetoOS';
+$localhost = 'localhost';
+$username = 'root';
+$password = '';
+$database = 'ProjetoOS';
 
-	$conn = New mysqli($localhost, $username, $password, $database);
+$conn = new mysqli($localhost, $username, $password, $database);
 
-	if ($conn->connect_error) {
-		die("Não foi possível estabelecer uma conexão com o banco de dados!" . $conn->connect_error);
-	}
+if ($conn->connect_error) {
+    die("Erro na conexão com o banco de dados: " . $conn->connect_error);
+}
+?>
 
-?> 
