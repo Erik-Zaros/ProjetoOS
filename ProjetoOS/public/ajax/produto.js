@@ -1,7 +1,7 @@
 $(document).ready(function () {
     function carregarProdutos() {
         $.ajax({
-            url: '../controller/produto/listar_produtos.php',
+            url: '../controller/produto/listaProduto.php',
             method: 'GET',
             dataType: 'json',
             success: function (data) {
@@ -50,7 +50,7 @@ $(document).ready(function () {
         };
 
         $.ajax({
-            url: '../controller/produto/cadastrar_produto.php',
+            url: '../controller/produto/cadastraProduto.php',
             method: 'POST',
             data: formData,
             success: function (response) {
@@ -87,7 +87,7 @@ $(document).ready(function () {
         var codigo = $(this).data('codigo');
 
         $.ajax({
-            url: '../controller/produto/buscar_produto.php',
+            url: '../controller/produto/buscaProduto.php',
             method: 'GET',
             data: { codigo: codigo },
             dataType: 'json',
@@ -101,7 +101,7 @@ $(document).ready(function () {
                 $('#produtoForm').off('submit').on('submit', function (e) {
                     e.preventDefault();
                     $.ajax({
-                        url: '../controller/produto/editar_produto.php',
+                        url: '../controller/produto/editaProduto.php',
                         method: 'POST',
                         data: {
                             id: id,

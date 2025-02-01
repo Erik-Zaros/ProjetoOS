@@ -25,7 +25,7 @@ ob_start();
     </div>
 
     <div class="text-center mt-4">
-        <a href="../controller/gerar_csv.php" class="btn btn-outline-success">Download Excel</a>
+        <a href="../controller/geraCsv.php" class="btn btn-outline-success">Download Excel</a>
     </div>
 </div>
 

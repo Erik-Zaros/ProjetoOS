@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function carregarDadosOS(os) {
     $.ajax({
-        url: '../controller/os/buscar_os.php',
+        url: '../controller/os/buscaOS.php',
         method: 'GET',
         data: { os: os },
         dataType: 'json',
@@ -36,7 +36,7 @@ function carregarDadosOS(os) {
 
             $('#osForm').off('submit').on('submit', function (e) {
                 e.preventDefault();
-                editarOS(os);
+                editaOS(os);
             });
         },
         error: function (xhr, status, error) {
@@ -51,7 +51,7 @@ function carregarDadosOS(os) {
 
 function carregarProdutos(produtoSelecionado = null) {
     $.ajax({
-        url: '../controller/produto/listar_produtos.php',
+        url: '../controller/produto/listaProduto.php',
         method: 'GET',
         cache: false,
         success: function (data) {
@@ -84,9 +84,9 @@ function carregarProdutos(produtoSelecionado = null) {
     });
 }
 
-function editarOS(os) {
+function editaOS(os) {
     $.ajax({
-        url: '../controller/os/editar_os.php',
+        url: '../controller/os/editaOS.php',
         method: 'POST',
         data: $('#osForm').serialize(),
         dataType: 'json',
@@ -122,7 +122,7 @@ $(document).ready(function () {
         $('#osForm').on('submit', function (e) {
             e.preventDefault();
             $.ajax({
-                url: '../controller/os/cadastrar_os.php',
+                url: '../controller/os/cadastraOS.php',
                 method: 'POST',
                 data: $(this).serialize(),
                 success: function (response) {
@@ -152,7 +152,7 @@ $(document).ready(function () {
 
     function carregarOs() {
         $.ajax({
-            url: '../controller/os/listar_os.php',
+            url: '../controller/os/listaOS.php',
             method: 'GET',
             dataType: 'json',
             success: function (data) {
@@ -190,7 +190,7 @@ $(document).ready(function () {
         e.preventDefault();
         var formData = $(this).serialize();
         $.ajax({
-            url: '../controller/os/filtrar_os.php',
+            url: '../controller/os/filtraOS.php',
             method: 'POST',
             data: formData,
             dataType: 'json',
@@ -240,7 +240,7 @@ $(document).ready(function () {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: '../controller/os/finalizar_os.php',
+                    url: '../controller/os/finalizaOS.php',
                     method: 'POST',
                     data: { os: os },
                     success: function (response) {

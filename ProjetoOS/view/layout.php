@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="../public/css/menu.css">
     <link rel="stylesheet" href="../public/css/cliente.css">
     <link rel="stylesheet" href="../public/css/produto.css">
-    <link rel="stylesheet" href="../public/css/cadastra_os.css">
-    <link rel="stylesheet" href="../public/css/consulta_os.css">
+    <link rel="stylesheet" href="../public/css/cadastraOS.css">
+    <link rel="stylesheet" href="../public/css/consultaOS.css">
     <?= $customCss ?? ''; ?>
 </head>
 

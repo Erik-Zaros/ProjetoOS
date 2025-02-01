@@ -169,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         $.ajax({
-            url: '../controller/menu/grafico_pizza.php',
+            url: '../controller/menu/graficoPizza.php',
             method: 'GET',
             dataType: 'json',
             success: function (response) {

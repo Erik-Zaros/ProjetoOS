@@ -1,6 +1,6 @@
 <?php
 
-function buscarCep($cep) {
+function buscaCep($cep) {
     if (preg_match('/^\d{8}$/', $cep)) {
         $url = "https://viacep.com.br/ws/$cep/json/";
         $response = file_get_contents($url);
@@ -12,7 +12,7 @@ function buscarCep($cep) {
 
 if (isset($_POST['cep'])) {
     $cep = $_POST['cep'];
-    echo buscarCep($cep);
+    echo buscaCep($cep);
 }
 
 ?>
