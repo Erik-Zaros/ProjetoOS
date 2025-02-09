@@ -8,14 +8,14 @@ $(document).ready(function () {
                 $('#produtosTable tbody').empty();
                 if (data.length > 0) {
                     data.forEach(function (produto) {
-                        var ativo = produto.ativo == 1 ? 'Sim' : 'Não';
+                        var ativo = produto.ativo == 1 ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>';
                         $('#produtosTable tbody').append(`
                             <tr data-codigo="${produto.codigo}">
                                 <td>${produto.codigo}</td>
                                 <td>${produto.descricao}</td>
                                 <td>${ativo}</td>
                                 <td>
-                                    <button class='btn btn-primary editar-produto' data-codigo='${produto.codigo}'>Editar</button>
+                                    <button class='btn btn-warning editar-produto' data-codigo='${produto.codigo}'>Editar</button>
                                 </td>
                             </tr>
                         `);
