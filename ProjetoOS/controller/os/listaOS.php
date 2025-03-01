@@ -9,6 +9,7 @@ function listaOS() {
     $sql = "SELECT 
         tbl_os.os,
         tbl_os.nome_consumidor AS cliente,
+        tbl_os.cpf_consumidor AS cpf,
         tbl_produto.descricao AS produto,
         tbl_os.data_abertura,
         tbl_os.finalizada
@@ -26,6 +27,7 @@ function listaOS() {
         $ordens[] = [
             'os' => $row['os'],
             'cliente' => $row['cliente'],
+            'cpf' => $row['cpf'],
             'produto' => $row['produto'],
             'data_abertura' => $dataAberturaFormatada,
             'finalizada' => $row['finalizada'] == 1

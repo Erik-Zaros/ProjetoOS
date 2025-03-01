@@ -32,8 +32,8 @@ ob_start();
                 </div>
             </div>
             <div class="mt-3">
-                <button type="submit" class="btn btn-success">Filtrar</button>
-                <button type="button" class="btn btn-secondary" id="limparFiltros">Limpar</button>
+                <button type="submit" class="btn btn-success btn-sm">Filtrar</button>
+                <button type="button" class="btn btn-secondary btn-sm" id="limparFiltros">Limpar</button>
             </div>
         </form>
     </div>
@@ -49,6 +49,7 @@ ob_start();
                 <tr>
                     <th>Número da Ordem</th>
                     <th>Nome do Cliente</th>
+                    <th>CPF</th>
                     <th>Produto</th>
                     <th>Data de Abertura</th>
                     <th>Ações</th>

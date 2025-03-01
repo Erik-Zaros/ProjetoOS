@@ -1,6 +1,6 @@
 .card-header {
     font-weight: bold;
-    background-color: #596d9b !important;
+    background-color:  #2e2e48 !important;
     color: #ffffff;
     border-radius: 0.25rem 0.25rem 0 0;
 }
@@ -11,7 +11,7 @@
 }
 
 .table th {
-    background-color: #596d9b;
+    background-color: #2e2e48;
     color: #ffffff;
 }
 

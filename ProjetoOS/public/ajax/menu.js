@@ -168,13 +168,79 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
+        function carregarGraficoPizzaStatusProduto(dados) {
+            console.log("Dados recebidos para o gráfico:", dados);
+
+            const produtoInativo = Number(dados.produto_inativo) || 0;
+            const produtoAtivo = Number(dados.produto_ativo) || 0;
+
+            if (produtoAtivo === 0 && produtoInativo === 0) {
+                console.warn("Nenhum dado disponível para exibir no gráfico.");
+                return;
+            }
+
+            Highcharts.chart('grafico-pizza-status-produto', {
+                chart: {
+                    type: 'pie',
+                    animation: {
+                        duration: 700
+                    }
+                },
+                title: {
+                    text: 'PRODUTOS ATIVOS E INATIVOS NO SISTEMA'
+                },
+                subtitle: {
+                    text: 'ATIVOS X INATIVOS',
+                    align: 'center',
+                    style: {
+                        fontSize: '16px'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '',
+                    pointFormat: '<span style="color:{point.color}">\u25cf</span> {point.name}: <b>{point.y}</b> ({point.percentage:.1f}%)'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        borderWidth: 2,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b><br>{point.y} ({point.percentage:.1f}%)',
+                            distance: 20
+                        }
+                    }
+                },
+                series: [{
+                    enableMouseTracking: false,
+                    animation: {
+                        duration: 1700
+                    },
+                    colorByPoint: true,
+                    data: [
+                        { name: 'Inativos', y: produtoInativo },
+                        { name: 'Ativos', y: produtoAtivo }
+                    ]
+                }],
+                colors: ['#ca2320', '#00ba32'],
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                }
+            });
+        }
+
         $.ajax({
             url: '../controller/menu/graficoPizza.php',
             method: 'GET',
             dataType: 'json',
             success: function (response) {
+                console.log(response);
                 carregarGraficoPizza(response);
                 carregarGraficoColunas(response);
+                carregarGraficoPizzaStatusProduto(response);
             },
             error: function (error) {
                 Swal.fire({

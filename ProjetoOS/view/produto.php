@@ -29,7 +29,7 @@ ob_start();
                 <input type="checkbox" class="form-check-input" id="ativo" name="ativo">
                 <label for="ativo" class="form-check-label">Ativo</label>
             </div>
-            <button type="submit" class="btn btn-success mt-3">Gravar</button>
+            <button type="submit" class="btn btn-success btn-sm mt-3">Gravar</button>
         </form>
     </div>
 </div>

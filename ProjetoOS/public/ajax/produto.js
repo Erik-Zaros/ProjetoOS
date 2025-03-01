@@ -15,7 +15,7 @@ $(document).ready(function () {
                                 <td>${produto.descricao}</td>
                                 <td>${ativo}</td>
                                 <td>
-                                    <button class='btn btn-warning editar-produto' data-codigo='${produto.codigo}'>Editar</button>
+                                    <button class='btn btn-warning btn-sm editar-produto' data-codigo='${produto.codigo}'>Editar</button>
                                 </td>
                             </tr>
                         `);

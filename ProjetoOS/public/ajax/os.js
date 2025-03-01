@@ -159,14 +159,17 @@ $(document).ready(function () {
                 $('#osTable tbody').empty();
                 data.forEach(function (os) {
                     var finalizadaBadge = os.finalizada ? '<span class="badge bg-success">Finalizada</span>' : '';
-                    var finalizarButton = os.finalizada ? '' : '<button class="btn btn-success finalizar-os" data-os="' + os.os + '">Finalizar</button>';
+                    var finalizarButton = os.finalizada ? '' : '<button class="btn btn-success btn-sm finalizar-os" data-os="' + os.os + '">Finalizar</button>';
+
                     $('#osTable tbody').append(`
                         <tr>
-                            <td><a href="cadastra_os.php?os=${os.os}">${os.os}</a></td>
+                            <td><a href="os_press.php?os=${os.os}" class="text-primary">${os.os}</a></td>
                             <td>${os.cliente}</td>
+                            <td>${os.cpf}</td>
                             <td>${os.produto}</td>
                             <td>${os.data_abertura}</td>
                             <td>
+                                <a href="cadastra_os.php?os=${os.os}" class="btn btn-warning btn-sm">Alterar</a>
                                 ${finalizarButton}
                                 ${finalizadaBadge}
                             </td>
@@ -174,7 +177,7 @@ $(document).ready(function () {
                     `);
                 });
             },
-            error: function (xhr, status, error) {
+            error: function () {
                 Swal.fire({
                     icon: 'error',
                     title: 'Erro',
@@ -185,6 +188,52 @@ $(document).ready(function () {
     }
 
     carregarOs();
+
+    function carregarDetalhesOS(os) {
+        console.log("Iniciando carregamento dos detalhes da OS:", os);
+
+        $.ajax({
+            url: '../controller/os/osPress.php',
+            method: 'GET',
+            data: { os: os },
+            dataType: 'json',
+            success: function (data) {
+                console.log("Dados recebidos:", data);
+
+                if (data.error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erro',
+                        text: 'Erro ao carregar OS: ' + data.error,
+                    });
+                    return;
+                }
+
+                $('#osNumero').text(data.os);
+                $('#dataAbertura').text(new Date(data.data_abertura).toLocaleDateString('pt-BR'));
+                $('#nomeConsumidor').text(data.nome_consumidor);
+                $('#cpfConsumidor').text(data.cpf_consumidor);
+                $('#produto').text(data.produto);
+                $('#status').html(data.finalizada ? '<span class="badge bg-success">Finalizada</span>' : '<span class="badge bg-warning">Em Aberto</span>');
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: 'Erro ao carregar dados da OS!',
+                });
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const osParam = urlParams.get('os');
+
+        if (osParam) {
+            carregarDetalhesOS(osParam);
+        }
+    });
 
     $('#filtroForm').on('submit', function (e) {
         e.preventDefault();

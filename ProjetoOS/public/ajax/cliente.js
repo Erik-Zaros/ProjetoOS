@@ -19,7 +19,7 @@ function carregarClientes() {
                             <td>${cliente.cidade || ''}</td>
                             <td>${cliente.estado || ''}</td>
                             <td>
-                                <button class="btn btn-warning editar" data-cpf="${cliente.cpf}">Editar</button>
+                                <button class="btn btn-warning btn-sm editar" data-cpf="${cliente.cpf}">Editar</button>
                             </td>
                         </tr>
                     `);

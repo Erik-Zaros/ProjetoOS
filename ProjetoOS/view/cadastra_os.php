@@ -40,7 +40,7 @@ ob_start();
                 <label for="produto_id" class="form-label">Produto</label>
                 <select class="form-control" id="produto_id" name="produto_id" required></select>
             </div>
-            <button type="submit" class="btn btn-success">Gravar</button>
+            <button type="submit" class="btn btn-success btn-sm">Gravar</button>
         </form>
     </div>
 </div>           
