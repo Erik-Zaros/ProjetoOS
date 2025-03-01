@@ -160,6 +160,7 @@ $(document).ready(function () {
                 data.forEach(function (os) {
                     var finalizadaBadge = os.finalizada ? '<span class="badge bg-success">Finalizada</span>' : '';
                     var finalizarButton = os.finalizada ? '' : '<button class="btn btn-success btn-sm finalizar-os" data-os="' + os.os + '">Finalizar</button>';
+                    var alterarButton = os.finalizada ? '' : `<a href="cadastra_os.php?os=${os.os}" class="btn btn-warning btn-sm">Alterar</a>`;
 
                     $('#osTable tbody').append(`
                         <tr>
@@ -169,7 +170,7 @@ $(document).ready(function () {
                             <td>${os.produto}</td>
                             <td>${os.data_abertura}</td>
                             <td>
-                                <a href="cadastra_os.php?os=${os.os}" class="btn btn-warning btn-sm">Alterar</a>
+                                ${alterarButton}
                                 ${finalizarButton}
                                 ${finalizadaBadge}
                             </td>
