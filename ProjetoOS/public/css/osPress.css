@@ -5,9 +5,9 @@
     border-radius: 0.25rem 0.25rem 0 0;
 }
 
-.table {
-    background-color: #ffffff;
-    text-align: center;
+.table th {
+    background-color: #2e2e48;
+    color: #ffffff;
 }
 
 .table th {

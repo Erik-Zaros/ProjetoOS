@@ -1,27 +1,47 @@
 <?php
-
 $title = 'Detalhes da Ordem de Serviço';
 $pageTitle = 'DETALHES DA ORDEM DE SERVIÇO';
 require_once '../config/imports.php';
 require_once '../config/rotas.php';
 
 $os = isset($_GET['os']) && is_numeric($_GET['os']) ? intval($_GET['os']) : 0;
-
 ?>
 
-<div class="card shadow-sm">
-    <div class="card-header bg-primary text-white">
-        <i class="bi bi-card-list"></i> Informações da Ordem de Serviço
+<div class="card shadow-sm mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-card-list"></i> Informações da Ordem de Serviço</h5>
     </div>
     <div class="card-body" id="detalhes-os">
-        <p><strong>Número da OS:</strong> <span id="osNumero"></span></p>
-        <p><strong>Data de Abertura:</strong> <span id="dataAbertura"></span></p>
-        <p><strong>Nome do Consumidor:</strong> <span id="nomeConsumidor"></span></p>
-        <p><strong>CPF:</strong> <span id="cpfConsumidor"></span></p>
-        <p><strong>Produto:</strong> <span id="produto"></span></p>
-        <p><strong>Status:</strong> <span id="status"></span></p>
-        <a href="cadastra_os.php?os=<?= $os ?>" class="btn btn-primary btn-sm">Alterar</a>
-        <a href="consulta_os.php" class="btn btn-secondary btn-sm">Voltar</a>
+
+        <div class="row mb-3">
+            <div class="col-md-12 text-center">
+                <h1 class="display-4 text-warning fw-bold" id="osNumero">OS 68653922</h1>
+                <span id="status">Aberto</span>
+            </div>
+        </div>
+
+        <table class="table table-bordered align-middle">
+            <tbody>
+                <tr>
+                    <th scope="row" style="width: 20%;">Data de Abertura</th>
+                    <td style="width: 30%;"><span id="dataAbertura"></span></td>
+                    <th scope="row" style="width: 20%;">Nome do Consumidor</th>
+                    <td style="width: 30%;"><span id="nomeConsumidor"></span></td>
+                </tr>
+                <tr>
+                    <th scope="row">CPF</th>
+                    <td><span id="cpfConsumidor"></span></td>
+                    <th scope="row">Produto</th>
+                    <td><span id="produto"></span></td>
+                </tr>
+                <tr>
+            </tbody>
+        </table>
+
+        <div class="text-end mt-3">
+            <a href="cadastra_os.php?os=<?= $os ?>" class="btn btn-primary btn-sm me-2">Alterar</a>
+            <a href="consulta_os.php" class="btn btn-secondary btn-sm">Voltar</a>
+        </div>
     </div>
 </div>
 
