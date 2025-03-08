@@ -139,7 +139,7 @@ $(document).ready(function () {
                 e.preventDefault();
                 const cepSemHifen = $('#cep').val().replace('-', '');
                 $.ajax({
-                    url: '../controller/cliente/editar_cliente.php',
+                    url: '../controller/cliente/editaCliente.php',
                     method: 'POST',
                     data: {
                         cpf: cliente.cpf,

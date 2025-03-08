@@ -15,8 +15,8 @@ $os = isset($_GET['os']) && is_numeric($_GET['os']) ? intval($_GET['os']) : 0;
 
         <div class="row mb-3">
             <div class="col-md-12 text-center">
-                <h1 class="display-4 text-warning fw-bold" id="osNumero">OS 68653922</h1>
-                <span id="status">Aberto</span>
+                <h1 class="display-4 text-warning fw-bold" id="osNumero"></h1>
+                <span id="status"></span>
             </div>
         </div>
 
