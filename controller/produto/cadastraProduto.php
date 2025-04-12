@@ -1,29 +1,31 @@
 <?php
 
-include '../../model/conexao.php';
+include '../../model/dbconfig.php';
 
 function cadastraProduto() {
 
-    global $conn;
+    global $con;
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $codigo = $_POST['codigo'] ?? '';
         $descricao = $_POST['descricao'] ?? '';
-        $ativo = ($_POST['ativo']) ? 1 : 0;
+        $ativo = ($_POST['ativo']) ? 'true' : 'false';
 
         if (!empty($codigo) && !empty($descricao)) {
             $valida_produto = "SELECT codigo, descricao FROM tbl_produto WHERE codigo = '$codigo' AND descricao = '$descricao'";
-            $result = $conn->query($valida_produto);
+            $result = pg_query($con, $valida_produto);
 
-            if ($result->num_rows > 0) {
+            if (pg_num_rows($result) > 0) {
                 echo json_encode(['status' => 'error', 'message' => 'Produto já cadastrado com esse código e descrição!']);
             } else {
                 $sql = "INSERT INTO tbl_produto (codigo, descricao, ativo) VALUES ('$codigo', '$descricao', $ativo)";
 
-                if ($conn->query($sql) === TRUE) {
+                $insert = pg_query($con, $sql);
+
+                if ($insert) {
                     echo json_encode(['status' => 'success', 'message' => 'Produto Cadastrado com Sucesso!']);
                 } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Erro ao Cadastrar Produto: ' . $conn->error]);
+                    echo json_encode(['status' => 'error', 'message' => 'Erro ao Cadastrar Produto: ' . pg_last_error($con)]);
                 }
             }
         }
@@ -32,5 +34,5 @@ function cadastraProduto() {
 
 cadastraProduto();
 
-$conn->close();
+pg_close($con);
 ?>

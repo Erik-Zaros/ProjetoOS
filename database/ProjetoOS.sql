@@ -2,7 +2,7 @@ CREATE DATABASE ProjetoOS;
 USE ProjetoOS;
 
 CREATE TABLE tbl_cliente (
-    id INT AUTO_INCREMENT UNIQUE PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     cpf VARCHAR(14) UNIQUE NOT NULL,
     cep VARCHAR(10),
@@ -14,20 +14,18 @@ CREATE TABLE tbl_cliente (
 );
 
 CREATE TABLE tbl_produto (
-    id INT AUTO_INCREMENT UNIQUE PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     codigo VARCHAR(50) NOT NULL,
     descricao VARCHAR(255) NOT NULL,
-    ativo TINYINT(1) DEFAULT 0
+    ativo BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE tbl_os (
-    os INT AUTO_INCREMENT UNIQUE PRIMARY KEY,
+    os SERIAL PRIMARY KEY,
     data_abertura DATE NOT NULL,
     nome_consumidor VARCHAR(255) NOT NULL,
     cpf_consumidor VARCHAR(14) NOT NULL,
-    produto_id INT,
-    cliente_id INT,
-    finalizada TINYINT(1) DEFAULT 0,
-    FOREIGN KEY (produto_id) REFERENCES tbl_produto(id),
-    FOREIGN KEY (cliente_id) REFERENCES tbl_cliente(id)
+    produto_id INTEGER REFERENCES tbl_produto(id),
+    cliente_id INTEGER REFERENCES tbl_cliente(id),
+    finalizada BOOLEAN DEFAULT FALSE
 );

@@ -53,8 +53,8 @@ ob_start();
                     <input type="text" class="form-control" id="estado" name="estado" maxlength="10">
                 </div>
             </div>
-            <button type="button" class="btn btn-primary" id="buscarCep">Buscar CEP</button>
-            <button type="submit" class="btn btn-success">Gravar</button>
+            <button type="button" class="btn btn-primary btn-sm" id="buscarCep">Buscar CEP</button>
+            <button type="submit" class="btn btn-success btn-sm">Gravar</button>
         </form>
     </div>
 </div>

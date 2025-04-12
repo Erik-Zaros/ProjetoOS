@@ -1,10 +1,10 @@
 <?php
 
-include '../../model/conexao.php';
+include '../../model/dbconfig.php';
 
 function editaCliente() {
 
-    global $conn;
+    global $con;
 
     $cpf = $_POST['cpf'];
     $nome = $_POST['nome'];
@@ -25,14 +25,16 @@ function editaCliente() {
                 estado = '$estado'
             WHERE cpf = '$cpf'";
 
-    if ($conn->query($sql) === TRUE) {
+    $update = pg_query($con, $sql);
+
+    if ($update) {
         echo json_encode(["status" => "success", "message" => "Cliente atualizado com sucesso!"]);
     } else {
-        echo json_encode(["status" => "error", "message" => "Erro ao atualizar cliente: " . $conn->error]);
+        echo json_encode(["status" => "error", "message" => "Erro ao atualizar cliente: " . pg_last_error($con)]);
     }
 }
 
 editaCliente();
 
-$conn->close();
+pg_close($con);
 ?>

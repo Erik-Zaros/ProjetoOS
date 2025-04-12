@@ -1,89 +1,94 @@
 <?php
 
-include '../../model/conexao.php';
+include '../../model/dbconfig.php';
 
-function editaOS($os) {
+function editaOS() {
+    
+    global $con;
 
-    global $conn, $os;
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        echo json_encode(["status" => "error", "message" => "Método inválido."]);
+        exit;
+    }
 
-    $os = $_POST['os'];
-    $data_abertura = $_POST['data_abertura'];
+    $os              = $_POST['os'];
+    $data_abertura   = $_POST['data_abertura'];
     $nome_consumidor = $_POST['nome_consumidor'];
-    $cpf_consumidor = $_POST['cpf_consumidor'];
-    $produto_id = $_POST['produto_id'];
+    $cpf_consumidor  = $_POST['cpf_consumidor'];
+    $produto_id      = $_POST['produto_id'];
 
-    $conn->begin_transaction();
+    pg_query($con, 'BEGIN');
 
     try {
-        $stmt = $conn->prepare("SELECT finalizada FROM tbl_os WHERE os = ?");
-        $stmt->bind_param("i", $os);
-        $stmt->execute();
-        $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            if ($row['finalizada'] == 1) {
-                echo json_encode(["status" => "error", "message" => "Ordem de serviço finalizada. Não é possível editar!"]);
-                exit;
-            }
-        } else {
+        $check_sql = "SELECT finalizada FROM tbl_os WHERE os = $1";
+        $result = pg_query_params($con, $check_sql, [$os]);
+
+        if (pg_num_rows($result) === 0) {
             echo json_encode(["status" => "error", "message" => "Ordem de serviço não encontrada."]);
             exit;
         }
 
-        $stmt = $conn->prepare("SELECT id, nome FROM tbl_cliente WHERE cpf = ?");
-        $stmt->bind_param("s", $cpf_consumidor);
-        $stmt->execute();
-        $result_cliente = $stmt->get_result();
-        
-        if ($result_cliente->num_rows > 0) {
-            $row_cliente = $result_cliente->fetch_assoc();
-            $cliente_id = $row_cliente['id'];
-            
-            if ($row_cliente['nome'] !== $nome_consumidor) {
-                $stmt = $conn->prepare("UPDATE tbl_cliente SET nome = ? WHERE id = ?");
-                $stmt->bind_param("si", $nome_consumidor, $cliente_id);
-                $stmt->execute();
-            }
-        } else {
-            $stmt = $conn->prepare("INSERT INTO tbl_cliente (nome, cpf) VALUES (?, ?)");
-            $stmt->bind_param("ss", $nome_consumidor, $cpf_consumidor);
-            
-            if (!$stmt->execute()) {
-                if ($conn->errno == 1062) {
-                    echo json_encode(["status" => "error", "message" => "CPF já cadastrado para outro cliente."]);
-                    exit;
-                }
-                echo json_encode(["status" => "error", "message" => "Erro ao cadastrar cliente."]);
-                exit;
-            }
-            $cliente_id = $conn->insert_id;
-        }
-
-        $stmt = $conn->prepare("UPDATE tbl_os SET 
-            data_abertura = ?,
-            nome_consumidor = ?,
-            cpf_consumidor = ?,
-            produto_id = ?,
-            cliente_id = ?
-            WHERE os = ?");
-        $stmt->bind_param("sssiii", $data_abertura, $nome_consumidor, $cpf_consumidor, $produto_id, $cliente_id, $os);
-        
-        if (!$stmt->execute()) {
-            echo json_encode(["status" => "error", "message" => "Erro ao atualizar ordem de serviço."]);
+        $row = pg_fetch_assoc($result);
+        if ($row['finalizada'] === 't') {
+            echo json_encode(["status" => "error", "message" => "Ordem de serviço finalizada. Não é possível editar!"]);
             exit;
         }
 
-        $conn->commit();
+        $cliente_sql = "SELECT id, nome FROM tbl_cliente WHERE cpf = $1";
+        $result_cliente = pg_query_params($con, $cliente_sql, [$cpf_consumidor]);
+
+        if (pg_num_rows($result_cliente) > 0) {
+            $row_cliente = pg_fetch_assoc($result_cliente);
+            $cliente_id = $row_cliente['id'];
+
+            if ($row_cliente['nome'] !== $nome_consumidor) {
+                $update_nome_sql = "UPDATE tbl_cliente SET nome = $1 WHERE id = $2";
+                pg_query_params($con, $update_nome_sql, [$nome_consumidor, $cliente_id]);
+            }
+        } else {
+            $insert_cliente_sql = "INSERT INTO tbl_cliente (nome, cpf) VALUES ($1, $2) RETURNING id";
+            $result_insert = pg_query_params($con, $insert_cliente_sql, [$nome_consumidor, $cpf_consumidor]);
+
+            if (!$result_insert) {
+                throw new Exception("Erro ao cadastrar cliente: " . pg_last_error($con));
+            }
+
+            $row_new = pg_fetch_assoc($result_insert);
+            $cliente_id = $row_new['id'];
+        }
+
+        $update_os_sql = "UPDATE tbl_os 
+                          SET data_abertura = $1,
+                              nome_consumidor = $2,
+                              cpf_consumidor = $3,
+                              produto_id = $4,
+                              cliente_id = $5
+                          WHERE os = $6";
+
+        $update_result = pg_query_params($con, $update_os_sql, [
+            $data_abertura,
+            $nome_consumidor,
+            $cpf_consumidor,
+            $produto_id,
+            $cliente_id,
+            $os
+        ]);
+
+        if (!$update_result) {
+            throw new Exception("Erro ao atualizar ordem de serviço: " . pg_last_error($con));
+        }
+
+        pg_query($con, 'COMMIT');
         echo json_encode(["status" => "success", "message" => "Ordem de Serviço Atualizada!"]);
 
     } catch (Exception $e) {
-        $conn->rollback();
+        pg_query($con, 'ROLLBACK');
         echo json_encode(["status" => "error", "message" => $e->getMessage()]);
     }
 }
 
-echo editaOS($os);
+editaOS();
 
-$conn->close();
+pg_close($con);
 ?>

@@ -1,19 +1,28 @@
 <?php
 
-include '../../model/conexao.php';
+include '../../model/dbconfig.php';
 
 function listaCliente() {
 
-    global $conn;
+    global $con;
 
     header('Content-Type: application/json');
 
-    $sql = "SELECT cpf, nome, cep, endereco, bairro, numero, cidade, estado FROM tbl_cliente";
-    $result = $conn->query($sql);
+    $sql = "SELECT cpf, 
+                   nome, 
+                   cep, 
+                   endereco, 
+                   bairro, 
+                   numero, 
+                   cidade, 
+                   estado 
+                FROM tbl_cliente
+            ";
+    $result = pg_query($con, $sql);
 
-    if ($result->num_rows > 0) {
+    if (pg_num_rows($result) > 0) {
         $clientes = [];
-        while ($row = $result->fetch_assoc()) {
+        while ($row = pg_fetch_assoc($result)) {
             $clientes[] = $row;
         }
         echo json_encode($clientes);
@@ -24,5 +33,5 @@ function listaCliente() {
 
 listaCliente();
 
-$conn->close();
+pg_close($con);
 ?>

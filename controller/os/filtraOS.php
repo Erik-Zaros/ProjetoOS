@@ -1,42 +1,39 @@
 <?php
 
-include '../../model/conexao.php';
+include '../../model/dbconfig.php';
 
 function filtraOS() {
-
-    global $conn;
+    
+    global $con;
 
     $conditions = [];
     $params = [];
-    $types = "";
 
     $base_sql = "SELECT 
-        tbl_os.os,
-        tbl_os.nome_consumidor AS cliente,
-        tbl_produto.descricao AS produto,
-        tbl_os.data_abertura,
-        tbl_os.finalizada 
-    FROM tbl_os
-    INNER JOIN tbl_produto ON tbl_os.produto_id = tbl_produto.id
-    WHERE 1=1";
+                    tbl_os.os,
+                    tbl_os.nome_consumidor AS cliente,
+                    tbl_os.cpf_consumidor AS cpf,
+                    tbl_produto.descricao AS produto,
+                    tbl_os.data_abertura,
+                    tbl_os.finalizada 
+                FROM tbl_os
+                INNER JOIN tbl_produto ON tbl_os.produto_id = tbl_produto.id
+                WHERE 1=1";
 
     if (!empty($_POST['os'])) {
-        $conditions[] = "tbl_os.os = ?";
+        $conditions[] = "tbl_os.os = $" . (count($params) + 1);
         $params[] = $_POST['os'];
-        $types .= "i";
     }
 
     if (!empty($_POST['nomeCliente'])) {
-        $conditions[] = "tbl_os.nome_consumidor LIKE ?";
+        $conditions[] = "tbl_os.nome_consumidor ILIKE $" . (count($params) + 1);
         $params[] = "%" . $_POST['nomeCliente'] . "%";
-        $types .= "s";
     }
 
     if (!empty($_POST['dataInicio']) && !empty($_POST['dataFim'])) {
-        $conditions[] = "tbl_os.data_abertura BETWEEN ? AND ?";
+        $conditions[] = "tbl_os.data_abertura BETWEEN $" . (count($params) + 1) . " AND $" . (count($params) + 2);
         $params[] = $_POST['dataInicio'];
         $params[] = $_POST['dataFim'];
-        $types .= "ss";
     }
 
     $sql = $base_sql;
@@ -46,32 +43,28 @@ function filtraOS() {
 
     $sql .= " ORDER BY tbl_os.os ASC";
 
-    $stmt = $conn->prepare($sql);
-    if (!empty($params)) {
-        $stmt->bind_param($types, ...$params);
-    }
-
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $result = pg_query_params($con, $sql, $params);
 
     $ordens = [];
-    while ($row = $result->fetch_assoc()) {
-        $dataAberturaFormatada = date('d/m/Y', strtotime($row['data_abertura']));
-        $ordens[] = [
-            'os' => $row['os'],
-            'cliente' => $row['cliente'],
-            'produto' => $row['produto'],
-            'data_abertura' => $dataAberturaFormatada,
-            'finalizada' => $row['finalizada'] == 1
-        ];
+
+    if ($result && pg_num_rows($result) > 0) {
+        while ($row = pg_fetch_assoc($result)) {
+            $dataFormatada = date('d/m/Y', strtotime($row['data_abertura']));
+            $ordens[] = [
+                'os'             => $row['os'],
+                'cliente'        => $row['cliente'],
+                'cpf'            => $row['cpf'],
+                'produto'        => $row['produto'],
+                'data_abertura'  => $dataFormatada,
+                'finalizada'     => $row['finalizada'] === 't'
+            ];
+        }
     }
 
     echo json_encode($ordens);
-
 }
 
 filtraOS();
 
-$conn->close();
+pg_close($con);
 ?>
-

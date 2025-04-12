@@ -61,7 +61,7 @@ function carregarProdutos(produtoSelecionado = null) {
                 $('#produto_id').append('<option value="">Selecione o Produto</option>');
 
                 produtos.forEach(function (produto) {
-                    if (produto.ativo == 1) {
+                    if (produto.ativo == 't') {
                         var selected = (produtoSelecionado && produto.id == produtoSelecionado) ? 'selected' : '';
                         $('#produto_id').append(`<option value="${produto.id}" ${selected}>${produto.descricao}</option>`);
                     }
@@ -124,12 +124,13 @@ $(document).ready(function () {
             $.ajax({
                 url: '../controller/os/cadastraOS.php',
                 method: 'POST',
+                dataType: 'json',
                 data: $(this).serialize(),
                 success: function (response) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Ordem de Serviço Cadastrada!',
-                        text: response,
+                        title: 'Sucesso!',
+                        text: response.message,
                     }).then(() => {
                         $('#osForm')[0].reset();
                         carregarProdutos();
@@ -248,14 +249,18 @@ $(document).ready(function () {
                 $('#osTable tbody').empty();
                 data.forEach(function (os) {
                     var finalizadaBadge = os.finalizada ? '<span class="badge bg-success">Finalizada</span>' : '';
-                    var finalizarButton = os.finalizada ? '' : '<button class="btn btn-success finalizar-os" data-os="' + os.os + '">Finalizar</button>';
+                    var finalizarButton = os.finalizada ? '' : '<button class="btn btn-success finalizar-os btn-sm" data-os="' + os.os + '">Finalizar</button>';
+                    var alterarButton = os.finalizada ? '' : `<a href="cadastra_os.php?os=${os.os}" class="btn btn-warning btn-sm">Alterar</a>`;
+
                     $('#osTable tbody').append(`
                             <tr>
                                 <td><a href="cadastra_os.php?os=${os.os}">${os.os}</a></td>
                                 <td>${os.cliente}</td>
+                                <td>${os.cpf}</td>
                                 <td>${os.produto}</td>
                                 <td>${os.data_abertura}</td>
                                 <td>
+                                    ${alterarButton}
                                     ${finalizarButton}
                                     ${finalizadaBadge}
                                 </td>

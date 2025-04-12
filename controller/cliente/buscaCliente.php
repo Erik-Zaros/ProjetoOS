@@ -1,23 +1,33 @@
 <?php
 
-include '../../model/conexao.php';
+include '../../model/dbconfig.php';
 
 function buscaCliente($cpf) {
-
-    global $conn, $cpf;
+    
+    global $con;
 
     $cpf = $_GET['cpf'];
-    $sql = "SELECT cpf, nome, cep, endereco, bairro, numero, cidade, estado FROM tbl_cliente WHERE cpf='$cpf'";
-    $result = $conn->query($sql);
+    $sql = "SELECT cpf, 
+                   nome, 
+                   cep, 
+                   endereco, 
+                   bairro, 
+                   numero, 
+                   cidade, 
+                   estado 
+                FROM tbl_cliente 
+                WHERE cpf = '$cpf'
+            ";
+    $result = pg_query($con, $sql);
 
-    if ($result->num_rows > 0) {
-        echo json_encode($result->fetch_assoc());
+    if (pg_num_rows($result) > 0) {
+        echo json_encode(pg_fetch_assoc($result));
     } else {
         echo "Cliente não encontrado";
     }
 }
 
-echo buscaCliente($cpf);
+echo buscaCliente($_GET['cpf']);
 
-$conn->close();
+pg_close($con);
 ?>

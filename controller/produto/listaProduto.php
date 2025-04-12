@@ -1,18 +1,18 @@
 <?php
 
-include '../../model/conexao.php';
+include '../../model/dbconfig.php';
 
 function listaProduto() {
 
-    global $conn;
+    global $con;
 
     $sql = "SELECT id, codigo, descricao, ativo FROM tbl_produto";
 
-    $result = $conn->query($sql);
+    $result = pg_query($con, $sql);
 
-    if ($result->num_rows > 0) {
+    if (pg_num_rows($result) > 0) {
         $produtos = array();
-        while ($row = $result->fetch_assoc()) {
+        while ($row = pg_fetch_assoc($result)) {
             $produtos[] = $row;
         }
         echo json_encode($produtos);
@@ -23,5 +23,5 @@ function listaProduto() {
 
 listaProduto();
 
-$conn->close();
+pg_close($con);
 ?>

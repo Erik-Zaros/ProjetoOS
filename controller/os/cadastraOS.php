@@ -1,61 +1,66 @@
 <?php
 
-include '../../model/conexao.php';
+include '../../model/dbconfig.php';
 
 function cadastraOS() {
+    global $con;
 
-    global $conn;
-
-    $data_abertura = $_POST['data_abertura'];
+    $data_abertura   = $_POST['data_abertura'];
     $nome_consumidor = $_POST['nome_consumidor'];
-    $cpf_consumidor = $_POST['cpf_consumidor'];
-    $produto_id = $_POST['produto_id'];
+    $cpf_consumidor  = $_POST['cpf_consumidor'];
+    $produto_id      = $_POST['produto_id'];
 
-    $conn->begin_transaction();
+    pg_query($con, 'BEGIN');
 
     try {
-        $stmt = $conn->prepare("SELECT id, nome FROM tbl_cliente WHERE cpf = ?");
-        $stmt->bind_param("s", $cpf_consumidor);
-        $stmt->execute();
-        $result_cliente = $stmt->get_result();
-        
-        if ($result_cliente->num_rows > 0) {
-            $row_cliente = $result_cliente->fetch_assoc();
+        $sql = "SELECT id, nome FROM tbl_cliente WHERE cpf = $1";
+        $result_cliente = pg_query_params($con, $sql, [$cpf_consumidor]);
+
+        if (pg_num_rows($result_cliente) > 0) {
+            $row_cliente = pg_fetch_assoc($result_cliente);
             $cliente_id = $row_cliente['id'];
-            
+
             if ($row_cliente['nome'] !== $nome_consumidor) {
-                $stmt = $conn->prepare("UPDATE tbl_cliente SET nome = ? WHERE id = ?");
-                $stmt->bind_param("si", $nome_consumidor, $cliente_id);
-                $stmt->execute();
+                $update_sql = "UPDATE tbl_cliente SET nome = $1 WHERE id = $2";
+                pg_query_params($con, $update_sql, [$nome_consumidor, $cliente_id]);
             }
+
         } else {
-            $stmt = $conn->prepare("INSERT INTO tbl_cliente (nome, cpf) VALUES (?, ?)");
-            $stmt->bind_param("ss", $nome_consumidor, $cpf_consumidor);
-            if (!$stmt->execute()) {
-                throw new Exception("Erro ao cadastrar o cliente");
+            $insert_cliente_sql = "INSERT INTO tbl_cliente (nome, cpf) VALUES ($1, $2) RETURNING id";
+            $insert_cliente_result = pg_query_params($con, $insert_cliente_sql, [$nome_consumidor, $cpf_consumidor]);
+
+            if (!$insert_cliente_result) {
+                throw new Exception("Erro ao cadastrar o cliente: " . pg_last_error($con));
             }
-            $cliente_id = $conn->insert_id;
+
+            $row = pg_fetch_assoc($insert_cliente_result);
+            $cliente_id = $row['id'];
         }
 
-        $stmt = $conn->prepare("INSERT INTO tbl_os (data_abertura, nome_consumidor, cpf_consumidor, produto_id, cliente_id) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssii", $data_abertura, $nome_consumidor, $cpf_consumidor, $produto_id, $cliente_id);
-        
-        if (!$stmt->execute()) {
-            throw new Exception("Erro ao cadastrar ordem de serviço");
+        $insert_os_sql = "INSERT INTO tbl_os (data_abertura, nome_consumidor, cpf_consumidor, produto_id, cliente_id) 
+                          VALUES ($1, $2, $3, $4, $5)";
+        $insert_os_result = pg_query_params($con, $insert_os_sql, [
+            $data_abertura,
+            $nome_consumidor,
+            $cpf_consumidor,
+            $produto_id,
+            $cliente_id
+        ]);
+
+        if (!$insert_os_result) {
+            throw new Exception("Erro ao cadastrar ordem de serviço: " . pg_last_error($con));
         }
 
-        $os_id = $conn->insert_id;
-        $conn->commit();
-        echo "Ordem de serviço cadastrada com sucesso!";
+        pg_query($con, 'COMMIT');
+        echo json_encode(['status' => 'success', 'message' => 'Ordem de serviço cadastrada com sucesso!']);
 
     } catch (Exception $e) {
-        $conn->rollback();
-        echo $e->getMessage();
+        pg_query($con, 'ROLLBACK');
+        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
-
 }
 
 cadastraOS();
 
-$conn->close();
+pg_close($con);
 ?>

@@ -8,7 +8,7 @@ $(document).ready(function () {
                 $('#produtosTable tbody').empty();
                 if (data.length > 0) {
                     data.forEach(function (produto) {
-                        var ativo = produto.ativo == 1 ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>';
+                        var ativo = produto.ativo == 't' ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>';
                         $('#produtosTable tbody').append(`
                             <tr data-codigo="${produto.codigo}">
                                 <td>${produto.codigo}</td>
@@ -46,7 +46,7 @@ $(document).ready(function () {
         var formData = {
             codigo: $('#codigo').val(),
             descricao: $('#descricao').val(),
-            ativo: $('#ativo').is(':checked') ? 1 : 0
+            ativo: $('#ativo').is(':checked') ? 't' : 'f'
         };
 
         $.ajax({
@@ -94,7 +94,7 @@ $(document).ready(function () {
             success: function (produto) {
                 $('#codigo').val(produto.codigo);
                 $('#descricao').val(produto.descricao);
-                $('#ativo').prop('checked', produto.ativo == '1');
+                $('#ativo').prop('checked', produto.ativo == 't');
 
                 var id = produto.id;
 
@@ -107,7 +107,7 @@ $(document).ready(function () {
                             id: id,
                             codigo: $('#codigo').val(),
                             descricao: $('#descricao').val(),
-                            ativo: $('#ativo').is(':checked') ? 1 : 0
+                            ativo: $('#ativo').is(':checked') ? 't' : 'f'
                         },
                         success: function (response) {
                             let res = JSON.parse(response);

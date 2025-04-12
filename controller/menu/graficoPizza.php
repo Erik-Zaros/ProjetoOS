@@ -1,40 +1,40 @@
 <?php
 
 header('Content-Type: application/json');
-include '../../model/conexao.php';
+include '../../model/dbconfig.php';
 
 function contaQuantidadeRegistro() {
 
-	global $conn;
+	global $con;
 
 	$result = [];
 
 	$sqlClientes = "SELECT COUNT(*) AS total_clientes FROM tbl_cliente";
-	$resultCLientes = $conn->query($sqlClientes);
-	$rowClientes = $resultCLientes->fetch_assoc();
+	$resultClientes = pg_query($con, $sqlClientes);
+	$rowClientes = pg_fetch_assoc($resultClientes);
 	$result['clientes'] = $rowClientes['total_clientes'];
 
 	$sqlProdutos = "SELECT COUNT(*) AS total_produtos FROM tbl_produto";
-	$resultProdutos = $conn->query($sqlProdutos);
-	$rowProdutos = $resultProdutos->fetch_assoc();
+	$resultProdutos = pg_query($con, $sqlProdutos);
+	$rowProdutos = pg_fetch_assoc($resultProdutos);
 	$result['produtos'] = $rowProdutos['total_produtos'];
 
 	$sqlOS = "SELECT COUNT(*) AS total_os FROM tbl_os";
-	$resultOS = $conn->query($sqlOS);
-	$rowOS = $resultOS->fetch_assoc();
+	$resultOS = pg_query($con, $sqlOS);
+	$rowOS = pg_fetch_assoc($resultOS);
 	$result['ordens_servico'] = $rowOS['total_os'];
 
-	$sqlStatusProdutoInativo = "SELECT COUNT(*) AS produto_inativo FROM tbl_produto WHERE ativo = 0";
-	$resultStatusProdutoInativo = $conn->query($sqlStatusProdutoInativo);
-	if ($rowStatusProdutoInativo = $resultStatusProdutoInativo->fetch_assoc()) {
+	$sqlStatusProdutoInativo = "SELECT COUNT(*) AS produto_inativo FROM tbl_produto WHERE ativo = false";
+	$resultStatusProdutoInativo = pg_query($con, $sqlStatusProdutoInativo);
+	if ($rowStatusProdutoInativo = pg_fetch_assoc($resultStatusProdutoInativo)) {
 	    $result['produto_inativo'] = (int)$rowStatusProdutoInativo['produto_inativo'];
 	} else {
 	    $result['produto_inativo'] = 0;
 	}
 
-	$sqlStatusProdutoAtivo = "SELECT COUNT(*) AS produto_ativo FROM tbl_produto WHERE ativo = 1";
-	$resultStatusProdutoAtivo = $conn->query($sqlStatusProdutoAtivo);
-	if ($rowStatusProdutoAtivo = $resultStatusProdutoAtivo->fetch_assoc()) {
+	$sqlStatusProdutoAtivo = "SELECT COUNT(*) AS produto_ativo FROM tbl_produto WHERE ativo = true";
+	$resultStatusProdutoAtivo = pg_query($con, $sqlStatusProdutoAtivo);
+	if ($rowStatusProdutoAtivo = pg_fetch_assoc($resultStatusProdutoAtivo)) {
 	    $result['produto_ativo'] = (int)$rowStatusProdutoAtivo['produto_ativo'];
 	} else {
 	    $result['produto_ativo'] = 0;
@@ -45,5 +45,5 @@ function contaQuantidadeRegistro() {
 
 contaQuantidadeRegistro();
 
-$conn->close();
+pg_close($con);
 ?>

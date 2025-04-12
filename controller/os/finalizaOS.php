@@ -1,20 +1,22 @@
 <?php
 
-include '../../model/conexao.php';
+include '../../model/dbconfig.php';
 
 function finalizaOS() {
 
-    global $conn;
+    global $con;
 
     $os = $_POST['os'] ?? '';
 
     if (!empty($os)) {
-        $sql = "UPDATE tbl_os SET finalizada = 1 WHERE os = '$os'";
+        $sql = "UPDATE tbl_os SET finalizada = 't' WHERE os = '$os'";
 
-        if ($conn->query($sql) === TRUE) {
+        $update = pg_query($con, $sql);
+
+        if ($update) {
             echo "Ordem de serviço $os finalizada com sucesso!";
         } else {
-            echo "Erro ao finalizar ordem de serviço: " . $conn->error;
+            echo "Erro ao finalizar ordem de serviço: " . pg_last_error($con);
         }
     }
 
@@ -22,5 +24,5 @@ function finalizaOS() {
 
 finalizaOS();
 
-$conn->close();
+pg_close($con);
 ?>
