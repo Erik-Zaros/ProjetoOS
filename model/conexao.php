@@ -2,7 +2,7 @@
 
 $localhost = 'localhost';
 $username = 'root';
-$password = 'pass';
+$password = '';
 $database = 'ProjetoOS';
 
 $conn = new mysqli($localhost, $username, $password, $database);

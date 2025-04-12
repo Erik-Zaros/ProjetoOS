@@ -5,17 +5,13 @@ $rotas = [
         "icone" => "bi bi-pie-chart-fill",
         "link" => "menu.php",
     ],
-    "ordem_servico" => [
-        "titulo" => "Ordem de Serviço",
-        "icone" => "bi bi-tools",
+    "clientes" => [
+        "titulo" => "Clientes",
+        "icone" => "bi bi-people-fill",
         "submenus" => [
             [
-                "titulo" => "Cadastrar OS",
-                "link" => "cadastra_os.php",
-            ],
-            [
-                "titulo" => "Consultar OS",
-                "link" => "consulta_os.php",
+                "titulo" => "Cadastrar Cliente",
+                "link" => "cliente.php",
             ]
         ]
     ],
@@ -29,13 +25,17 @@ $rotas = [
             ]
         ]
     ],
-    "clientes" => [
-        "titulo" => "Clientes",
-        "icone" => "bi bi-people-fill",
+    "ordem_servico" => [
+        "titulo" => "Ordem de Serviço",
+        "icone" => "bi bi-tools",
         "submenus" => [
             [
-                "titulo" => "Cadastrar Cliente",
-                "link" => "cliente.php",
+                "titulo" => "Cadastrar OS",
+                "link" => "cadastra_os.php",
+            ],
+            [
+                "titulo" => "Consultar OS",
+                "link" => "consulta_os.php",
             ]
         ]
     ]
