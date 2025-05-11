@@ -9,7 +9,7 @@ function buscaProduto($codigo) {
     if (isset($_GET['codigo']) && !empty($_GET['codigo'])) {
         $codigo = $_GET['codigo'];
 
-        $sql = "SELECT id, codigo, descricao, ativo FROM tbl_produto WHERE codigo = '$codigo'";
+        $sql = "SELECT produto, codigo, descricao, ativo FROM tbl_produto WHERE codigo = '$codigo'";
         $result = pg_query($con, $sql);
 
         if ($result) {

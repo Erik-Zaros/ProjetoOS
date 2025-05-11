@@ -9,7 +9,7 @@ function geraCsv() {
 
     global $con;
 
-    $query_verifica = "SELECT 
+    $query_verifica = "SELECT
             (SELECT COUNT(*) FROM tbl_cliente) AS total_clientes,
             (SELECT COUNT(*) FROM tbl_produto) AS total_produtos,
             (SELECT COUNT(*) FROM tbl_os) AS total_ordens_servico";
@@ -26,24 +26,24 @@ function geraCsv() {
     }
 
     $query = "SELECT
-              tbl_os.os AS ordem_servico,
-              tbl_os.data_abertura AS data_abertura,
-              tbl_os.finalizada AS finalizada,
-              tbl_produto.codigo AS codigo_produto,
-              tbl_produto.descricao AS descricao_produto,
-              tbl_produto.ativo AS ativo_produto,
-              tbl_cliente.nome AS nome_consumidor,
-              tbl_cliente.cpf AS cpf_consumidor,
-              tbl_cliente.cep AS cep_consumidor,
-              tbl_cliente.endereco AS endereco_consumidor,
-              tbl_cliente.bairro AS bairro_consumidor,
-              tbl_cliente.numero AS numero_consumidor,
-              tbl_cliente.cidade AS cidade_consumidor,
-              tbl_cliente.estado AS estado_consumidor
-        FROM tbl_os
-        LEFT JOIN tbl_produto ON tbl_os.produto_id = tbl_produto.id
-        LEFT JOIN tbl_cliente ON tbl_os.cliente_id = tbl_cliente.id
-        ORDER BY tbl_os.os ASC
+              os.os AS ordem_servico,
+              os.data_abertura AS data_abertura,
+              os.finalizada AS finalizada,
+              prod.codigo AS codigo_produto,
+              prod.descricao AS descricao_produto,
+              prod.ativo AS ativo_produto,
+              cli.nome AS nome_consumidor,
+              cli.cpf AS cpf_consumidor,
+              cli.cep AS cep_consumidor,
+              cli.endereco AS endereco_consumidor,
+              cli.bairro AS bairro_consumidor,
+              cli.numero AS numero_consumidor,
+              cli.cidade AS cidade_consumidor,
+              cli.estado AS estado_consumidor
+        FROM tbl_os os
+        LEFT JOIN tbl_produto prod ON os.produto_id = prod.produto
+        LEFT JOIN tbl_cliente cli ON os.cliente_id = cli.cliente
+        ORDER BY os.os ASC
     ";
 
     $result_query = pg_query($con, $query);
@@ -54,7 +54,20 @@ function geraCsv() {
 
         $resultado = fopen("php://output", 'w');
 
-        $cabecalho = ['OS', 'Data Abertura', 'Finalizada', 'Nome Consumidor', 'CPF Consumidor', 'CEP Consumidor', 'Endereço Consumidor', 'Bairro Consumidor', 'Número Consumidor', 'Cidade Consumidor', 'Estado Consumidor', 'Código Produto', 'Descrição Produto', 'Status Produto'];
+        $cabecalho = ['OS',
+                      'Data Abertura',
+                      'Finalizada',
+                      'Nome Consumidor',
+                      'CPF Consumidor',
+                      'CEP Consumidor',
+                      'Endereço Consumidor',
+                      'Bairro Consumidor',
+                      'Número Consumidor',
+                      'Cidade Consumidor',
+                      'Estado Consumidor',
+                      'Código Produto',
+                      'Descrição Produto',
+                      'Status Produto'];
         fputcsv($resultado, $cabecalho, ';');
 
         while ($row_query = pg_fetch_assoc($result_query)) {
@@ -86,7 +99,7 @@ function geraCsv() {
         exit();
     } else {
         $_SESSION['msg'] = "Erro: Nenhum registro encontrado.";
-        header("Location: menu.php");
+        header("Location: ../view/menu.php ");
         exit();
     }
 }

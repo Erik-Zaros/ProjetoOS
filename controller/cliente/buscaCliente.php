@@ -3,19 +3,19 @@
 include '../../model/dbconfig.php';
 
 function buscaCliente($cpf) {
-    
+
     global $con;
 
     $cpf = $_GET['cpf'];
-    $sql = "SELECT cpf, 
-                   nome, 
-                   cep, 
-                   endereco, 
-                   bairro, 
-                   numero, 
-                   cidade, 
-                   estado 
-                FROM tbl_cliente 
+    $sql = "SELECT cpf,
+                   nome,
+                   cep,
+                   endereco,
+                   bairro,
+                   numero,
+                   cidade,
+                   estado
+                FROM tbl_cliente
                 WHERE cpf = '$cpf'
             ";
     $result = pg_query($con, $sql);

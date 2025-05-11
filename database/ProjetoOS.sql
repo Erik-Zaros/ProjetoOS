@@ -2,7 +2,7 @@ CREATE DATABASE ProjetoOS;
 USE ProjetoOS;
 
 CREATE TABLE tbl_cliente (
-    id SERIAL PRIMARY KEY,
+    cliente SERIAL PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     cpf VARCHAR(14) UNIQUE NOT NULL,
     cep VARCHAR(10),
@@ -14,7 +14,7 @@ CREATE TABLE tbl_cliente (
 );
 
 CREATE TABLE tbl_produto (
-    id SERIAL PRIMARY KEY,
+    produto SERIAL PRIMARY KEY,
     codigo VARCHAR(50) NOT NULL,
     descricao VARCHAR(255) NOT NULL,
     ativo BOOLEAN DEFAULT FALSE

@@ -3,7 +3,7 @@
 include '../../model/dbconfig.php';
 
 function editaOS() {
-    
+
     global $con;
 
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -35,7 +35,7 @@ function editaOS() {
             exit;
         }
 
-        $cliente_sql = "SELECT id, nome FROM tbl_cliente WHERE cpf = $1";
+        $cliente_sql = "SELECT cliente, nome FROM tbl_cliente WHERE cpf = $1";
         $result_cliente = pg_query_params($con, $cliente_sql, [$cpf_consumidor]);
 
         if (pg_num_rows($result_cliente) > 0) {
@@ -47,7 +47,7 @@ function editaOS() {
                 pg_query_params($con, $update_nome_sql, [$nome_consumidor, $cliente_id]);
             }
         } else {
-            $insert_cliente_sql = "INSERT INTO tbl_cliente (nome, cpf) VALUES ($1, $2) RETURNING id";
+            $insert_cliente_sql = "INSERT INTO tbl_cliente (nome, cpf) VALUES ($1, $2) RETURNING cliente";
             $result_insert = pg_query_params($con, $insert_cliente_sql, [$nome_consumidor, $cpf_consumidor]);
 
             if (!$result_insert) {
@@ -58,7 +58,7 @@ function editaOS() {
             $cliente_id = $row_new['id'];
         }
 
-        $update_os_sql = "UPDATE tbl_os 
+        $update_os_sql = "UPDATE tbl_os
                           SET data_abertura = $1,
                               nome_consumidor = $2,
                               cpf_consumidor = $3,

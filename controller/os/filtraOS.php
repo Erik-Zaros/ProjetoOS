@@ -3,21 +3,21 @@
 include '../../model/dbconfig.php';
 
 function filtraOS() {
-    
+
     global $con;
 
     $conditions = [];
     $params = [];
 
-    $base_sql = "SELECT 
+    $base_sql = "SELECT
                     tbl_os.os,
                     tbl_os.nome_consumidor AS cliente,
                     tbl_os.cpf_consumidor AS cpf,
                     tbl_produto.descricao AS produto,
                     tbl_os.data_abertura,
-                    tbl_os.finalizada 
+                    tbl_os.finalizada
                 FROM tbl_os
-                INNER JOIN tbl_produto ON tbl_os.produto_id = tbl_produto.id
+                INNER JOIN tbl_produto ON tbl_os.produto_id = tbl_produto.produto
                 WHERE 1=1";
 
     if (!empty($_POST['os'])) {

@@ -1,8 +1,9 @@
 <?php
+
 $title = 'Detalhes da Ordem de Serviço';
 $pageTitle = 'DETALHES DA ORDEM DE SERVIÇO';
-require_once '../config/imports.php';
-require_once '../config/rotas.php';
+$customCss;
+$customJs;
 
 $os = isset($_GET['os']) && is_numeric($_GET['os']) ? intval($_GET['os']) : 0;
 ?>
@@ -44,12 +45,6 @@ $os = isset($_GET['os']) && is_numeric($_GET['os']) ? intval($_GET['os']) : 0;
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        carregarDetalhesOS(<?= $os ?>);
-    });
-</script>
 
 <?php
 $content = ob_get_clean();

@@ -13,7 +13,7 @@ function cadastraOS() {
     pg_query($con, 'BEGIN');
 
     try {
-        $sql = "SELECT id, nome FROM tbl_cliente WHERE cpf = $1";
+        $sql = "SELECT cliente, nome FROM tbl_cliente WHERE cpf = $1";
         $result_cliente = pg_query_params($con, $sql, [$cpf_consumidor]);
 
         if (pg_num_rows($result_cliente) > 0) {
@@ -21,12 +21,12 @@ function cadastraOS() {
             $cliente_id = $row_cliente['id'];
 
             if ($row_cliente['nome'] !== $nome_consumidor) {
-                $update_sql = "UPDATE tbl_cliente SET nome = $1 WHERE id = $2";
+                $update_sql = "UPDATE tbl_cliente SET nome = $1 WHERE cliente = $2";
                 pg_query_params($con, $update_sql, [$nome_consumidor, $cliente_id]);
             }
 
         } else {
-            $insert_cliente_sql = "INSERT INTO tbl_cliente (nome, cpf) VALUES ($1, $2) RETURNING id";
+            $insert_cliente_sql = "INSERT INTO tbl_cliente (nome, cpf) VALUES ($1, $2) RETURNING cliente";
             $insert_cliente_result = pg_query_params($con, $insert_cliente_sql, [$nome_consumidor, $cpf_consumidor]);
 
             if (!$insert_cliente_result) {

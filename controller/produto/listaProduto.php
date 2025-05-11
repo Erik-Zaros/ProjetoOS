@@ -6,7 +6,13 @@ function listaProduto() {
 
     global $con;
 
-    $sql = "SELECT id, codigo, descricao, ativo FROM tbl_produto";
+    $sql = "SELECT produto,
+                   codigo,
+                   descricao,
+                   ativo
+                FROM tbl_produto
+                ORDER BY codigo ASC
+            ";
 
     $result = pg_query($con, $sql);
 

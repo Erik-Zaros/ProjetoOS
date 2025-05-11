@@ -96,7 +96,7 @@ $(document).ready(function () {
                 $('#descricao').val(produto.descricao);
                 $('#ativo').prop('checked', produto.ativo == 't');
 
-                var id = produto.id;
+                var produto = produto.produto;
 
                 $('#produtoForm').off('submit').on('submit', function (e) {
                     e.preventDefault();
@@ -104,7 +104,7 @@ $(document).ready(function () {
                         url: '../controller/produto/editaProduto.php',
                         method: 'POST',
                         data: {
-                            id: id,
+                            produto: produto,
                             codigo: $('#codigo').val(),
                             descricao: $('#descricao').val(),
                             ativo: $('#ativo').is(':checked') ? 't' : 'f'

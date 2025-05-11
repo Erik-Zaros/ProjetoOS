@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 
 $os = isset($_GET['os']) && is_numeric($_GET['os']) ? intval($_GET['os']) : 0;
 
-$sql = "SELECT 
+$sql = "SELECT
             tbl_os.os,
             tbl_os.data_abertura,
             tbl_os.nome_consumidor,
@@ -13,8 +13,9 @@ $sql = "SELECT
             tbl_produto.descricao AS produto,
             tbl_os.finalizada
         FROM tbl_os
-        INNER JOIN tbl_produto ON tbl_os.produto_id = tbl_produto.id
-        WHERE tbl_os.os = $os";
+        INNER JOIN tbl_produto ON tbl_os.produto_id = tbl_produto.produto
+        WHERE tbl_os.os = $os
+    ";
 
 $result = pg_query($con, $sql);
 $ordem = pg_fetch_assoc($result);

@@ -3,7 +3,7 @@
 include '../../model/dbconfig.php';
 
 function buscaOS() {
-    
+
     global $con;
 
     if (!isset($_GET['os']) || !is_numeric($_GET['os'])) {
@@ -21,7 +21,7 @@ function buscaOS() {
                    tbl_os.finalizada,
                    tbl_os.produto_id
             FROM tbl_os
-            INNER JOIN tbl_produto ON tbl_os.produto_id = tbl_produto.id
+            INNER JOIN tbl_produto ON tbl_os.produto_id = tbl_produto.produto
             WHERE tbl_os.os = $1";
 
     $result = pg_query_params($con, $sql, [$os]);
@@ -37,5 +37,6 @@ function buscaOS() {
 }
 
 buscaOS();
+
 pg_close($con);
 ?>

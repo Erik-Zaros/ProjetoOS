@@ -17,6 +17,7 @@ function listaCliente() {
                    cidade, 
                    estado 
                 FROM tbl_cliente
+                ORDER BY cpf ASC
             ";
     $result = pg_query($con, $sql);
 

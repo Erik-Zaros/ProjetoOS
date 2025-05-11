@@ -62,8 +62,8 @@ function carregarProdutos(produtoSelecionado = null) {
 
                 produtos.forEach(function (produto) {
                     if (produto.ativo == 't') {
-                        var selected = (produtoSelecionado && produto.id == produtoSelecionado) ? 'selected' : '';
-                        $('#produto_id').append(`<option value="${produto.id}" ${selected}>${produto.descricao}</option>`);
+                        var selected = (produtoSelecionado && produto.produto == produtoSelecionado) ? 'selected' : '';
+                        $('#produto_id').append(`<option value="${produto.produto}" ${selected}>${produto.codigo} - ${produto.descricao}</option>`);
                     }
                 });
             } catch (e) {
@@ -192,7 +192,6 @@ $(document).ready(function () {
     carregarOs();
 
     function carregarDetalhesOS(os) {
-        console.log("Iniciando carregamento dos detalhes da OS:", os);
 
         $.ajax({
             url: '../controller/os/osPress.php',
@@ -200,7 +199,6 @@ $(document).ready(function () {
             data: { os: os },
             dataType: 'json',
             success: function (data) {
-                console.log("Dados recebidos:", data);
 
                 if (data.error) {
                     Swal.fire({
@@ -216,7 +214,7 @@ $(document).ready(function () {
                 $('#nomeConsumidor').text(data.nome_consumidor);
                 $('#cpfConsumidor').text(data.cpf_consumidor);
                 $('#produto').text(data.produto);
-                $('#status').html(data.finalizada ? '<span class="badge bg-success">Finalizada</span>' : '<span class="badge bg-warning">Em Aberto</span>');
+                $('#status').html((data.finalizada === true || data.finalizada === 't') ? '<span class="badge bg-success">Finalizada</span>' : '<span class="badge bg-warning">Em Aberto</span>');
             },
             error: function (xhr, status, error) {
                 Swal.fire({
