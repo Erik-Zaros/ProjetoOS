@@ -1,5 +1,7 @@
 <?php
 
+include_once '../controller/login/autentica_usuario.php';
+
 require_once '../config/rotas.php';
 require_once '../config/imports.php';
 $current_page = basename($_SERVER['PHP_SELF']);
@@ -69,7 +71,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <?php endif; ?>
                 <?php endforeach; ?>
             </ul>
+                <a href="../logout.php" class="nav-link text-danger">
+                    <i class="bi bi-box-arrow-right"></i> Sair
+                </a>
         </nav>
+
 
         <div class="flex-grow-1">
             <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">

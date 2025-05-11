@@ -1,5 +1,10 @@
 <?php
 
+include_once '../controller/login/autentica_usuario.php';
+
+$regra_arquivo = '../controller/regras_posto/posto_'. $login_posto . '/regras.php';
+include_once file_exists($regra_arquivo) ? $regra_arquivo : '../controller/regras_posto/default.php';
+
 $title = 'Menu';
 $pageTitle = 'MENU';
 $customCss;

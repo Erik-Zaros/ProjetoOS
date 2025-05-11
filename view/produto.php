@@ -1,5 +1,7 @@
 <?php
 
+include_once '../controller/login/autentica_usuario.php';
+
 $title = 'Cadastro de Produto';
 $pageTitle = 'CADASTRO DE PRODUTO';
 $customCss;

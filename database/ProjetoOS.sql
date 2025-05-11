@@ -29,3 +29,18 @@ CREATE TABLE tbl_os (
     cliente_id INTEGER REFERENCES tbl_cliente(id),
     finalizada BOOLEAN DEFAULT FALSE
 );
+
+CREATE TABLE tbl_posto (
+  posto SERIAL PRIMARY KEY,
+  nome TEXT NOT NULL,
+  ativo BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE tbl_usuario (
+  usuario SERIAL PRIMARY KEY,
+  login TEXT NOT NULL UNIQUE,
+  senha TEXT NOT NULL,
+  posto INTEGER REFERENCES tbl_posto(posto),
+  ativo BOOLEAN DEFAULT TRUE
+);
+

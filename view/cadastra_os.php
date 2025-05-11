@@ -1,5 +1,7 @@
 <?php
 
+include_once '../controller/login/autentica_usuario.php';
+
 $title = 'Cadastro de Ordem de Serviço';
 $pageTitle = 'CADASTRO DE ORDEM DE SERVIÇO';
 $customCss;
