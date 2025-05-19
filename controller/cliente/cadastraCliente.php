@@ -1,9 +1,10 @@
 <?php
 
 include '../../model/dbconfig.php';
+include '../login/autentica_usuario.php';
 
 function cadastraCliente() {
-    global $con;
+    global $con, $login_posto;
 
     $cpf      = $_POST['cpf'];
     $nome     = $_POST['nome'];
@@ -14,7 +15,7 @@ function cadastraCliente() {
     $cidade   = $_POST['cidade'];
     $estado   = $_POST['estado'];
 
-    $valida_cpf = "SELECT cpf FROM tbl_cliente WHERE cpf = '$cpf'";
+    $valida_cpf = "SELECT cpf FROM tbl_cliente WHERE cpf = '$cpf' AND posto = $login_posto";
     $result = pg_query($con, $valida_cpf);
 
     if (pg_num_rows($result) > 0) {
@@ -23,8 +24,8 @@ function cadastraCliente() {
             'message' => 'Cliente já cadastrado com esse CPF!'
         ]);
     } else {
-        $sql = "INSERT INTO tbl_cliente (cpf, nome, cep, endereco, bairro, numero, cidade, estado) 
-                VALUES ('$cpf', '$nome', '$cep', '$endereco', '$bairro', '$numero', '$cidade', '$estado')";
+        $sql = "INSERT INTO tbl_cliente (cpf, nome, cep, endereco, bairro, numero, cidade, estado, posto)
+                VALUES ('$cpf', '$nome', '$cep', '$endereco', '$bairro', '$numero', '$cidade', '$estado', $login_posto)";
 
         $insert = pg_query($con, $sql);
 

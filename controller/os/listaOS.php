@@ -1,10 +1,11 @@
 <?php
 
 include '../../model/dbconfig.php';
+include '../login/autentica_usuario.php';
 
 function listaOS() {
 
-    global $con;
+    global $con, $login_posto;
 
     $sql = "SELECT
                 tbl_os.os,
@@ -15,6 +16,7 @@ function listaOS() {
                 tbl_os.finalizada
             FROM tbl_os
             INNER JOIN tbl_produto ON tbl_os.produto_id = tbl_produto.produto
+            WHERE tbl_os.posto = $login_posto
             ORDER BY tbl_os.os ASC
         ";
 

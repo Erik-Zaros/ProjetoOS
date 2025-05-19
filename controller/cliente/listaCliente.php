@@ -1,22 +1,24 @@
 <?php
 
 include '../../model/dbconfig.php';
+include '../login/autentica_usuario.php';
 
 function listaCliente() {
 
-    global $con;
+    global $con, $login_posto;
 
     header('Content-Type: application/json');
 
-    $sql = "SELECT cpf, 
-                   nome, 
-                   cep, 
-                   endereco, 
-                   bairro, 
-                   numero, 
-                   cidade, 
-                   estado 
+    $sql = "SELECT cpf,
+                   nome,
+                   cep,
+                   endereco,
+                   bairro,
+                   numero,
+                   cidade,
+                   estado
                 FROM tbl_cliente
+                WHERE posto = $login_posto
                 ORDER BY cpf ASC
             ";
     $result = pg_query($con, $sql);

@@ -10,14 +10,16 @@ CREATE TABLE tbl_cliente (
     bairro VARCHAR(255),
     numero VARCHAR(10),
     cidade VARCHAR(255),
-    estado VARCHAR(10)
+    estado VARCHAR(10),
+    posto INTEGER REFERENCES tbl_posto(posto)
 );
 
 CREATE TABLE tbl_produto (
     produto SERIAL PRIMARY KEY,
     codigo VARCHAR(50) NOT NULL,
     descricao VARCHAR(255) NOT NULL,
-    ativo BOOLEAN DEFAULT FALSE
+    ativo BOOLEAN DEFAULT FALSE,
+    posto INTEGER REFERENCES tbl_posto(posto)
 );
 
 CREATE TABLE tbl_os (
@@ -27,7 +29,8 @@ CREATE TABLE tbl_os (
     cpf_consumidor VARCHAR(14) NOT NULL,
     produto_id INTEGER REFERENCES tbl_produto(id),
     cliente_id INTEGER REFERENCES tbl_cliente(id),
-    finalizada BOOLEAN DEFAULT FALSE
+    finalizada BOOLEAN DEFAULT FALSE,
+    posto INTEGER REFERENCES tbl_posto(posto)
 );
 
 CREATE TABLE tbl_posto (

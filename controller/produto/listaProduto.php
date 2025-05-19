@@ -1,16 +1,18 @@
 <?php
 
 include '../../model/dbconfig.php';
+include '../login/autentica_usuario.php';
 
 function listaProduto() {
 
-    global $con;
+    global $con, $login_posto;
 
     $sql = "SELECT produto,
                    codigo,
                    descricao,
                    ativo
                 FROM tbl_produto
+                WHERE posto = $login_posto
                 ORDER BY codigo ASC
             ";
 

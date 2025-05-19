@@ -1,10 +1,11 @@
 <?php
 
 include '../../model/dbconfig.php';
+include '../login/autentica_usuario.php';
 
 function editaCliente() {
 
-    global $con;
+    global $con, $login_posto;
 
     $cpf = $_POST['cpf'];
     $nome = $_POST['nome'];
@@ -15,16 +16,16 @@ function editaCliente() {
     $cidade = $_POST['cidade'];
     $estado = $_POST['estado'];
 
-    $sql = "UPDATE tbl_cliente 
-            SET nome = '$nome', 
-                cep = '$cep', 
-                endereco = '$endereco', 
-                bairro = '$bairro', 
+    $sql = "UPDATE tbl_cliente
+            SET nome = '$nome',
+                cep = '$cep',
+                endereco = '$endereco',
+                bairro = '$bairro',
                 numero = '$numero',
-                cidade = '$cidade', 
+                cidade = '$cidade',
                 estado = '$estado'
-            WHERE cpf = '$cpf'";
-
+            WHERE cpf = '$cpf'
+            AND posto = $login_posto";
     $update = pg_query($con, $sql);
 
     if ($update) {

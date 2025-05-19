@@ -3,7 +3,6 @@
 include '../../model/dbconfig.php';
 
 function editaOS() {
-
     global $con;
 
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -20,9 +19,8 @@ function editaOS() {
     pg_query($con, 'BEGIN');
 
     try {
-
-        $check_sql = "SELECT finalizada FROM tbl_os WHERE os = $1";
-        $result = pg_query_params($con, $check_sql, [$os]);
+        $check_sql = "SELECT finalizada FROM tbl_os WHERE os = $os";
+        $result = pg_query($con, $check_sql);
 
         if (pg_num_rows($result) === 0) {
             echo json_encode(["status" => "error", "message" => "Ordem de serviço não encontrada."]);
@@ -35,45 +33,37 @@ function editaOS() {
             exit;
         }
 
-        $cliente_sql = "SELECT cliente, nome FROM tbl_cliente WHERE cpf = $1";
-        $result_cliente = pg_query_params($con, $cliente_sql, [$cpf_consumidor]);
+        $cliente_sql = "SELECT cliente, nome FROM tbl_cliente WHERE cpf = '$cpf_consumidor'";
+        $result_cliente = pg_query($con, $cliente_sql);
 
         if (pg_num_rows($result_cliente) > 0) {
             $row_cliente = pg_fetch_assoc($result_cliente);
-            $cliente_id = $row_cliente['id'];
+            $cliente_id = $row_cliente['cliente'];
 
             if ($row_cliente['nome'] !== $nome_consumidor) {
-                $update_nome_sql = "UPDATE tbl_cliente SET nome = $1 WHERE id = $2";
-                pg_query_params($con, $update_nome_sql, [$nome_consumidor, $cliente_id]);
+                $update_nome_sql = "UPDATE tbl_cliente SET nome = '$nome_consumidor' WHERE cliente = $cliente_id";
+                pg_query($con, $update_nome_sql);
             }
         } else {
-            $insert_cliente_sql = "INSERT INTO tbl_cliente (nome, cpf) VALUES ($1, $2) RETURNING cliente";
-            $result_insert = pg_query_params($con, $insert_cliente_sql, [$nome_consumidor, $cpf_consumidor]);
+            $insert_cliente_sql = "INSERT INTO tbl_cliente (nome, cpf) VALUES ('$nome_consumidor', '$cpf_consumidor') RETURNING cliente";
+            $result_insert = pg_query($con, $insert_cliente_sql);
 
             if (!$result_insert) {
                 throw new Exception("Erro ao cadastrar cliente: " . pg_last_error($con));
             }
 
             $row_new = pg_fetch_assoc($result_insert);
-            $cliente_id = $row_new['id'];
+            $cliente_id = $row_new['cliente'];
         }
 
         $update_os_sql = "UPDATE tbl_os
-                          SET data_abertura = $1,
-                              nome_consumidor = $2,
-                              cpf_consumidor = $3,
-                              produto_id = $4,
-                              cliente_id = $5
-                          WHERE os = $6";
-
-        $update_result = pg_query_params($con, $update_os_sql, [
-            $data_abertura,
-            $nome_consumidor,
-            $cpf_consumidor,
-            $produto_id,
-            $cliente_id,
-            $os
-        ]);
+                          SET data_abertura = '$data_abertura',
+                              nome_consumidor = '$nome_consumidor',
+                              cpf_consumidor = '$cpf_consumidor',
+                              produto_id = $produto_id,
+                              cliente_id = $cliente_id
+                          WHERE os = $os";
+        $update_result = pg_query($con, $update_os_sql);
 
         if (!$update_result) {
             throw new Exception("Erro ao atualizar ordem de serviço: " . pg_last_error($con));
@@ -89,6 +79,6 @@ function editaOS() {
 }
 
 editaOS();
-
 pg_close($con);
 ?>
+

@@ -1,6 +1,7 @@
 <?php
 
 include '../../model/dbconfig.php';
+include '../login/autentica_usuario.php';
 header('Content-Type: application/json');
 
 $os = isset($_GET['os']) && is_numeric($_GET['os']) ? intval($_GET['os']) : 0;
@@ -15,6 +16,7 @@ $sql = "SELECT
         FROM tbl_os
         INNER JOIN tbl_produto ON tbl_os.produto_id = tbl_produto.produto
         WHERE tbl_os.os = $os
+        AND tbl_os.posto = $login_posto
     ";
 
 $result = pg_query($con, $sql);

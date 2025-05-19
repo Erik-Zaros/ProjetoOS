@@ -1,15 +1,16 @@
 <?php
 
 include '../../model/dbconfig.php';
+include '../login/autentica_usuario.php';
 
 function finalizaOS() {
 
-    global $con;
+    global $con, $login_posto;
 
     $os = $_POST['os'] ?? '';
 
     if (!empty($os)) {
-        $sql = "UPDATE tbl_os SET finalizada = 't' WHERE os = '$os'";
+        $sql = "UPDATE tbl_os SET finalizada = 't' WHERE os = '$os' AND posto = $login_posto";
 
         $update = pg_query($con, $sql);
 

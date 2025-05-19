@@ -1,10 +1,11 @@
 <?php
 
 include '../../model/dbconfig.php';
+include '../login/autentica_usuario.php';
 
 function buscaCliente($cpf) {
 
-    global $con;
+    global $con, $login_posto;
 
     $cpf = $_GET['cpf'];
     $sql = "SELECT cpf,
@@ -17,6 +18,7 @@ function buscaCliente($cpf) {
                    estado
                 FROM tbl_cliente
                 WHERE cpf = '$cpf'
+                AND posto = $login_posto
             ";
     $result = pg_query($con, $sql);
 
