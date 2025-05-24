@@ -14,6 +14,10 @@ $imports = [
             "../public/ajax/main.js"
         ]
     ],
+    "usuario" => [
+        "css" => ["../public/css/cliente.css"],
+        "js" => ["../public/ajax/usuario.js"]
+    ],
     "menu" => [
         "css" => ["../public/css/menu.css"],
         "js" => ["../public/ajax/menu.js"]

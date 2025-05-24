@@ -4,10 +4,11 @@ session_start();
 ob_start();
 
 include '../model/dbconfig.php';
+include 'login/autentica_usuario.php';
 
 function geraCsv() {
 
-    global $con;
+    global $con, $login_posto;
 
     $query_verifica = "SELECT
             (SELECT COUNT(*) FROM tbl_cliente) AS total_clientes,
@@ -43,6 +44,8 @@ function geraCsv() {
         FROM tbl_os os
         LEFT JOIN tbl_produto prod ON os.produto_id = prod.produto
         LEFT JOIN tbl_cliente cli ON os.cliente_id = cli.cliente
+        LEFT JOIN tbl_posto posto ON posto.posto = os.posto
+        WHERE posto.posto = $login_posto
         ORDER BY os.os ASC
     ";
 
@@ -71,8 +74,8 @@ function geraCsv() {
         fputcsv($resultado, $cabecalho, ';');
 
         while ($row_query = pg_fetch_assoc($result_query)) {
-            $finalizada = $row_query['finalizada'] ? 'Sim' : 'Não';
-            $ativo = $row_query['ativo_produto'] ? 'Ativo' : 'Inativo';
+            $finalizada = $row_query['finalizada'] == 't' ? 'Sim' : 'Não';
+            $ativo = $row_query['ativo_produto'] == 't' ? 'Ativo' : 'Inativo';
             $dataFormatada = date('d/m/Y', strtotime($row_query['data_abertura']));
 
             $linha = [

@@ -23,7 +23,7 @@ $res = pg_query_params($con, $sql, [$login]);
 if (pg_num_rows($res) === 1) {
   $row = pg_fetch_assoc($res);
 
-  if ($row['senha'] !== $senha) {
+   if (!password_verify($senha, $row['senha'])) {
     echo json_encode(['success' => false, 'message' => 'Senha incorreta']);
     exit;
   }

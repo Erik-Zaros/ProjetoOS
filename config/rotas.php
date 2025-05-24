@@ -1,5 +1,10 @@
 <?php
 $rotas = [
+    "usuarios" => [
+        "titulo" => "Usuários Admin",
+        "icone" => "bi bi-person-circle",
+        "link" => "usuarios.php"
+    ],
     "dashboard" => [
         "titulo" => "Dashboard Geral",
         "icone" => "bi bi-pie-chart-fill",
