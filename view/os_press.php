@@ -1,6 +1,7 @@
 <?php
 
-include_once '../controller/login/autentica_usuario.php';
+require_once '../controller/login/autentica_usuario.php';
+include_once '../controller/funcoes.php';
 
 $title = 'Detalhes da Ordem de Serviço';
 $pageTitle = 'DETALHES DA ORDEM DE SERVIÇO';
@@ -8,6 +9,8 @@ $customCss;
 $customJs;
 
 $os = isset($_GET['os']) && is_numeric($_GET['os']) ? intval($_GET['os']) : 0;
+
+$osFinalizada = verificaOsFinalizada($os, $login_posto);
 ?>
 
 <div class="card shadow-sm mb-4">
@@ -42,7 +45,7 @@ $os = isset($_GET['os']) && is_numeric($_GET['os']) ? intval($_GET['os']) : 0;
         </table>
 
         <div class="text-end mt-3">
-            <a href="cadastra_os.php?os=<?= $os ?>" class="btn btn-primary btn-sm me-2">Alterar</a>
+            <?= $osFinalizada == 't' ? "" : "<a href='cadastra_os.php?os=$os' class='btn btn-primary btn-sm me-2'>Alterar</a>" ?>
             <a href="consulta_os.php" class="btn btn-secondary btn-sm">Voltar</a>
         </div>
     </div>

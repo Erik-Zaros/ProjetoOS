@@ -1,7 +1,7 @@
 <?php
 
-include_once '../controller/login/autentica_usuario.php';
-include '../controller/funcoes.php';
+require_once '../controller/login/autentica_usuario.php';
+include_once '../controller/funcoes.php';
 require_once '../config/rotas.php';
 require_once '../config/imports.php';
 $current_page = basename($_SERVER['PHP_SELF']);
