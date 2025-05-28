@@ -8,6 +8,7 @@ function editaUsuario() {
 
     $usuario_id = intval($_POST['usuario']);
     $login = $_POST['login'];
+    $nome = $_POST['nome'];
     $ativo = (isset($_POST['ativo']) && $_POST['ativo'] === 'on') ? 'true' : 'false';
     $senha = $_POST['senha'];
 
@@ -17,7 +18,7 @@ function editaUsuario() {
         $senha_sql = ", senha = '$senha_hash'";
     }
 
-    $sql = "UPDATE tbl_usuario SET login = '$login', ativo = $ativo $senha_sql WHERE usuario = $usuario_id AND posto = $login_posto";
+    $sql = "UPDATE tbl_usuario SET login = '$login', ativo = $ativo $senha_sql, nome = $nome WHERE usuario = $usuario_id AND posto = $login_posto";
     $update = pg_query($con, $sql);
 
     if ($update) {

@@ -11,6 +11,7 @@ function carregarUsuarios() {
                         <tr>
                             <td>${usuario.usuario}</td>
                             <td>${usuario.login}</td>
+                            <td>${usuario.nome}</td>
                             <td>
                                 ${usuario.ativo === 't' || usuario.ativo === true ? '<span class="badge bg-success">Sim</span>' : '<span class="badge bg-danger">Não</span>'}
                             </td>
@@ -82,13 +83,12 @@ $(document).ready(function () {
                 var usuario = JSON.parse(data);
 
                 $('#login').val(usuario.login);
+                $('#nome').val(usuario.nome);
                 $('#senha').val('');
                 $('#ativo').prop('checked', usuario.ativo === 't' || usuario.ativo === true);
 
-                // Bloqueia o campo login ao editar (evita duplicidade)
                 $('#login').prop('readonly', true);
 
-                // Altera o submit para modo editar
                 $('#usuarioForm').off('submit').on('submit', function (e) {
                     e.preventDefault();
 
@@ -118,7 +118,6 @@ $(document).ready(function () {
                                     $('#usuarioForm')[0].reset();
                                     $('#login').prop('readonly', false);
 
-                                    // Volta ao modo cadastro
                                     $('#usuarioForm').off('submit').on('submit', function (e) {
                                         e.preventDefault();
                                         const cadastroData = $(this).serializeArray();

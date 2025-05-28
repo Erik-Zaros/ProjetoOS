@@ -7,7 +7,7 @@ function buscaUsuario($usuario_id) {
     global $con, $login_posto;
 
     $usuario_id = intval($_GET['usuario']);
-    $sql = "SELECT usuario, login, ativo FROM tbl_usuario WHERE usuario = $usuario_id AND posto = $login_posto";
+    $sql = "SELECT usuario, login, nome, ativo FROM tbl_usuario WHERE usuario = $usuario_id AND posto = $login_posto";
     $result = pg_query($con, $sql);
 
     if (pg_num_rows($result) > 0) {

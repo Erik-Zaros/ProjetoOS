@@ -1,10 +1,11 @@
 <?php
 
 include '../../model/dbconfig.php';
+include '../login/autentica_usuario.php';
 
 function cadastraOS() {
 
-    global $con;
+    global $con, $login_posto;
 
     $data_abertura   = $_POST['data_abertura'];
     $nome_consumidor = $_POST['nome_consumidor'];
@@ -26,7 +27,7 @@ function cadastraOS() {
                 pg_query($con, $update_sql);
             }
         } else {
-            $insert_cliente_sql = "INSERT INTO tbl_cliente (nome, cpf) VALUES ('$nome_consumidor', '$cpf_consumidor') RETURNING cliente";
+            $insert_cliente_sql = "INSERT INTO tbl_cliente (nome, cpf, posto) VALUES ('$nome_consumidor', '$cpf_consumidor', $login_posto) RETURNING cliente";
             $insert_cliente_result = pg_query($con, $insert_cliente_sql);
 
             if (!$insert_cliente_result) {
@@ -37,8 +38,8 @@ function cadastraOS() {
             $cliente_id = $row['cliente'];
         }
 
-        $insert_os_sql = "INSERT INTO tbl_os (data_abertura, nome_consumidor, cpf_consumidor, produto_id, cliente_id)
-                            VALUES ('$data_abertura', '$nome_consumidor', '$cpf_consumidor', $produto_id, $cliente_id)";
+        $insert_os_sql = "INSERT INTO tbl_os (data_abertura, nome_consumidor, cpf_consumidor, produto_id, cliente_id, posto)
+                            VALUES ('$data_abertura', '$nome_consumidor', '$cpf_consumidor', $produto_id, $cliente_id, $login_posto)";
         $insert_os_result = pg_query($con, $insert_os_sql);
 
         if (!$insert_os_result) {

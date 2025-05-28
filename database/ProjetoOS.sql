@@ -43,6 +43,7 @@ CREATE TABLE tbl_usuario (
   usuario SERIAL PRIMARY KEY,
   login TEXT NOT NULL UNIQUE,
   senha TEXT NOT NULL,
+  nome TEXT NOT NULL,
   posto INTEGER REFERENCES tbl_posto(posto),
   ativo BOOLEAN DEFAULT TRUE
 );

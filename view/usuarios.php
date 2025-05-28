@@ -24,6 +24,10 @@ ob_start();
                     <input type="password" class="form-control" id="senha" name="senha" required maxlength="50">
                 </div>
                 <div class="col-md-4">
+                    <label for="nome" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="nome" name="nome" required maxlength="50">
+                </div>
+                <div class="col-md-4">
                     <label for="ativo" class="form-label d-block">Ativo</label>
                     <div class="form-check form-switch mt-2">
                         <input class="form-check-input" type="checkbox" id="ativo" name="ativo" checked>
@@ -46,6 +50,7 @@ ob_start();
                 <tr>
                     <th>ID</th>
                     <th>Login</th>
+                    <th>Nome</th>
                     <th>Ativo</th>
                     <th>Ações</th>
                 </tr>
