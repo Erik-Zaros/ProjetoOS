@@ -1,9 +1,18 @@
 <?php
 
-require_once '../controller/login/autentica_usuario.php';
-include_once '../controller/funcoes.php';
-require_once '../config/rotas.php';
-require_once '../config/imports.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use App\Auth\Autenticador;
+use App\Core\Db;
+use App\Service\FuncoesService;
+Autenticador::iniciar();
+
+$con = Db::getConnection();
+
+$posto = Autenticador::getPosto();
+
+require_once __DIR__ . '/../config/menus/rotas.php';
+require_once __DIR__ . '/../config/assets/imports.php';
 $current_page = basename($_SERVER['PHP_SELF']);
 
 ?>
@@ -81,7 +90,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
                 <div class="container-fluid">
                     <button class="btn btn-dark" id="sidebarToggle">&#9776;</button>
-                     <span class="navbar-brand w-100 text-center"><?php $nomePosto = buscaNomePosto($login_posto); echo $nomePosto; ?></span>
+                     <span class="navbar-brand w-100 text-center"><?php echo FuncoesService::buscaNomePosto($posto); ?></span>
                     <span class="navbar-brand ms-auto"><?= $pageTitle ?? ''; ?></span>
                 </div>
             </nav>

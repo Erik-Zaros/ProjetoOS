@@ -1,6 +1,6 @@
 function carregarClientes() {
     $.ajax({
-        url: '../controller/cliente/listaCliente.php',
+        url: '../public/cliente/listar.php',
         method: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -49,7 +49,7 @@ $(document).ready(function () {
         const cep = $('#cep').val().replace('-', '');
         if (cep.length === 8) {
             $.ajax({
-                url: '../controller/cep/buscaCep.php',
+                url: '../public/cep/buscar.php',
                 method: 'POST',
                 data: { cep: cep },
                 success: function (data) {
@@ -91,7 +91,7 @@ $(document).ready(function () {
         formData.push({ name: 'cep', value: cepSemHifen });
 
         $.ajax({
-            url: '../controller/cliente/cadastraCliente.php',
+            url: '../public/cliente/cadastrar.php',
             method: 'POST',
             data: $.param(formData),
             success: function (response) {
@@ -120,7 +120,7 @@ $(document).ready(function () {
     $(document).on('click', '.editar', function () {
     var cpf = $(this).data('cpf');
     $.ajax({
-        url: '../controller/cliente/buscaCliente.php',
+        url: '../public/cliente/buscar.php',
         method: 'GET',
         data: { cpf: cpf },
         success: function (data) {
@@ -139,7 +139,7 @@ $(document).ready(function () {
                 e.preventDefault();
                 const cepSemHifen = $('#cep').val().replace('-', '');
                 $.ajax({
-                    url: '../controller/cliente/editaCliente.php',
+                    url: '../public/cliente/editar.php',
                     method: 'POST',
                     data: {
                         cpf: cliente.cpf,

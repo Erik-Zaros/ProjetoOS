@@ -1,6 +1,11 @@
 <?php
 
-include_once '../controller/login/autentica_usuario.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use App\Auth\Autenticador;
+
+Autenticador::iniciar();
+$posto = Autenticador::getPosto();
 
 $title = 'Cadastro de Ordem de Serviço';
 $pageTitle = 'CADASTRO DE ORDEM DE SERVIÇO';

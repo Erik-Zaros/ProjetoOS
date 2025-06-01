@@ -6,7 +6,7 @@ $(document).ready(function () {
     const senha = $('#senha').val();
 
     $.ajax({
-      url: 'controller/login/valida_login.php',
+      url: 'public/auth/login.php',
       type: 'POST',
       dataType: 'json',
       data: { login, senha },

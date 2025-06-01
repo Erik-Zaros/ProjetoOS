@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function carregarDadosOS(os) {
     $.ajax({
-        url: '../controller/os/buscaOS.php',
+        url: '../public/os/buscar.php',
         method: 'GET',
         data: { os: os },
         dataType: 'json',
@@ -51,7 +51,7 @@ function carregarDadosOS(os) {
 
 function carregarProdutos(produtoSelecionado = null) {
     $.ajax({
-        url: '../controller/produto/listaProduto.php',
+        url: '../public/produto/listar.php',
         method: 'GET',
         cache: false,
         success: function (data) {
@@ -86,7 +86,7 @@ function carregarProdutos(produtoSelecionado = null) {
 
 function editaOS(os) {
     $.ajax({
-        url: '../controller/os/editaOS.php',
+        url: '../public/os/editar.php',
         method: 'POST',
         data: $('#osForm').serialize(),
         dataType: 'json',
@@ -122,7 +122,7 @@ $(document).ready(function () {
         $('#osForm').on('submit', function (e) {
             e.preventDefault();
             $.ajax({
-                url: '../controller/os/cadastraOS.php',
+                url: '../public/os/cadastrar.php',
                 method: 'POST',
                 dataType: 'json',
                 data: $(this).serialize(),
@@ -153,7 +153,7 @@ $(document).ready(function () {
 
     function carregarOs() {
         $.ajax({
-            url: '../controller/os/listaOS.php',
+            url: '../public/os/listar.php',
             method: 'GET',
             dataType: 'json',
             success: function (data) {
@@ -192,9 +192,9 @@ $(document).ready(function () {
     carregarOs();
 
     function carregarDetalhesOS(os) {
-
+//osPress
         $.ajax({
-            url: '../controller/os/osPress.php',
+            url: '../public/os/press.php',
             method: 'GET',
             data: { os: os },
             dataType: 'json',
@@ -239,7 +239,7 @@ $(document).ready(function () {
         e.preventDefault();
         var formData = $(this).serialize();
         $.ajax({
-            url: '../controller/os/filtraOS.php',
+            url: '../public/os/filtrar.php',
             method: 'POST',
             data: formData,
             dataType: 'json',
@@ -293,14 +293,14 @@ $(document).ready(function () {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: '../controller/os/finalizaOS.php',
+                    url: '../public/os/finalizar.php',
                     method: 'POST',
                     data: { os: os },
                     success: function (response) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Finalizado!',
-                            text: response,
+                            text: response.message,
                         }).then(() => {
                             carregarOs();
                         });

@@ -1,6 +1,6 @@
 function carregarUsuarios() {
     $.ajax({
-        url: '../controller/usuario/listaUsuario.php',
+        url: '../public/usuario/listar.php',
         method: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -47,7 +47,7 @@ $(document).ready(function () {
         const formData = $(this).serializeArray();
 
         $.ajax({
-            url: '../controller/usuario/cadastraUsuario.php',
+            url: '../public/usuario/cadastrar.php',
             method: 'POST',
             data: $.param(formData),
             success: function (response) {
@@ -76,12 +76,10 @@ $(document).ready(function () {
     $(document).on('click', '.editar', function () {
         var usuario_id = $(this).data('usuario');
         $.ajax({
-            url: '../controller/usuario/buscaUsuario.php',
+            url: '../public/usuario/buscar.php',
             method: 'GET',
             data: { usuario: usuario_id },
-            success: function (data) {
-                var usuario = JSON.parse(data);
-
+            success: function (usuario) {
                 $('#login').val(usuario.login);
                 $('#nome').val(usuario.nome);
                 $('#senha').val('');
@@ -96,11 +94,10 @@ $(document).ready(function () {
                     formData.push({ name: 'usuario', value: usuario.usuario });
 
                     $.ajax({
-                        url: '../controller/usuario/editaUsuario.php',
+                        url: '../public/usuario/editar.php',
                         method: 'POST',
                         data: $.param(formData),
-                        success: function (response) {
-                            let res = JSON.parse(response);
+                        success: function (res) {
 
                             if (res.status === 'error') {
                                 Swal.fire({
@@ -125,8 +122,7 @@ $(document).ready(function () {
                                             url: '../controller/usuario/cadastraUsuario.php',
                                             method: 'POST',
                                             data: $.param(cadastroData),
-                                            success: function (response) {
-                                                let res = JSON.parse(response);
+                                            success: function (response) {;
                                                 if (res.status === 'error') {
                                                     Swal.fire({
                                                         icon: 'error',

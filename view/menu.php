@@ -1,9 +1,10 @@
 <?php
 
-include_once '../controller/login/autentica_usuario.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
-$regra_arquivo = '../controller/regras_posto/posto_'. $login_posto . '/regras.php';
-include_once file_exists($regra_arquivo) ? $regra_arquivo : '../controller/regras_posto/default.php';
+use App\Auth\Autenticador;
+
+Autenticador::iniciar();
 
 $title = 'Menu';
 $pageTitle = 'MENU';
@@ -13,7 +14,7 @@ ob_start();
 ?>
 
     <div class="text-center mt-4 mb-3">
-        <a href="../controller/geraCsv.php" class="btn btn-outline-success btn-sm">Download Excel</a>
+        <a href="../public/relatorio/relatorio.php" class="btn btn-outline-success btn-sm">Download Excel</a>
     </div>
 
     <div class="row">

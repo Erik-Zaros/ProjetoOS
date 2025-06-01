@@ -1,7 +1,11 @@
 <?php
 
-require_once '../controller/login/autentica_usuario.php';
-include_once '../controller/funcoes.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use App\Auth\Autenticador;
+use App\Controller\OsController;
+
+Autenticador::iniciar();
 
 $title = 'Detalhes da Ordem de Serviço';
 $pageTitle = 'DETALHES DA ORDEM DE SERVIÇO';
@@ -10,7 +14,9 @@ $customJs;
 
 $os = isset($_GET['os']) && is_numeric($_GET['os']) ? intval($_GET['os']) : 0;
 
-$osFinalizada = verificaOsFinalizada($os, $login_posto);
+$posto = Autenticador::getPosto();
+$osInfo = OsController::buscarPorNumero($os, $posto);
+$osFinalizada = $osInfo['finalizada'] ?? false;
 ?>
 
 <div class="card shadow-sm mb-4">

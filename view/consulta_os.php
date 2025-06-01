@@ -1,6 +1,10 @@
 <?php
 
-include_once '../controller/login/autentica_usuario.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use App\Auth\Autenticador;
+
+Autenticador::iniciar();
 
 $title = 'Consulta de Ordem de Serviço';
 $pageTitle = 'CONSULTA DE ORDEM DE SERVIÇO';
