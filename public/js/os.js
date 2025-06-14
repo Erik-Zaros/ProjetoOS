@@ -192,7 +192,7 @@ $(document).ready(function () {
     carregarOs();
 
     function carregarDetalhesOS(os) {
-//osPress
+
         $.ajax({
             url: '../public/os/press.php',
             method: 'GET',
@@ -317,4 +317,28 @@ $(document).ready(function () {
         });
     });
 });
+
+$(function() {
+  $("#nome_consumidor").autocomplete({
+    minLength: 2,
+    source: function(request, response) {
+      $.ajax({
+        url: "../public/cliente/autocomplete.php",
+        dataType: "json",
+        data: {
+          term: request.term
+        },
+        success: function(data) {
+          response(data);
+        }
+      });
+    },
+    select: function(event, ui) {
+      $("#nome_consumidor").val(ui.item.value);
+      $("#cpf_consumidor").val(ui.item.cpf);
+      return false;
+    }
+  });
+});
+
 });

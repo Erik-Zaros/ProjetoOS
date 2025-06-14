@@ -96,4 +96,27 @@ class Cliente
 
         return $clientes;
     }
+
+    public static function autocompleteClientes($termo, $posto)
+    {
+        $con = Db::getConnection();
+
+        $sql = "SELECT nome, cpf, cep FROM tbl_cliente 
+                WHERE cep IS NOT NULL AND cep <> '' 
+                AND nome ILIKE $1 
+                AND posto = $2
+                ORDER BY nome LIMIT 20";
+        $res = pg_query_params($con, $sql, ["%$termo%", $posto]);
+
+        $sugestoes = [];
+        while ($row = pg_fetch_assoc($res)) {
+            $sugestoes[] = [
+                'label' => $row['nome'] . " (" . $row['cpf'] . ")",
+                'value' => $row['nome'],
+                'cpf'   => $row['cpf'],
+                'cep'   => $row['cep']
+            ];
+        }
+        return $sugestoes;
+    }
 }

@@ -41,8 +41,8 @@ class RelatorioController
                   cli.cidade AS cidade_consumidor,
                   cli.estado AS estado_consumidor
             FROM tbl_os os
-            LEFT JOIN tbl_produto prod ON os.produto_id = prod.produto
-            LEFT JOIN tbl_cliente cli ON os.cliente_id = cli.cliente
+            LEFT JOIN tbl_produto prod ON os.produto = prod.produto
+            LEFT JOIN tbl_cliente cli ON os.cliente = cli.cliente
             WHERE os.posto = $1
             ORDER BY os.os ASC";
 

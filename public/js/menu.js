@@ -169,7 +169,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         function carregarGraficoPizzaStatusProduto(dados) {
-            console.log("Dados recebidos para o gráfico:", dados);
 
             const produtoInativo = Number(dados.produto_inativo) || 0;
             const produtoAtivo = Number(dados.produto_ativo) || 0;

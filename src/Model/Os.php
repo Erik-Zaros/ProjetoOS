@@ -49,14 +49,14 @@ class Os
                 $cliente_id = $cliente_row['cliente'];
             }
 
-            $insert_os = "INSERT INTO tbl_os (data_abertura, nome_consumidor, cpf_consumidor, produto_id, cliente_id, posto)
+            $insert_os = "INSERT INTO tbl_os (data_abertura, nome_consumidor, cpf_consumidor, produto, cliente, posto)
                           VALUES ($1, $2, $3, $4, $5, $6)";
 
             $res_os = pg_query_params($con, $insert_os, [
                 $this->dados['data_abertura'],
                 $this->dados['nome_consumidor'],
                 $this->dados['cpf_consumidor'],
-                $this->dados['produto_id'],
+                $this->dados['produto'],
                 $cliente_id,
                 $this->posto
             ]);
@@ -116,13 +116,13 @@ class Os
             }
 
             $update_os = "UPDATE tbl_os SET data_abertura = $1, nome_consumidor = $2, cpf_consumidor = $3,
-                          produto_id = $4, cliente_id = $5 WHERE os = $6";
+                          produto = $4, cliente_id = $5 WHERE os = $6";
 
             $res_update = pg_query_params($con, $update_os, [
                 $this->dados['data_abertura'],
                 $this->dados['nome_consumidor'],
                 $this->dados['cpf_consumidor'],
-                $this->dados['produto_id'],
+                $this->dados['produto'],
                 $cliente_id,
                 $os
             ]);
@@ -145,9 +145,9 @@ class Os
         $con = Db::getConnection();
 
         $sql = "SELECT os.os, os.data_abertura, os.nome_consumidor, os.cpf_consumidor,
-                       p.descricao AS produto, os.finalizada, os.produto_id
+                       p.descricao AS produto, os.finalizada, os.produto
                 FROM tbl_os os
-                INNER JOIN tbl_produto p ON os.produto_id = p.produto
+                INNER JOIN tbl_produto p ON os.produto = p.produto
                 WHERE os.os = $1";
 
         $res = pg_query_params($con, $sql, [$os]);
@@ -171,7 +171,7 @@ class Os
         $con = Db::getConnection();
 
         $sql = "SELECT os, nome_consumidor AS cliente, cpf_consumidor AS cpf, data_abertura, finalizada,
-                       (SELECT descricao FROM tbl_produto WHERE produto = tbl_os.produto_id) AS produto
+                       (SELECT descricao FROM tbl_produto WHERE produto = tbl_os.produto) AS produto
                 FROM tbl_os
                 WHERE posto = $1
                 ORDER BY os ASC";
@@ -181,6 +181,7 @@ class Os
 
         while ($row = pg_fetch_assoc($res)) {
             $row['finalizada'] = $row['finalizada'] === 't';
+            $row['data_abertura'] = date('d/m/Y', strtotime($row['data_abertura']));
             $lista[] = $row;
         }
 
@@ -202,7 +203,7 @@ class Os
                     os.data_abertura,
                     os.finalizada
                 FROM tbl_os os
-                INNER JOIN tbl_produto p ON os.produto_id = p.produto
+                INNER JOIN tbl_produto p ON os.produto = p.produto
                 WHERE 1=1";
 
         if (!empty($filtros['os'])) {
@@ -258,7 +259,7 @@ class Os
                     p.descricao AS produto,
                     os.finalizada
                 FROM tbl_os os
-                INNER JOIN tbl_produto p ON os.produto_id = p.produto
+                INNER JOIN tbl_produto p ON os.produto = p.produto
                 WHERE os.os = $1 AND os.posto = $2";
 
         $res = pg_query_params($con, $sql, [$os, $posto]);

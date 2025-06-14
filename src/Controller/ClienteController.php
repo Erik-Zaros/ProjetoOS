@@ -28,4 +28,9 @@ class ClienteController
     {
         return Cliente::listarTodos($posto);
     }
+
+    public static function autocomplete($termo, $posto)
+    {
+        return Cliente::autocompleteClientes($termo, $posto);
+    }
 }
