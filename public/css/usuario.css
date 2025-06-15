@@ -23,9 +23,9 @@
     padding: 5px 10px;
 }
 
-#clientesTable tr.stripe1 td, #clientesTable tr.stripe1 th {
+#usuariosTable tr.stripe1 td, #usuariosTable tr.stripe1 th {
     background-color: #f2f2f2;
 }
-#clientesTable tr.stripe2 td, #clientesTable tr.stripe2 th {
+#usuariosTable tr.stripe2 td, #usuariosTable tr.stripe2 th {
     background-color: #fff;
 }

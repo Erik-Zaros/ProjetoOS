@@ -19,19 +19,21 @@ class Produto
     {
         $con = Db::getConnection();
 
-        $check = pg_query_params($con,
-            "SELECT 1 FROM tbl_produto WHERE codigo = $1 AND descricao = $2 AND posto = $3",
-            [$this->dados['codigo'], $this->dados['descricao'], $this->posto]
-        );
+        $codigo    = pg_escape_string($this->dados['codigo']);
+        $descricao = pg_escape_string($this->dados['descricao']);
+        $ativo     = ($this->dados['ativo'] === 't') ? 't' : 'f';
+        $posto     = intval($this->posto);
+
+        $sqlCheck = "SELECT 1 FROM tbl_produto WHERE codigo = '{$codigo}' AND descricao = '{$descricao}' AND posto = {$posto}";
+        $check = pg_query($con, $sqlCheck);
 
         if (pg_num_rows($check) > 0) {
             return ['status' => 'error', 'message' => 'Produto já cadastrado com esse código e descrição!'];
         }
 
-        $insert = pg_query_params($con,
-            "INSERT INTO tbl_produto (codigo, descricao, ativo, posto) VALUES ($1, $2, $3, $4)",
-            [$this->dados['codigo'], $this->dados['descricao'], $this->dados['ativo'] === 't', $this->posto]
-        );
+        $sqlInsert = "INSERT INTO tbl_produto (codigo, descricao, ativo, posto)
+                      VALUES ('{$codigo}', '{$descricao}', '{$ativo}', {$posto})";
+        $insert = pg_query($con, $sqlInsert);
 
         return $insert
             ? ['status' => 'success', 'message' => 'Produto cadastrado com sucesso!']
@@ -41,31 +43,37 @@ class Produto
     public static function buscarPorCodigo($codigo, $posto)
     {
         $con = Db::getConnection();
-        $res = pg_query_params($con,
-            "SELECT produto, codigo, descricao, ativo FROM tbl_produto WHERE codigo = $1 AND posto = $2",
-            [$codigo, $posto]
-        );
+        $codigo = pg_escape_string($codigo);
+        $posto = intval($posto);
 
-        return pg_num_rows($res) > 0 ? pg_fetch_assoc($res) : ['success' => false, 'error' => 'Produto não encontrado.'];
+        $sql = "SELECT produto, codigo, descricao, ativo FROM tbl_produto WHERE codigo = '{$codigo}' AND posto = {$posto}";
+        $res = pg_query($con, $sql);
+
+        return pg_num_rows($res) > 0
+            ? pg_fetch_assoc($res)
+            : ['success' => false, 'error' => 'Produto não encontrado.'];
     }
 
     public function atualizar()
     {
         $con = Db::getConnection();
 
-        $check = pg_query_params($con,
-            "SELECT 1 FROM tbl_produto WHERE codigo = $1 AND descricao = $2 AND produto != $3 AND posto = $4",
-            [$this->dados['codigo'], $this->dados['descricao'], $this->dados['produto'], $this->posto]
-        );
+        $codigo    = pg_escape_string($this->dados['codigo']);
+        $descricao = pg_escape_string($this->dados['descricao']);
+        $ativo     = ($this->dados['ativo'] === 't') ? 't' : 'f';
+        $produto   = intval($this->dados['produto']);
+        $posto     = intval($this->posto);
+
+        $sqlCheck = "SELECT 1 FROM tbl_produto WHERE codigo = '{$codigo}' AND descricao = '{$descricao}' AND produto != {$produto} AND posto = {$posto}";
+        $check = pg_query($con, $sqlCheck);
 
         if (pg_num_rows($check) > 0) {
             return ['status' => 'error', 'message' => 'Já existe um produto com esse código e descrição.'];
         }
 
-        $update = pg_query_params($con,
-            "UPDATE tbl_produto SET codigo = $1, descricao = $2, ativo = $3 WHERE produto = $4 AND posto = $5",
-            [$this->dados['codigo'], $this->dados['descricao'], $this->dados['ativo'] === 't', $this->dados['produto'], $this->posto]
-        );
+        $sqlUpdate = "UPDATE tbl_produto SET codigo = '{$codigo}', descricao = '{$descricao}', ativo = '{$ativo}'
+                      WHERE produto = {$produto} AND posto = {$posto}";
+        $update = pg_query($con, $sqlUpdate);
 
         return $update
             ? ['status' => 'success', 'message' => 'Produto atualizado com sucesso!']
@@ -75,10 +83,10 @@ class Produto
     public static function listarTodos($posto)
     {
         $con = Db::getConnection();
-        $res = pg_query_params($con,
-            "SELECT produto, codigo, descricao, ativo FROM tbl_produto WHERE posto = $1 ORDER BY codigo ASC",
-            [$posto]
-        );
+        $posto = intval($posto);
+
+        $sql = "SELECT produto, codigo, descricao, ativo FROM tbl_produto WHERE posto = {$posto} ORDER BY codigo ASC";
+        $res = pg_query($con, $sql);
 
         $lista = [];
         while ($row = pg_fetch_assoc($res)) {

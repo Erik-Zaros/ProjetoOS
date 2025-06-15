@@ -29,9 +29,9 @@ class OsController
         return Os::listarTodos($posto);
     }
 
-    public static function filtrar(array $filtros)
+    public static function filtrar(array $filtros, $posto)
     {
-        return Os::filtrarOrdens($filtros);
+        return Os::filtrarOrdens($filtros, $posto);
     }
 
     public static function finalizar($os, $posto)

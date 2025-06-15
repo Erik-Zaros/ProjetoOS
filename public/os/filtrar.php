@@ -1,9 +1,11 @@
 <?php
 
 require '../../vendor/autoload.php';
-session_start();
 
 use App\Controller\OsController;
+use App\Auth\Autenticador;
 
-$result = OsController::filtrar($_POST);
+Autenticador::iniciar();
+$posto = Autenticador::getPosto();
+$result = OsController::filtrar($_POST, $posto);
 echo json_encode($result);

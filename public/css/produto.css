@@ -22,3 +22,10 @@
 .table .btn {
     padding: 5px 10px;
 }
+
+#produtosTable tr.stripe1 td, #produtosTable tr.stripe1 th {
+    background-color: #f2f2f2;
+}
+#produtosTable tr.stripe2 td, #produtosTable tr.stripe2 th {
+    background-color: #fff;
+}

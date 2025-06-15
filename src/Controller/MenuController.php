@@ -15,6 +15,7 @@ class MenuController
         $res['clientes'] = self::conta($con, "SELECT COUNT(*) FROM tbl_cliente WHERE posto = $1", [$posto]);
         $res['produtos'] = self::conta($con, "SELECT COUNT(*) FROM tbl_produto WHERE posto = $1", [$posto]);
         $res['ordens_servico'] = self::conta($con, "SELECT COUNT(*) FROM tbl_os WHERE posto = $1", [$posto]);
+        $res['usuarios'] = self::conta($con, "SELECT COUNT(*) FROM tbl_usuario WHERE posto = $1", [$posto]);
 
         $res['produto_ativo'] = self::conta($con, "SELECT COUNT(*) FROM tbl_produto WHERE ativo = true AND posto = $1", [$posto]);
         $res['produto_inativo'] = self::conta($con, "SELECT COUNT(*) FROM tbl_produto WHERE ativo = false AND posto = $1", [$posto]);

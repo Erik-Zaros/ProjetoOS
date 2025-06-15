@@ -1,4 +1,7 @@
 function carregarUsuarios() {
+    if ($.fn.DataTable.isDataTable('#usuariosTable')) {
+        $('#usuariosTable').DataTable().destroy();
+    }
     $.ajax({
         url: '../public/usuario/listar.php',
         method: 'GET',
@@ -28,6 +31,13 @@ function carregarUsuarios() {
                     </tr>
                 `);
             }
+            $('#usuariosTable').DataTable({
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+                },
+                order: [[0, "asc"]],
+                stripeClasses: ['stripe1', 'stripe2'],
+            });
         },
         error: function () {
             Swal.fire({

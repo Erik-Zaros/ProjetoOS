@@ -126,6 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const clientes = Number(dados.clientes) || 0;
             const produtos = Number(dados.produtos) || 0;
             const ordensServico = Number(dados.ordens_servico) || 0;
+            const usuarios = Number(dados.usuarios) || 0;
 
             Highcharts.chart('grafico-colunas', {
                 chart: {
@@ -138,7 +139,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     text: 'Resumo de Registros'
                 },
                 xAxis: {
-                    categories: ['Clientes', 'Produtos', 'Ordens de Serviço'],
+                    categories: ['Usuários', 'Clientes', 'Produtos', 'Ordens de Serviço'],
                     title: {
                         text: null
                     }
@@ -162,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 series: [{
                     name: 'Registros',
-                    data: [clientes, produtos, ordensServico],
+                    data: [usuarios, clientes, produtos, ordensServico],
                     color: '#007bff'
                 }]
             });
@@ -236,7 +237,6 @@ document.addEventListener("DOMContentLoaded", function () {
             method: 'GET',
             dataType: 'json',
             success: function (response) {
-                console.log(response);
                 carregarGraficoPizza(response);
                 carregarGraficoColunas(response);
                 carregarGraficoPizzaStatusProduto(response);

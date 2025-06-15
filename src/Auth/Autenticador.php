@@ -14,7 +14,7 @@ class Autenticador
         }
 
         if (!isset($_SESSION['usuario'], $_SESSION['posto'])) {
-            header("Location: ../../login.php");
+            header("Location: ../login.php");
             exit;
         }
 

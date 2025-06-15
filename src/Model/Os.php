@@ -18,48 +18,37 @@ class Os
     public function salvar()
     {
         $con = Db::getConnection();
-
         pg_query($con, 'BEGIN');
 
         try {
-            $sql = "SELECT cliente, nome FROM tbl_cliente WHERE cpf = $1";
-            $res = pg_query_params($con, $sql, [$this->dados['cpf_consumidor']]);
+            $cpf = pg_escape_string($this->dados['cpf_consumidor']);
+            $nome = pg_escape_string($this->dados['nome_consumidor']);
+            $produto = intval($this->dados['produto']);
+            $posto = intval($this->posto);
+            $data_abertura = pg_escape_string($this->dados['data_abertura']);
+
+            $sqlCliente = "SELECT cliente, nome FROM tbl_cliente WHERE cpf = '{$cpf}' AND posto = {$posto}";
+            $res = pg_query($con, $sqlCliente);
 
             if (pg_num_rows($res) > 0) {
                 $cliente = pg_fetch_assoc($res);
                 $cliente_id = $cliente['cliente'];
 
-                if ($cliente['nome'] !== $this->dados['nome_consumidor']) {
-                    $update = "UPDATE tbl_cliente SET nome = $1 WHERE cliente = $2";
-                    pg_query_params($con, $update, [$this->dados['nome_consumidor'], $cliente_id]);
+                if ($cliente['nome'] !== $nome) {
+                    $sqlUpdate = "UPDATE tbl_cliente SET nome = '{$nome}' WHERE cliente = {$cliente_id}";
+                    pg_query($con, $sqlUpdate);
                 }
             } else {
-                $insert_cliente = "INSERT INTO tbl_cliente (nome, cpf, posto) VALUES ($1, $2, $3) RETURNING cliente";
-                $res_insert = pg_query_params($con, $insert_cliente, [
-                    $this->dados['nome_consumidor'],
-                    $this->dados['cpf_consumidor'],
-                    $this->posto
-                ]);
-
-                if (!$res_insert) {
-                    throw new \Exception("Erro ao cadastrar cliente.");
-                }
-
+                $sqlInsertCliente = "INSERT INTO tbl_cliente (nome, cpf, posto) VALUES ('{$nome}', '{$cpf}', {$posto}) RETURNING cliente";
+                $res_insert = pg_query($con, $sqlInsertCliente);
+                if (!$res_insert) throw new \Exception("Erro ao cadastrar cliente.");
                 $cliente_row = pg_fetch_assoc($res_insert);
                 $cliente_id = $cliente_row['cliente'];
             }
 
-            $insert_os = "INSERT INTO tbl_os (data_abertura, nome_consumidor, cpf_consumidor, produto, cliente, posto)
-                          VALUES ($1, $2, $3, $4, $5, $6)";
-
-            $res_os = pg_query_params($con, $insert_os, [
-                $this->dados['data_abertura'],
-                $this->dados['nome_consumidor'],
-                $this->dados['cpf_consumidor'],
-                $this->dados['produto'],
-                $cliente_id,
-                $this->posto
-            ]);
+            $sqlInsertOS = "INSERT INTO tbl_os (data_abertura, nome_consumidor, cpf_consumidor, produto, cliente, posto)
+                            VALUES ('{$data_abertura}', '{$nome}', '{$cpf}', {$produto}, {$cliente_id}, {$posto})";
+            $res_os = pg_query($con, $sqlInsertOS);
 
             if (!$res_os) {
                 throw new \Exception("Erro ao cadastrar OS.");
@@ -67,7 +56,6 @@ class Os
 
             pg_query($con, 'COMMIT');
             return ['status' => 'success', 'message' => 'OS cadastrada com sucesso!'];
-
         } catch (\Exception $e) {
             pg_query($con, 'ROLLBACK');
             return ['status' => 'error', 'message' => $e->getMessage()];
@@ -77,123 +65,58 @@ class Os
     public function editar()
     {
         $con = Db::getConnection();
-
         pg_query($con, 'BEGIN');
 
         try {
-            $os = $this->dados['os'];
+            $os = intval($this->dados['os']);
+            $cpf = pg_escape_string($this->dados['cpf_consumidor']);
+            $nome = pg_escape_string($this->dados['nome_consumidor']);
+            $produto = intval($this->dados['produto']);
+            $posto = intval($this->posto);
+            $data_abertura = pg_escape_string($this->dados['data_abertura']);
 
-            $res_check = pg_query_params($con, "SELECT finalizada FROM tbl_os WHERE os = $1", [$os]);
+            $sqlCheck = "SELECT finalizada FROM tbl_os WHERE os = {$os}";
+            $res_check = pg_query($con, $sqlCheck);
 
-            if (pg_num_rows($res_check) === 0) {
-                throw new \Exception("OS não encontrada.");
-            }
-
+            if (pg_num_rows($res_check) === 0) throw new \Exception("OS não encontrada.");
             $row = pg_fetch_assoc($res_check);
-            if ($row['finalizada'] === 't') {
-                throw new \Exception("OS já finalizada. Não é possível editar.");
-            }
+            if ($row['finalizada'] === 't') throw new \Exception("OS já finalizada. Não é possível editar.");
 
-            $res_cliente = pg_query_params($con, "SELECT cliente, nome FROM tbl_cliente WHERE cpf = $1", [$this->dados['cpf_consumidor']]);
+            $sqlCliente = "SELECT cliente, nome FROM tbl_cliente WHERE cpf = '{$cpf}' AND posto = {$posto}";
+            $res_cliente = pg_query($con, $sqlCliente);
 
             if (pg_num_rows($res_cliente) > 0) {
                 $cliente = pg_fetch_assoc($res_cliente);
                 $cliente_id = $cliente['cliente'];
 
-                if ($cliente['nome'] !== $this->dados['nome_consumidor']) {
-                    pg_query_params($con, "UPDATE tbl_cliente SET nome = $1 WHERE cliente = $2", [
-                        $this->dados['nome_consumidor'],
-                        $cliente_id
-                    ]);
+                if ($cliente['nome'] !== $nome) {
+                    $sqlUpdate = "UPDATE tbl_cliente SET nome = '{$nome}' WHERE cliente = {$cliente_id}";
+                    pg_query($con, $sqlUpdate);
                 }
             } else {
-                $res_insert = pg_query_params($con, "INSERT INTO tbl_cliente (nome, cpf) VALUES ($1, $2) RETURNING cliente", [
-                    $this->dados['nome_consumidor'],
-                    $this->dados['cpf_consumidor']
-                ]);
+                $sqlInsert = "INSERT INTO tbl_cliente (nome, cpf, posto) VALUES ('{$nome}', '{$cpf}', {$posto}) RETURNING cliente";
+                $res_insert = pg_query($con, $sqlInsert);
                 $row_new = pg_fetch_assoc($res_insert);
                 $cliente_id = $row_new['cliente'];
             }
 
-            $update_os = "UPDATE tbl_os SET data_abertura = $1, nome_consumidor = $2, cpf_consumidor = $3,
-                          produto = $4, cliente_id = $5 WHERE os = $6";
+            $sqlUpdateOS = "UPDATE tbl_os SET data_abertura = '{$data_abertura}', nome_consumidor = '{$nome}', cpf_consumidor = '{$cpf}', produto = {$produto}, cliente = {$cliente_id}
+                            WHERE os = {$os}";
+            $res_update = pg_query($con, $sqlUpdateOS);
 
-            $res_update = pg_query_params($con, $update_os, [
-                $this->dados['data_abertura'],
-                $this->dados['nome_consumidor'],
-                $this->dados['cpf_consumidor'],
-                $this->dados['produto'],
-                $cliente_id,
-                $os
-            ]);
-
-            if (!$res_update) {
-                throw new \Exception("Erro ao atualizar OS.");
-            }
+            if (!$res_update) throw new \Exception("Erro ao atualizar OS.");
 
             pg_query($con, 'COMMIT');
             return ['status' => 'success', 'message' => 'OS atualizada com sucesso!'];
-
         } catch (\Exception $e) {
             pg_query($con, 'ROLLBACK');
             return ['status' => 'error', 'message' => $e->getMessage()];
         }
     }
 
-    public static function buscar($os)
+    public static function filtrarOrdens(array $filtros, $posto)
     {
         $con = Db::getConnection();
-
-        $sql = "SELECT os.os, os.data_abertura, os.nome_consumidor, os.cpf_consumidor,
-                       p.descricao AS produto, os.finalizada, os.produto
-                FROM tbl_os os
-                INNER JOIN tbl_produto p ON os.produto = p.produto
-                WHERE os.os = $1";
-
-        $res = pg_query_params($con, $sql, [$os]);
-        return pg_num_rows($res) > 0 ? pg_fetch_assoc($res) : null;
-    }
-
-    public static function finalizar($os, $posto)
-    {
-        $con = Db::getConnection();
-
-        $sql = "UPDATE tbl_os SET finalizada = true WHERE os = $1 AND posto = $2";
-        $res = pg_query_params($con, $sql, [$os, $posto]);
-
-        return $res
-            ? ['status' => 'success', 'message' => 'OS finalizada com sucesso!']
-            : ['status' => 'error', 'message' => 'Erro ao finalizar OS.'];
-    }
-
-    public static function listarTodos($posto)
-    {
-        $con = Db::getConnection();
-
-        $sql = "SELECT os, nome_consumidor AS cliente, cpf_consumidor AS cpf, data_abertura, finalizada,
-                       (SELECT descricao FROM tbl_produto WHERE produto = tbl_os.produto) AS produto
-                FROM tbl_os
-                WHERE posto = $1
-                ORDER BY os ASC";
-
-        $res = pg_query_params($con, $sql, [$posto]);
-        $lista = [];
-
-        while ($row = pg_fetch_assoc($res)) {
-            $row['finalizada'] = $row['finalizada'] === 't';
-            $row['data_abertura'] = date('d/m/Y', strtotime($row['data_abertura']));
-            $lista[] = $row;
-        }
-
-        return $lista;
-    }
-
-    public static function filtrarOrdens(array $filtros)
-    {
-        $con = Db::getConnection();
-
-        $conditions = [];
-        $params = [];
 
         $sql = "SELECT
                     os.os,
@@ -204,31 +127,27 @@ class Os
                     os.finalizada
                 FROM tbl_os os
                 INNER JOIN tbl_produto p ON os.produto = p.produto
-                WHERE 1=1";
+                WHERE os.posto = $posto";
 
         if (!empty($filtros['os'])) {
-            $conditions[] = "os.os = $" . (count($params) + 1);
-            $params[] = $filtros['os'];
+            $os = (int) $filtros['os'];
+            $sql .= " AND os.os = $os";
         }
 
         if (!empty($filtros['nomeCliente'])) {
-            $conditions[] = "os.nome_consumidor ILIKE $" . (count($params) + 1);
-            $params[] = '%' . $filtros['nomeCliente'] . '%';
+            $nome = pg_escape_string($con, $filtros['nomeCliente']);
+            $sql .= " AND os.nome_consumidor ILIKE '%$nome%'";
         }
 
         if (!empty($filtros['dataInicio']) && !empty($filtros['dataFim'])) {
-            $conditions[] = "os.data_abertura BETWEEN $" . (count($params) + 1) . " AND $" . (count($params) + 2);
-            $params[] = $filtros['dataInicio'];
-            $params[] = $filtros['dataFim'];
-        }
-
-        if (!empty($conditions)) {
-            $sql .= " AND " . implode(" AND ", $conditions);
+            $dataInicio = pg_escape_string($con, $filtros['dataInicio']);
+            $dataFim    = pg_escape_string($con, $filtros['dataFim']);
+            $sql .= " AND os.data_abertura BETWEEN '$dataInicio' AND '$dataFim'";
         }
 
         $sql .= " ORDER BY os.os ASC";
 
-        $result = pg_query_params($con, $sql, $params);
+        $result = pg_query($con, $sql);
         $ordens = [];
 
         if ($result && pg_num_rows($result) > 0) {
@@ -247,9 +166,61 @@ class Os
         return $ordens;
     }
 
+    public static function buscar($os)
+    {
+        $con = Db::getConnection();
+        $os = intval($os);
+        $sql = "SELECT os.os, os.data_abertura, os.nome_consumidor, os.cpf_consumidor,
+                       p.descricao AS produto, os.finalizada, os.produto
+                FROM tbl_os os
+                INNER JOIN tbl_produto p ON os.produto = p.produto
+                WHERE os.os = {$os}";
+
+        $res = pg_query($con, $sql);
+        return pg_num_rows($res) > 0 ? pg_fetch_assoc($res) : null;
+    }
+
+    public static function finalizar($os, $posto)
+    {
+        $con = Db::getConnection();
+        $os = intval($os);
+        $posto = intval($posto);
+        $sql = "UPDATE tbl_os SET finalizada = true WHERE os = {$os} AND posto = {$posto}";
+        $res = pg_query($con, $sql);
+
+        return $res
+            ? ['status' => 'success', 'message' => 'OS finalizada com sucesso!']
+            : ['status' => 'error', 'message' => 'Erro ao finalizar OS.'];
+    }
+
+    public static function listarTodos($posto)
+    {
+        $con = Db::getConnection();
+        $posto = intval($posto);
+
+        $sql = "SELECT os, nome_consumidor AS cliente, cpf_consumidor AS cpf, data_abertura, finalizada,
+                       (SELECT descricao FROM tbl_produto WHERE produto = tbl_os.produto) AS produto
+                FROM tbl_os
+                WHERE posto = {$posto}
+                ORDER BY os ASC";
+
+        $res = pg_query($con, $sql);
+        $lista = [];
+
+        while ($row = pg_fetch_assoc($res)) {
+            $row['finalizada'] = $row['finalizada'] === 't';
+            $row['data_abertura'] = date('d/m/Y', strtotime($row['data_abertura']));
+            $lista[] = $row;
+        }
+
+        return $lista;
+    }
+
     public static function buscarPorNumero($os, $posto)
     {
         $con = Db::getConnection();
+        $os = intval($os);
+        $posto = intval($posto);
 
         $sql = "SELECT
                     os.os,
@@ -260,10 +231,9 @@ class Os
                     os.finalizada
                 FROM tbl_os os
                 INNER JOIN tbl_produto p ON os.produto = p.produto
-                WHERE os.os = $1 AND os.posto = $2";
+                WHERE os.os = {$os} AND os.posto = {$posto}";
 
-        $res = pg_query_params($con, $sql, [$os, $posto]);
-
+        $res = pg_query($con, $sql);
         return pg_num_rows($res) > 0 ? pg_fetch_assoc($res) : null;
     }
 }

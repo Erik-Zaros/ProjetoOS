@@ -1,4 +1,7 @@
 function carregarClientes() {
+    if ($.fn.DataTable.isDataTable('#clientesTable')) {
+        $('#clientesTable').DataTable().destroy();
+    }
     $.ajax({
         url: '../public/cliente/listar.php',
         method: 'GET',
@@ -31,6 +34,13 @@ function carregarClientes() {
                     </tr>
                 `);
             }
+            $('#clientesTable').DataTable({
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+                },
+                order: [[0, "asc"]],
+                stripeClasses: ['stripe1', 'stripe2'],
+            });
         },
         error: function (xhr, status, error) {
             Swal.fire({

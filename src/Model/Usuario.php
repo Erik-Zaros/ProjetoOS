@@ -19,26 +19,22 @@ class Usuario
     {
         $con = Db::getConnection();
 
-        $sql = "SELECT usuario FROM tbl_usuario WHERE login = $1 AND posto = $2";
-        $res = pg_query_params($con, $sql, [$this->dados['login'], $this->posto]);
+        $login = pg_escape_string($this->dados['login']);
+        $nome = pg_escape_string($this->dados['nome']);
+        $senha_hash = pg_escape_string(password_hash($this->dados['senha'], PASSWORD_DEFAULT));
+        $ativo = (isset($this->dados['ativo']) && $this->dados['ativo'] === 'on') ? 't' : 'f';
+        $posto = intval($this->posto);
+
+        $sqlCheck = "SELECT usuario FROM tbl_usuario WHERE login = '{$login}' AND posto = {$posto}";
+        $res = pg_query($con, $sqlCheck);
 
         if (pg_num_rows($res) > 0) {
             return ['status' => 'error', 'message' => 'Login já cadastrado!'];
         }
 
-        $senha_hash = password_hash($this->dados['senha'], PASSWORD_DEFAULT);
-        $ativo = ($this->dados['ativo'] ?? 'off') === 'on';
-
-        $sql = "INSERT INTO tbl_usuario (login, nome, senha, ativo, posto)
-                VALUES ($1, $2, $3, $4, $5)";
-
-        $res = pg_query_params($con, $sql, [
-            $this->dados['login'],
-            $this->dados['nome'],
-            $senha_hash,
-            $ativo,
-            $this->posto
-        ]);
+        $sqlInsert = "INSERT INTO tbl_usuario (login, nome, senha, ativo, posto)
+                      VALUES ('{$login}', '{$nome}', '{$senha_hash}', '{$ativo}', {$posto})";
+        $res = pg_query($con, $sqlInsert);
 
         return $res
             ? ['status' => 'success', 'message' => 'Usuário cadastrado com sucesso!']
@@ -48,11 +44,12 @@ class Usuario
     public static function listar($posto)
     {
         $con = Db::getConnection();
+        $posto = intval($posto);
 
         $sql = "SELECT usuario, login, nome, ativo FROM tbl_usuario
-                WHERE posto = $1 ORDER BY usuario ASC";
+                WHERE posto = {$posto} ORDER BY usuario ASC";
 
-        $res = pg_query_params($con, $sql, [$posto]);
+        $res = pg_query($con, $sql);
         $usuarios = [];
 
         while ($row = pg_fetch_assoc($res)) {
@@ -65,11 +62,13 @@ class Usuario
     public static function buscar($usuarioId, $posto)
     {
         $con = Db::getConnection();
+        $usuarioId = intval($usuarioId);
+        $posto = intval($posto);
 
         $sql = "SELECT usuario, login, nome, ativo FROM tbl_usuario
-                WHERE usuario = $1 AND posto = $2";
+                WHERE usuario = {$usuarioId} AND posto = {$posto}";
 
-        $res = pg_query_params($con, $sql, [$usuarioId, $posto]);
+        $res = pg_query($con, $sql);
         return pg_fetch_assoc($res) ?: null;
     }
 
@@ -77,27 +76,22 @@ class Usuario
     {
         $con = Db::getConnection();
 
-        $ativo = isset($this->dados['ativo']) && $this->dados['ativo'] === 'on' ? 'true' : 'false';
-
-        $sql = "UPDATE tbl_usuario SET login = $1, nome = $2, ativo = $3";
-        $params = [
-            $this->dados['login'],
-            $this->dados['nome'],
-            $ativo
-        ];
+        $usuarioId = intval($this->dados['usuario']);
+        $login = pg_escape_string($this->dados['login']);
+        $nome = pg_escape_string($this->dados['nome']);
+        $ativo = (isset($this->dados['ativo']) && $this->dados['ativo'] === 'on') ? 't' : 'f';
+        $posto = intval($this->posto);
 
         if (!empty($this->dados['senha'])) {
-            $sql .= ", senha = $4 WHERE usuario = $5 AND posto = $6";
-            $params[] = password_hash($this->dados['senha'], PASSWORD_DEFAULT);
-            $params[] = $this->dados['usuario'];
-            $params[] = $this->posto;
+            $senha_hash = pg_escape_string(password_hash($this->dados['senha'], PASSWORD_DEFAULT));
+            $sql = "UPDATE tbl_usuario SET login = '{$login}', nome = '{$nome}', ativo = '{$ativo}', senha = '{$senha_hash}'
+                    WHERE usuario = {$usuarioId} AND posto = {$posto}";
         } else {
-            $sql .= " WHERE usuario = $4 AND posto = $5";
-            $params[] = $this->dados['usuario'];
-            $params[] = $this->posto;
+            $sql = "UPDATE tbl_usuario SET login = '{$login}', nome = '{$nome}', ativo = '{$ativo}'
+                    WHERE usuario = {$usuarioId} AND posto = {$posto}";
         }
 
-        $res = pg_query_params($con, $sql, $params);
+        $res = pg_query($con, $sql);
 
         return $res
             ? ['status' => 'success', 'message' => 'Usuário atualizado com sucesso!']
