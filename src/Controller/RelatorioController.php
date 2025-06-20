@@ -12,7 +12,7 @@ class RelatorioController
         $posto = intval($posto);
 
         $sqlVerifica = "
-            SELECT 
+            SELECT
                 (SELECT COUNT(*) FROM tbl_cliente WHERE posto = {$posto}) AS total_clientes,
                 (SELECT COUNT(*) FROM tbl_produto WHERE posto = {$posto}) AS total_produtos,
                 (SELECT COUNT(*) FROM tbl_os WHERE posto = {$posto}) AS total_ordens_servico
@@ -25,8 +25,8 @@ class RelatorioController
 
         $dados = pg_fetch_assoc($resVerifica);
         if (
-            $dados['total_clientes'] == 0 || 
-            $dados['total_produtos'] == 0 || 
+            $dados['total_clientes'] == 0 ||
+            $dados['total_produtos'] == 0 ||
             $dados['total_ordens_servico'] == 0
         ) {
             echo 'Cadastre pelo menos um cliente, produto e ordem de serviço.'; exit;

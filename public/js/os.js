@@ -66,6 +66,14 @@ function carregarProdutos(produtoSelecionado = null) {
                         $('#produto_id').append(`<option value="${produto.produto}" ${selected}>${produto.codigo} - ${produto.descricao}</option>`);
                     }
                 });
+
+                $('#produto_id').select2({
+                    theme: 'bootstrap4',
+                    width: '100%',
+                    placeholder: 'Selecione o Produto',
+                    allowClear: true
+                });
+
             } catch (e) {
                 Swal.fire({
                     icon: 'error',

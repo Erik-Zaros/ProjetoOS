@@ -35,8 +35,11 @@ $imports = [
         "js" => ["../public/js/produto.js"]
     ],
     "cadastra_os" => [
-        "css" => ["../public/css/cadastraOS.css"],
-        "js" => ["../public/js/os.js"]
+        "css" => ["../public/css/cadastraOS.css",
+                  "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css",
+                  "https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css"],
+        "js" => ["../public/js/os.js",
+                 "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"]
     ],
     "consulta_os" => [
         "css" => ["../public/css/consultaOS.css"],

@@ -42,7 +42,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <?= $customCss ?? ''; ?>
 </head>
 
-<body>
+<body id="layoutContainer" class="sidebar-visible">
     <div class="d-flex">
         <nav id="sidebar" class="vh-100 sidebar-transition">
             <div class="sidebar-header p-3 text-center">
@@ -86,7 +86,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </nav>
 
 
-        <div class="flex-grow-1">
+        <div id="main-content" class="flex-grow-1">
             <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
                 <div class="container-fluid">
                     <button class="btn btn-dark" id="sidebarToggle">&#9776;</button>
@@ -94,7 +94,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <span class="navbar-brand ms-auto"><?= $pageTitle ?? ''; ?></span>
                 </div>
             </nav>
-            <div class="container mt-4">
+            <div class="container-fluid mt-4">
                 <?= $content ?? ''; ?>
             </div>
         </div>

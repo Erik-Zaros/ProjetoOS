@@ -1,10 +1,11 @@
 <?php
 
 require '../../vendor/autoload.php';
-session_start();
 
 use App\Controller\ClienteController;
+use App\Auth\Autenticador;
 
-$posto = $_SESSION['login_posto'] ?? 1;
+Autenticador::iniciar();
+$posto = Autenticador::getPosto();
 
 echo json_encode(ClienteController::editar($_POST, $posto));

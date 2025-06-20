@@ -12,7 +12,14 @@ body {
     width: 250px;
     transition: width 0.3s ease-in-out;
     padding-top: 15px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1040;
 }
+
 
 #sidebar .nav-link {
     color: #dcdde1;
@@ -61,4 +68,19 @@ body {
 
 i {
     color: #fac927;
+}
+
+#main-content {
+    margin-left: 250px;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+.sidebar-hidden #main-content {
+    margin-left: 0;
+}
+
+.sidebar-hidden #sidebar {
+    width: 0;
+    overflow: hidden;
+    padding: 0;
 }

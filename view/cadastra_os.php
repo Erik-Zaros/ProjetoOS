@@ -50,7 +50,7 @@ ob_start();
             <button type="submit" class="btn btn-success btn-sm">Gravar</button>
         </form>
     </div>
-</div>           
+</div>
 
 <?php
 $content = ob_get_clean();
