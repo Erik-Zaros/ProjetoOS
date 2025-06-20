@@ -1,64 +1,54 @@
 document.addEventListener("DOMContentLoaded", function () {
-        function carregarGraficoPizza(dados) {
-            const clientes = Number(dados.clientes) || 0;
-            const produtos = Number(dados.produtos) || 0;
-            const ordensServico = Number(dados.ordens_servico) || 0;
+    function carregarGraficoPizzaStatusOS(dados) {
+        const osAbertas = Number(dados.os_abertas) || 0;
+        const osFinalizadas = Number(dados.os_finalizadas) || 0;
 
-            Highcharts.chart('grafico-pizza', {
-                chart: {
-                    type: 'pie',
-                    animation: {
-                        duration: 700
-                    }
-                },
-                title: {
-                    text: 'CADASTRO NO SISTEMA'
-                },
-                subtitle: {
-                    text: 'Cliente X Produto X Ordem de Serviço',
-                    align: 'center',
-                    style: {
-                        fontSize: '16px'
-                    }
-                },
-                tooltip: {
-                    headerFormat: '',
-                    pointFormat:
-                        '<span style="color:{point.color}">\u25cf</span> ' +
-                        '{point.name}: <b>{point.y}</b> ({point.percentage:.1f}%)'
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        borderWidth: 2,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: true,
-                            format: '<b>{point.name}</b><br>{point.y} ({point.percentage:.1f}%)',
-                            distance: 20
-                        }
-                    }
-                },
-                series: [{
-                    enableMouseTracking: false,
-                    animation: {
-                        duration: 1700
-                    },
-                    colorByPoint: true,
-                    data: [
-                        { name: 'CLIENTES', y: clientes },
-                        { name: 'PRODUTOS', y: produtos },
-                        { name: 'ORDENS DE SERVIÇO', y: ordensServico }
-                    ]
-                }],
-                colors: ['#007bff', '#28a745', '#ffc107'],
-                accessibility: {
-                    point: {
-                        valueSuffix: '%'
+        Highcharts.chart('grafico-pizza-os-status', {
+            chart: {
+                type: 'pie',
+                animation: { duration: 700 }
+            },
+            title: {
+                text: 'STATUS DAS ORDENS DE SERVIÇO'
+            },
+            subtitle: {
+                text: 'Abertas x Finalizadas',
+                align: 'center',
+                style: {
+                    fontSize: '16px'
+                }
+            },
+            tooltip: {
+                headerFormat: '',
+                pointFormat: '<span style="color:{point.color}">\u25cf</span> {point.name}: <b>{point.y}</b> ({point.percentage:.1f}%)'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    borderWidth: 2,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b><br>{point.y} ({point.percentage:.1f}%)',
+                        distance: 20
                     }
                 }
-            });
-        }
+            },
+            series: [{
+                enableMouseTracking: false,
+                animation: { duration: 1700 },
+                colorByPoint: true,
+                data: [
+                    { name: 'Abertas', y: osAbertas },
+                    { name: 'Finalizadas', y: osFinalizadas }
+                ]
+            }],
+            colors: ['#ffc107', '#28a745'],
+            accessibility: {
+                point: { valueSuffix: '%' }
+            }
+        });
+    }
 
         (function (H) {
             H.seriesTypes.pie.prototype.animate = function (init) {
@@ -237,7 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {
             method: 'GET',
             dataType: 'json',
             success: function (response) {
-                carregarGraficoPizza(response);
+                carregarGraficoPizzaStatusOS(response);
                 carregarGraficoColunas(response);
                 carregarGraficoPizzaStatusProduto(response);
             },

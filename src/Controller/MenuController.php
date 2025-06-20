@@ -12,13 +12,40 @@ class MenuController
 
         $res = [];
 
-        $res['clientes'] = self::conta($con, "SELECT COUNT(*) FROM tbl_cliente WHERE posto = $1", [$posto]);
-        $res['produtos'] = self::conta($con, "SELECT COUNT(*) FROM tbl_produto WHERE posto = $1", [$posto]);
-        $res['ordens_servico'] = self::conta($con, "SELECT COUNT(*) FROM tbl_os WHERE posto = $1", [$posto]);
-        $res['usuarios'] = self::conta($con, "SELECT COUNT(*) FROM tbl_usuario WHERE posto = $1", [$posto]);
+        $sqlClientes = "SELECT COUNT(*) AS total FROM tbl_cliente WHERE posto = $1";
+        $res['clientes'] = self::conta($con, $sqlClientes, [$posto]);
 
-        $res['produto_ativo'] = self::conta($con, "SELECT COUNT(*) FROM tbl_produto WHERE ativo = true AND posto = $1", [$posto]);
-        $res['produto_inativo'] = self::conta($con, "SELECT COUNT(*) FROM tbl_produto WHERE ativo = false AND posto = $1", [$posto]);
+        $sqlProdutos = "SELECT COUNT(*) AS total FROM tbl_produto WHERE posto = $1";
+        $res['produtos'] = self::conta($con, $sqlProdutos, [$posto]);
+
+        $sqlOS = "SELECT COUNT(*) AS total FROM tbl_os WHERE posto = $1";
+        $res['ordens_servico'] = self::conta($con, $sqlOS, [$posto]);
+
+        $sqlUsuarios = "SELECT COUNT(*) AS total FROM tbl_usuario WHERE posto = $1";
+        $res['usuarios'] = self::conta($con, $sqlUsuarios, [$posto]);
+
+        $sqlProdutoAtivo = "SELECT COUNT(*) AS total FROM tbl_produto WHERE ativo = true AND posto = $1";
+        $res['produto_ativo'] = self::conta($con, $sqlProdutoAtivo, [$posto]);
+
+        $sqlProdutoInativo = "SELECT COUNT(*) AS total FROM tbl_produto WHERE ativo = false AND posto = $1";
+        $res['produto_inativo'] = self::conta($con, $sqlProdutoInativo, [$posto]);
+
+        $sqlStatusOS = "
+            SELECT 
+                COUNT(*) FILTER (WHERE finalizada IS TRUE) AS finalizadas,
+                COUNT(*) FILTER (WHERE finalizada IS FALSE OR finalizada IS NULL) AS abertas
+            FROM tbl_os
+            WHERE posto = $1
+        ";
+
+        $resStatusOs = pg_query_params($con, $sqlStatusOS, [$posto]);
+        if ($resStatusOs && $row = pg_fetch_assoc($resStatusOs)) {
+            $res['os_finalizadas'] = (int)$row['finalizadas'];
+            $res['os_abertas'] = (int)$row['abertas'];
+        } else {
+            $res['os_finalizadas'] = 0;
+            $res['os_abertas'] = 0;
+        }
 
         return $res;
     }

@@ -51,7 +51,7 @@ class Os
             $res_os = pg_query($con, $sqlInsertOS);
 
             if (!$res_os) {
-                throw new \Exception("Erro ao cadastrar OS.");
+                return ['status' => 'error', 'message' => 'Erro ao cadastrar OS.'];
             }
 
             pg_query($con, 'COMMIT');

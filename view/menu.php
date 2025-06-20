@@ -20,8 +20,8 @@ ob_start();
     <div class="row">
         <div class="col-md-6">
             <div class="card p-3 shadow-sm border-0 card-sharp">
-                <h5 class="text-center">Gráfico de Pizza</h5>
-                <div id="grafico-pizza" style="height: 300px;"></div>
+                <h5 class="text-center">Status das OS</h5>
+                <div id="grafico-pizza-os-status" style="height: 300px;"></div>
             </div>
         </div>
         <div class="col-md-6">

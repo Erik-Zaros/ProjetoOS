@@ -32,7 +32,7 @@ function carregarDadosOS(os) {
             $('#nome_consumidor').val(data.nome_consumidor);
             $('#cpf_consumidor').val(data.cpf_consumidor);
 
-            carregarProdutos(data.produto_codigo);
+            carregarProdutos(data.produto);
 
             $('#osForm').off('submit').on('submit', function (e) {
                 e.preventDefault();
@@ -57,17 +57,17 @@ function carregarProdutos(produtoSelecionado = null) {
         success: function (data) {
             try {
                 var produtos = JSON.parse(data);
-                $('#produto_id').empty();
-                $('#produto_id').append('<option value="">Selecione o Produto</option>');
+                $('#produto').empty();
+                $('#produto').append('<option value="">Selecione o Produto</option>');
 
                 produtos.forEach(function (produto) {
                     if (produto.ativo == 't') {
                         var selected = (produtoSelecionado && produto.produto == produtoSelecionado) ? 'selected' : '';
-                        $('#produto_id').append(`<option value="${produto.produto}" ${selected}>${produto.codigo} - ${produto.descricao}</option>`);
+                        $('#produto').append(`<option value="${produto.produto}" ${selected}>${produto.codigo} - ${produto.descricao}</option>`);
                     }
                 });
 
-                $('#produto_id').select2({
+                $('#produto').select2({
                     theme: 'bootstrap4',
                     width: '100%',
                     placeholder: 'Selecione o Produto',
@@ -135,14 +135,22 @@ $(document).ready(function () {
                 dataType: 'json',
                 data: $(this).serialize(),
                 success: function (response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Sucesso!',
-                        text: response.message,
-                    }).then(() => {
-                        $('#osForm')[0].reset();
-                        carregarProdutos();
-                    });
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Sucesso!',
+                            text: response.message,
+                        }).then(() => {
+                            $('#osForm')[0].reset();
+                            carregarProdutos();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erro!',
+                            text: response.message,
+                        });
+                    }
                 },
                 error: function (xhr, status, error) {
                     Swal.fire({

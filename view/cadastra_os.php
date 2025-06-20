@@ -44,8 +44,8 @@ ob_start();
                 </div>
             </div>
             <div class="mb-3">
-                <label for="produto_id" class="form-label">Produto</label>
-                <select class="form-control" id="produto_id" name="produto_id" required></select>
+                <label for="produto" class="form-label">Produto</label>
+                <select class="form-control" id="produto" name="produto" required></select>
             </div>
             <button type="submit" class="btn btn-success btn-sm">Gravar</button>
         </form>
