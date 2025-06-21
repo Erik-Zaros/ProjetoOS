@@ -14,7 +14,7 @@ ob_start();
 ?>
 
     <div class="text-center mt-4 mb-3">
-        <a href="../public/relatorio/relatorio.php" class="btn btn-outline-success btn-sm">Download Excel</a>
+        <a href="../public/relatorio/relatorio.php" class="btn btn-success btn-sm">Download Excel</a>
     </div>
 
     <div class="row">

@@ -1,0 +1,21 @@
+.form-control,
+.form-select {
+    border: 1px solid #ced4da;
+    border-radius: 3px;
+    padding: 8px 12px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background-color: #ffffff;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #2e2e48;
+    box-shadow: 0 0 0 0.2rem rgba(46, 46, 72, 0.15);
+    outline: 0;
+}
+
+.form-control::placeholder {
+    color: #adb5bd;
+    font-size: 14px;
+}

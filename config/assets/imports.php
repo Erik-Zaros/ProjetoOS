@@ -6,7 +6,9 @@ $imports = [
             "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css",
             "https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css",
             "https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css",
-            "../public/css/style.css"
+            "../public/css/style.css",
+            "../public/css/form.css",
+            "../public/css/button.css"
         ],
         "js" => [
             "https://code.jquery.com/jquery-3.6.0.min.js",
