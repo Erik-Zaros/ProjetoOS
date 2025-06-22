@@ -8,8 +8,6 @@ Autenticador::iniciar();
 
 $title = 'Menu';
 $pageTitle = 'MENU';
-$customCss;
-$customJs;
 ob_start();
 ?>
 
@@ -26,13 +24,13 @@ ob_start();
         </div>
         <div class="col-md-6">
             <div class="card p-3 shadow-sm border-0 card-sharp">
-                <h5 class="text-center">Gráfico de Pizza</h5>
+                <h5 class="text-center">Status dos Produtos</h5>
                 <div id="grafico-pizza-status-produto" style="height: 300px;"></div>
             </div>
         </div>
         <div class="col-md-12 mt-4">
             <div class="card p-3 shadow-sm border-0 card-sharp">
-                <h5 class="text-center">Gráfico de Colunas</h5>
+                <h5 class="text-center">Todos os Registros</h5>
                 <div id="grafico-colunas" style="height: 300px;"></div>
             </div>
         </div>

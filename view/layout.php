@@ -22,7 +22,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="../public/img/tc_2009.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%232e2e48'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'%3EOS%3C/text%3E%3C/svg%3E" type="image/x-icon">
     <title><?= $title ?? 'Projeto OS'; ?></title>
 
     <?php foreach ($imports["global"]["css"] as $css): ?>
@@ -114,6 +114,5 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
     ?>
 
-    <?= $customJs ?? ''; ?>
 </body>
 </html>

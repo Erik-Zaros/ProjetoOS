@@ -27,7 +27,7 @@ class AuthController
             $row = pg_fetch_assoc($res);
 
             if (!password_verify($senha, $row['senha'])) {
-                return ['success' => false, 'message' => 'Senha incorreta'];
+                return ['success' => false, 'message' => 'Login ou Senha Inválido'];
             }
 
             if ($row['usuario_ativo'] !== 't') {

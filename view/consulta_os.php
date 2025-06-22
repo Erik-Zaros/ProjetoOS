@@ -8,8 +8,6 @@ Autenticador::iniciar();
 
 $title = 'Consulta de Ordem de Serviço';
 $pageTitle = 'CONSULTA DE ORDEM DE SERVIÇO';
-$customCss;
-$customJs;
 ob_start();
 ?>
 
@@ -21,7 +19,7 @@ ob_start();
         <form id="filtroForm">
             <div class="row">
                 <div class="col-md-3">
-                    <label for="os" class="form-label">Número da Ordem:</label>
+                    <label for="os" class="form-label">Número OS:</label>
                     <input type="text" class="form-control" id="os" name="os">
                 </div>
                 <div class="col-md-3">
@@ -53,7 +51,7 @@ ob_start();
         <table class="table table-bordered" id="osTable">
             <thead>
                 <tr>
-                    <th>Número da Ordem</th>
+                    <th>Número OS</th>
                     <th>Nome do Cliente</th>
                     <th>CPF</th>
                     <th>Produto</th>

@@ -122,7 +122,7 @@ class Os
                     os.os,
                     os.nome_consumidor AS cliente,
                     os.cpf_consumidor AS cpf,
-                    p.descricao AS produto,
+                    CONCAT(p.codigo, ' - ', p.descricao) AS produto,
                     os.data_abertura,
                     os.finalizada
                 FROM tbl_os os
@@ -198,8 +198,14 @@ class Os
         $con = Db::getConnection();
         $posto = intval($posto);
 
-        $sql = "SELECT os, nome_consumidor AS cliente, cpf_consumidor AS cpf, data_abertura, finalizada,
-                       (SELECT descricao FROM tbl_produto WHERE produto = tbl_os.produto) AS produto
+        $sql = "SELECT os, 
+                       nome_consumidor AS cliente, 
+                       cpf_consumidor AS cpf, 
+                       to_char(data_abertura, 'DD/MM/YYYY') AS data_abertura, 
+                       finalizada,
+                       (SELECT CONCAT(codigo, ' - ', descricao) AS codigo_descricao
+                        FROM tbl_produto 
+                        WHERE produto = tbl_os.produto) AS produto
                 FROM tbl_os
                 WHERE posto = {$posto}
                 ORDER BY os ASC";
@@ -209,7 +215,6 @@ class Os
 
         while ($row = pg_fetch_assoc($res)) {
             $row['finalizada'] = $row['finalizada'] === 't';
-            $row['data_abertura'] = date('d/m/Y', strtotime($row['data_abertura']));
             $lista[] = $row;
         }
 
@@ -224,13 +229,20 @@ class Os
 
         $sql = "SELECT
                     os.os,
-                    os.data_abertura,
+                    to_char(os.data_abertura, 'DD/MM/YYYY') AS data_abertura,
                     os.nome_consumidor,
                     os.cpf_consumidor,
-                    p.descricao AS produto,
+                    c.cep,
+                    c.endereco,
+                    c.bairro,
+                    c.numero,
+                    c.cidade,
+                    c.estado,
+                    CONCAT(p.codigo, ' - ', p.descricao) AS codigo_descricao,
                     os.finalizada
                 FROM tbl_os os
                 INNER JOIN tbl_produto p ON os.produto = p.produto
+                LEFT JOIN tbl_cliente c ON os.cliente = c.cliente
                 WHERE os.os = {$os} AND os.posto = {$posto}";
 
         $res = pg_query($con, $sql);

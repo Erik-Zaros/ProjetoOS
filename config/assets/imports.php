@@ -14,7 +14,6 @@ $imports = [
             "https://code.jquery.com/jquery-3.6.0.min.js",
             "https://code.jquery.com/ui/1.13.3/jquery-ui.min.js",
             "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
-            "https://code.highcharts.com/9.1.2/highcharts.js",
             "https://cdn.jsdelivr.net/npm/sweetalert2@11",
             "https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js",
             "../public/js/main.js"
@@ -26,7 +25,8 @@ $imports = [
     ],
     "menu" => [
         "css" => ["../public/css/menu.css"],
-        "js" => ["../public/js/menu.js"]
+        "js" => ["../public/js/menu.js",
+                 "https://code.highcharts.com/9.1.2/highcharts.js"],
     ],
     "cliente" => [
         "css" => ["../public/css/cliente.css"],

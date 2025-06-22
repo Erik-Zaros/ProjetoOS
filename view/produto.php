@@ -8,8 +8,6 @@ Autenticador::iniciar();
 
 $title = 'Cadastro de Produto';
 $pageTitle = 'CADASTRO DE PRODUTO';
-$customCss;
-$customJs;
 ob_start();
 ?>
 

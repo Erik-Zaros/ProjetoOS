@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: 'STATUS DAS ORDENS DE SERVIÇO'
             },
             subtitle: {
-                text: 'Abertas x Finalizadas',
+                text: 'ABERTAS x FINALIZADAS',
                 align: 'center',
                 style: {
                     fontSize: '16px'

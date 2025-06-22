@@ -9,8 +9,6 @@ $posto = Autenticador::getPosto();
 
 $title = 'Cadastro de Ordem de Serviço';
 $pageTitle = 'CADASTRO DE ORDEM DE SERVIÇO';
-$customCss;
-$customJs;
 ob_start();
 ?>
 

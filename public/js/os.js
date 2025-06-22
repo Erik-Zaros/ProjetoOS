@@ -226,10 +226,16 @@ $(document).ready(function () {
                 }
 
                 $('#osNumero').text(data.os);
-                $('#dataAbertura').text(new Date(data.data_abertura).toLocaleDateString('pt-BR'));
+                $('#dataAbertura').text(data.data_abertura);
                 $('#nomeConsumidor').text(data.nome_consumidor);
                 $('#cpfConsumidor').text(data.cpf_consumidor);
-                $('#produto').text(data.produto);
+                $('#cepConsumidor').text(data.cep);
+                $('#enderecoConsumidor').text(data.endereco);
+                $('#bairroConsumidor').text(data.bairro);
+                $('#numeroConsumidor').text(data.numero);
+                $('#cidadeConsumidor').text(data.cidade);
+                $('#estadoConsumidor').text(data.estado);
+                $('#produtoCodigoDescricao').text(data.codigo_descricao);
                 $('#status').html((data.finalizada === true || data.finalizada === 't') ? '<span class="badge bg-success">Finalizada</span>' : '<span class="badge bg-warning">Em Aberto</span>');
             },
             error: function (xhr, status, error) {
