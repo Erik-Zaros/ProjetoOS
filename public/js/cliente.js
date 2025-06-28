@@ -55,7 +55,7 @@ function carregarClientes() {
 $(document).ready(function () {
     carregarClientes();
 
-    $('#buscarCep').on('click', function () {
+    $('#cep').on('blur', function () {
         const cep = $('#cep').val().replace('-', '');
         if (cep.length === 8) {
             $.ajax({
