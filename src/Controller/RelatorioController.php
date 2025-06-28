@@ -35,7 +35,7 @@ class RelatorioController
         $sql = "
             SELECT
                 os.os AS ordem_servico,
-                os.data_abertura,
+                to_char(os.data_abertura, 'DD/MM/YYYY') AS data_abertura, 
                 os.finalizada,
                 prod.codigo AS codigo_produto,
                 prod.descricao AS descricao_produto,
@@ -76,10 +76,9 @@ class RelatorioController
         while ($row = pg_fetch_assoc($res)) {
             $finalizada = $row['finalizada'] === 't' ? 'Sim' : 'Não';
             $ativo = $row['ativo_produto'] === 't' ? 'Ativo' : 'Inativo';
-            $data = date('d/m/Y', strtotime($row['data_abertura']));
 
             fputcsv($output, [
-                $row['ordem_servico'], $data, $finalizada,
+                $row['ordem_servico'], $row['data_abertura'], $finalizada,
                 $row['nome_consumidor'], $row['cpf_consumidor'],
                 $row['cep_consumidor'], $row['endereco_consumidor'], $row['bairro_consumidor'],
                 $row['numero_consumidor'], $row['cidade_consumidor'], $row['estado_consumidor'],
