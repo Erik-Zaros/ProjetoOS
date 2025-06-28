@@ -61,19 +61,18 @@ $(document).ready(function () {
             method: 'POST',
             data: $.param(formData),
             success: function (response) {
-                let res = JSON.parse(response);
 
-                if (res.status === 'error') {
+                if (response.status === 'error') {
                     Swal.fire({
                         icon: 'error',
                         title: 'Erro!',
-                        text: res.message,
+                        text: response.message,
                     });
                 } else {
                     Swal.fire({
                         icon: 'success',
                         title: 'Sucesso!',
-                        text: res.message,
+                        text: response.message,
                     }).then(() => {
                         $('#usuarioForm')[0].reset();
                         carregarUsuarios();
