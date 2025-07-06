@@ -19,7 +19,17 @@ CREATE TABLE tbl_produto (
     codigo VARCHAR(50) NOT NULL,
     descricao VARCHAR(255) NOT NULL,
     ativo BOOLEAN DEFAULT FALSE,
-    posto INTEGER REFERENCES tbl_posto(posto)
+    posto INTEGER REFERENCES tbl_posto(posto),
+    data_input TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE tbl_peca (
+    peca SERIAL PRIMARY KEY,
+    codigo VARCHAR(50) NOT NULL,
+    descricao VARCHAR(255) NOT NULL,
+    ativo BOOLEAN DEFAULT FALSE,
+    posto INTEGER REFERENCES tbl_posto(posto),
+    data_input TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE tbl_os (

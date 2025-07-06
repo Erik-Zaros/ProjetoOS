@@ -115,6 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
         function carregarGraficoColunas(dados) {
             const clientes = Number(dados.clientes) || 0;
             const produtos = Number(dados.produtos) || 0;
+            const pecas = Number(dados.pecas) || 0;
             const ordensServico = Number(dados.ordens_servico) || 0;
             const usuarios = Number(dados.usuarios) || 0;
 
@@ -129,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     text: 'Resumo de Registros'
                 },
                 xAxis: {
-                    categories: ['Usuários', 'Clientes', 'Produtos', 'Ordens de Serviço'],
+                    categories: ['Usuários', 'Clientes', 'Produtos', 'Peças', 'Ordens de Serviço'],
                     title: {
                         text: null
                     }
@@ -153,7 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 series: [{
                     name: 'Registros',
-                    data: [usuarios, clientes, produtos, ordensServico],
+                    data: [usuarios, clientes, produtos, pecas, ordensServico],
                     color: '#007bff'
                 }]
             });
@@ -222,6 +223,69 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
+        function carregarGraficoPizzaStatusPeca(dados) {
+
+            const pecaInativa = Number(dados.peca_inativa) || 0;
+            const pecaAtiva = Number(dados.peca_ativa) || 0;
+
+            if (pecaAtiva === 0 && pecaInativa === 0) {
+                console.warn("Nenhum dado disponível para exibir no gráfico.");
+                return;
+            }
+
+            Highcharts.chart('grafico-pizza-status-peca', {
+                chart: {
+                    type: 'pie',
+                    animation: {
+                        duration: 700
+                    }
+                },
+                title: {
+                    text: 'PEÇAS ATIVAS E INATIVAS NO SISTEMA'
+                },
+                subtitle: {
+                    text: 'ATIVOS X INATIVOS',
+                    align: 'center',
+                    style: {
+                        fontSize: '16px'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '',
+                    pointFormat: '<span style="color:{point.color}">\u25cf</span> {point.name}: <b>{point.y}</b> ({point.percentage:.1f}%)'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        borderWidth: 2,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b><br>{point.y} ({point.percentage:.1f}%)',
+                            distance: 20
+                        }
+                    }
+                },
+                series: [{
+                    enableMouseTracking: false,
+                    animation: {
+                        duration: 1700
+                    },
+                    colorByPoint: true,
+                    data: [
+                        { name: 'Inativos', y: pecaInativa },
+                        { name: 'Ativos', y: pecaAtiva }
+                    ]
+                }],
+                colors: ['#ca2320', '#00ba32'],
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                }
+            });
+        }
+
         $.ajax({
             url: '../public/menu/menu.php',
             method: 'GET',
@@ -230,6 +294,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 carregarGraficoPizzaStatusOS(response);
                 carregarGraficoColunas(response);
                 carregarGraficoPizzaStatusProduto(response);
+                carregarGraficoPizzaStatusPeca(response);
             },
             error: function (error) {
                 Swal.fire({

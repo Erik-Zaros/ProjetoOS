@@ -26,4 +26,9 @@ class ProdutoController
     {
         return Produto::listarTodos($posto);
     }
+
+    public static function apagar($dados, $posto)
+    {
+        return Produto::excluir($dados, $posto);
+    }
 }

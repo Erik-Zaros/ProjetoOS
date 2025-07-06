@@ -1,37 +1,37 @@
 $(document).ready(function () {
-    function carregarProdutos() {
-        if ($.fn.DataTable.isDataTable('#produtosTable')) {
-            $('#produtosTable').DataTable().destroy();
+    function carregarPecas() {
+        if ($.fn.DataTable.isDataTable('#pecasTable')) {
+            $('#pecasTable').DataTable().destroy();
         }
         $.ajax({
-            url: '../public/produto/listar.php',
+            url: '../public/peca/listar.php',
             method: 'GET',
             dataType: 'json',
             success: function (data) {
-                $('#produtosTable tbody').empty();
+                $('#pecasTable tbody').empty();
                 if (data.length > 0) {
-                    data.forEach(function (produto) {
-                        var ativo = produto.ativo == 't' ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>';
-                        $('#produtosTable tbody').append(`
-                            <tr data-codigo="${produto.codigo}">
-                                <td>${produto.codigo}</td>
-                                <td>${produto.descricao}</td>
+                    data.forEach(function (peca) {
+                        var ativo = peca.ativo == 't' ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>';
+                        $('#pecasTable tbody').append(`
+                            <tr data-codigo="${peca.codigo}">
+                                <td>${peca.codigo}</td>
+                                <td>${peca.descricao}</td>
                                 <td>${ativo}</td>
                                 <td>
-                                    <button class='btn btn-warning btn-sm editar-produto' data-codigo='${produto.codigo}'>Editar</button>
-                                    <button class='btn btn-danger btn-sm excluir-produto' data-produto='${produto.produto}'>Excluir</button>
+                                    <button class='btn btn-warning btn-sm editar-peca' data-codigo='${peca.codigo}'>Editar</button>
+                                    <button class='btn btn-danger btn-sm excluir-peca' data-peca='${peca.peca}'>Excluir</button>
                                 </td>
                             </tr>
                         `);
                     });
                 } else {
-                    $('#produtosTable tbody').append(`
+                    $('#pecasTable tbody').append(`
                         <tr>
-                            <td colspan="9" class="text-center">NENHUM PRODUTO CADASTRADO</td>
+                            <td colspan="9" class="text-center">NENHUMA PEÇA CADASTRADO</td>
                         </tr>
                     `);
                 }
-                $('#produtosTable').DataTable({
+                $('#pecasTable').DataTable({
                     language: {
                         url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
                     },
@@ -43,15 +43,15 @@ $(document).ready(function () {
                 Swal.fire({
                     icon: 'error',
                     title: 'Erro!',
-                    text: 'Erro ao carregar os produtos.',
+                    text: 'Erro ao carregar as peças.',
                 });
             }
         });
     }
 
-    carregarProdutos();
+    carregarPecas();
 
-    $('#produtoForm').on('submit', function (e) {
+    $('#pecaForm').on('submit', function (e) {
         e.preventDefault();
 
         var formData = {
@@ -61,7 +61,7 @@ $(document).ready(function () {
         };
 
         $.ajax({
-            url: '../public/produto/cadastrar.php',
+            url: '../public/peca/cadastrar.php',
             method: 'POST',
             data: formData,
             success: function (response) {
@@ -78,8 +78,8 @@ $(document).ready(function () {
                         title: 'Sucesso!',
                         text: response.message,
                     }).then(() => {
-                        $('#produtoForm')[0].reset();
-                        carregarProdutos();
+                        $('#pecaForm')[0].reset();
+                        carregarPecas();
                     });
                 }
             },
@@ -87,34 +87,34 @@ $(document).ready(function () {
                 Swal.fire({
                     icon: 'error',
                     title: 'Erro!',
-                    text: 'Erro ao cadastrar produto.',
+                    text: 'Erro ao cadastrar peça.',
                 });
             }
         });
     });
 
-    $(document).on('click', '.editar-produto', function () {
+    $(document).on('click', '.editar-peca', function () {
         var codigo = $(this).data('codigo');
 
         $.ajax({
-            url: '../public/produto/buscar.php',
+            url: '../public/peca/buscar.php',
             method: 'GET',
             data: { codigo: codigo },
             dataType: 'json',
-            success: function (produto) {
-                $('#codigo').val(produto.codigo);
-                $('#descricao').val(produto.descricao);
-                $('#ativo').prop('checked', produto.ativo == 't');
+            success: function (peca) {
+                $('#codigo').val(peca.codigo);
+                $('#descricao').val(peca.descricao);
+                $('#ativo').prop('checked', peca.ativo == 't');
 
-                var produto = produto.produto;
+                var peca = peca.peca;
 
-                $('#produtoForm').off('submit').on('submit', function (e) {
+                $('#pecaForm').off('submit').on('submit', function (e) {
                     e.preventDefault();
                     $.ajax({
-                        url: '../public/produto/editar.php',
+                        url: '../public/peca/editar.php',
                         method: 'POST',
                         data: {
-                            produto: produto,
+                            peca: peca,
                             codigo: $('#codigo').val(),
                             descricao: $('#descricao').val(),
                             ativo: $('#ativo').is(':checked') ? 't' : 'f'
@@ -134,8 +134,8 @@ $(document).ready(function () {
                                     title: 'Sucesso!',
                                     text: res.message,
                                 }).then(() => {
-                                    $('#produtoForm')[0].reset();
-                                    carregarProdutos();
+                                    $('#pecaForm')[0].reset();
+                                    carregarPecas();
                                 });
                             }
                         },
@@ -143,7 +143,7 @@ $(document).ready(function () {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Erro!',
-                                text: 'Erro ao editar produto.',
+                                text: 'Erro ao editar peça.',
                             });
                         }
                     });
@@ -152,11 +152,11 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('click', '.excluir-produto', function () {
-        let produto = $(this).data('produto');
+    $(document).on('click', '.excluir-peca', function () {
+        let peca = $(this).data('peca');
 
         Swal.fire({
-            title: `Deseja excluir o produto?`,
+            title: `Deseja excluir a peça?`,
             text: 'Essa ação não pode ser desfeita.',
             icon: 'warning',
             showCancelButton: true,
@@ -165,16 +165,16 @@ $(document).ready(function () {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: '../public/produto/excluir.php',
+                    url: '../public/peca/excluir.php',
                     method: 'POST',
-                    data: { produto: produto },
+                    data: { peca: peca },
                     success: function (response) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Excluído!',
                             text: response.message,
                         }).then(() => {
-                            carregarProdutos();
+                            carregarPecas();
                         });
                     },
                     error: function (xhr, status, error) {
@@ -188,17 +188,4 @@ $(document).ready(function () {
             }
         });
     });
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const alerta = urlParams.get('alerta');
-
-    if (alerta === 'true') {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Atenção',
-            text: 'Nenhum produto cadastrado!',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#007bff'
-        });
-    }
 });

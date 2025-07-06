@@ -1,6 +1,6 @@
 .card-header {
     font-weight: bold;
-    background-color:  #2e2e48 !important;
+    background-color: #2e2e48 !important;
     color: #ffffff;
     border-radius: 0.25rem 0.25rem 0 0;
 }
@@ -23,10 +23,10 @@
     padding: 5px 10px;
 }
 
-#usuariosTable tr.stripe1 td, #usuariosTable tr.stripe1 th {
+#pecasTable tr.stripe1 td, #pecasTable tr.stripe1 th {
     background-color: #f2f2f2;
 }
-#usuariosTable tr.stripe2 td, #usuariosTable tr.stripe2 th {
+#pecasTable tr.stripe2 td, #pecasTable tr.stripe2 th {
     background-color: #fff;
 }
 

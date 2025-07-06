@@ -2,10 +2,10 @@
 
 require '../../vendor/autoload.php';
 
-use App\Controller\RelatorioController;
+use App\Controller\PecaController;
 use App\Auth\Autenticador;
 
 Autenticador::iniciar();
-
 $posto = Autenticador::getPosto();
-RelatorioController::gerarCSV($posto);
+
+echo json_encode(PecaController::listar($posto));

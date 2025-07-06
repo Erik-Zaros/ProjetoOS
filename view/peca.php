@@ -6,17 +6,17 @@ use App\Auth\Autenticador;
 
 Autenticador::iniciar();
 
-$title = 'Cadastro de Produto';
-$pageTitle = 'CADASTRO DE PRODUTO';
+$title = 'Cadastro de Peça';
+$pageTitle = 'CADASTRO DE PEÇA';
 ob_start();
 ?>
 
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-primary text-white">
-        <i class="bi bi-box-fill"></i> Cadastro de Produto
+        <i class="bi bi-wrench"></i> Cadastro de Peça
     </div>
     <div class="card-body">
-        <form id="produtoForm">
+        <form id="pecaForm">
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="codigo" class="form-label">Código</label>
@@ -43,7 +43,7 @@ ob_start();
         <i class="bi bi-card-list"></i> Produtos Cadastrados
     </div>
     <div class="card-body">
-        <table class="table table-bordered" id="produtosTable">
+        <table class="table table-bordered" id="pecasTable">
             <thead>
                 <tr>
                     <th>Código</th>
@@ -55,10 +55,6 @@ ob_start();
             <tbody></tbody>
         </table>
     </div>
-</div>
-
-<div class="text-center mt-4 mb-3">
-    <a href="../public/produto/relatorio.php" class="btn btn-success btn-sm">Download Excel</a>
 </div>
 
 <?php

@@ -30,6 +30,16 @@ $rotas = [
             ]
         ]
     ],
+    "pecas" => [
+        "titulo" => "Peças",
+        "icone" => "bi bi-wrench",
+        "submenus" => [
+            [
+                "titulo" => "Cadastrar Peças",
+                "link" => "peca.php",
+            ]
+        ]
+    ],
     "ordem_servico" => [
         "titulo" => "Ordem de Serviço",
         "icone" => "bi bi-tools",

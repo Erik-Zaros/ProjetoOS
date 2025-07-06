@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Relatorio;
 
 use App\Core\Db;
 
-class RelatorioController
+class RelatorioMenuController
 {
     public static function gerarCSV($posto)
     {
@@ -19,17 +19,10 @@ class RelatorioController
         ";
         $resVerifica = pg_query($con, $sqlVerifica);
 
-        if (!$resVerifica || pg_num_rows($resVerifica) === 0) {
-            echo 'Erro na verificação de dados.'; exit;
-        }
-
         $dados = pg_fetch_assoc($resVerifica);
-        if (
-            $dados['total_clientes'] == 0 ||
-            $dados['total_produtos'] == 0 ||
-            $dados['total_ordens_servico'] == 0
-        ) {
-            echo 'Cadastre pelo menos um cliente, produto e ordem de serviço.'; exit;
+
+        if (in_array(0, $dados)) {
+            header("Location: ../../view/menu.php?alerta=true");
         }
 
         $sql = "
@@ -56,10 +49,6 @@ class RelatorioController
         ";
 
         $res = pg_query($con, $sql);
-
-        if (!$res || pg_num_rows($res) === 0) {
-            echo 'Nenhum registro encontrado.'; exit;
-        }
 
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Disposition: attachment; filename=Relatorio_Completo_Sistema.csv');

@@ -18,6 +18,9 @@ class MenuController
         $sqlProdutos = "SELECT COUNT(*) AS total FROM tbl_produto WHERE posto = $1";
         $res['produtos'] = self::conta($con, $sqlProdutos, [$posto]);
 
+        $sqlPecas = "SELECT COUNT(*) AS total FROM tbl_peca WHERE posto = $1";
+        $res['pecas'] = self::conta($con, $sqlPecas, [$posto]);
+
         $sqlOS = "SELECT COUNT(*) AS total FROM tbl_os WHERE posto = $1";
         $res['ordens_servico'] = self::conta($con, $sqlOS, [$posto]);
 
@@ -29,6 +32,12 @@ class MenuController
 
         $sqlProdutoInativo = "SELECT COUNT(*) AS total FROM tbl_produto WHERE ativo = false AND posto = $1";
         $res['produto_inativo'] = self::conta($con, $sqlProdutoInativo, [$posto]);
+
+        $sqlPecaAtiva = "SELECT COUNT(*) AS total FROM tbl_peca WHERE ativo = true AND posto = $1";
+        $res['peca_ativa'] = self::conta($con, $sqlPecaAtiva, [$posto]);
+
+        $sqlPecaInativa = "SELECT COUNT(*) AS total FROM tbl_peca WHERE ativo = false AND posto = $1";
+        $res['peca_inativa'] = self::conta($con, $sqlPecaInativa, [$posto]);
 
         $sqlStatusOS = "
             SELECT 
