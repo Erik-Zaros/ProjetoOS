@@ -114,5 +114,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
     ?>
 
+<?php include __DIR__ . '/ModalLog.php'; ?>
+
 </body>
 </html>

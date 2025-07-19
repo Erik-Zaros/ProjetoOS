@@ -11,7 +11,8 @@ CREATE TABLE tbl_cliente (
     numero VARCHAR(10),
     cidade VARCHAR(255),
     estado VARCHAR(10),
-    posto INTEGER REFERENCES tbl_posto(posto)
+    posto INTEGER REFERENCES tbl_posto(posto),
+    data_input TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE tbl_produto (
@@ -40,7 +41,8 @@ CREATE TABLE tbl_os (
     produto_id INTEGER REFERENCES tbl_produto(id),
     cliente_id INTEGER REFERENCES tbl_cliente(id),
     finalizada BOOLEAN DEFAULT FALSE,
-    posto INTEGER REFERENCES tbl_posto(posto)
+    posto INTEGER REFERENCES tbl_posto(posto),
+    cancelada BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE tbl_posto (
@@ -58,3 +60,13 @@ CREATE TABLE tbl_usuario (
   ativo BOOLEAN DEFAULT TRUE
 );
 
+CREATE TABLE tbl_log_auditor (
+    log_auditor UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tabela TEXT NOT NULL,
+    id_registro TEXT NOT NULL,
+    acao TEXT NOT NULL CHECK (acao IN ('insert', 'update', 'delete')),
+    antes JSONB,
+    depois JSONB,
+    usuario INT REFERENCES tbl_usuario(usuario),
+    data_log TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

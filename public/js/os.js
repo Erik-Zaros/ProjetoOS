@@ -175,9 +175,20 @@ $(document).ready(function () {
             success: function (data) {
                 $('#osTable tbody').empty();
                 data.forEach(function (os) {
+                    if (os.finalizada != true) {
+                        var canceladaButton = os.cancelada ? '' : '<button class="btn btn-danger btn-sm cancelar-os" data-os="' + os.os + '">Cancelar</button>';
+                    }
+
+                    if (os.cancelada != true) {
+                        var finalizarButton = os.finalizada ? '' : '<button class="btn btn-success btn-sm finalizar-os" data-os="' + os.os + '">Finalizar</button>';
+                    }
+
+                    if (os.finalizada != true || os.cancelada != true) {
+                        var alterarButton = '<a href="cadastra_os.php?os=${os.os}" class="btn btn-warning btn-sm">Alterar</a>';
+                    }
+
+                    var canceladaBadge = os.cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '';
                     var finalizadaBadge = os.finalizada ? '<span class="badge bg-success">Finalizada</span>' : '';
-                    var finalizarButton = os.finalizada ? '' : '<button class="btn btn-success btn-sm finalizar-os" data-os="' + os.os + '">Finalizar</button>';
-                    var alterarButton = os.finalizada ? '' : `<a href="cadastra_os.php?os=${os.os}" class="btn btn-warning btn-sm">Alterar</a>`;
 
                     $('#osTable tbody').append(`
                         <tr>
@@ -187,8 +198,10 @@ $(document).ready(function () {
                             <td>${os.produto}</td>
                             <td>${os.data_abertura}</td>
                             <td>
-                                ${alterarButton}
-                                ${finalizarButton}
+                                ${canceladaBadge}
+                                ${os.finalizada != true ? canceladaButton : ''}
+                                ${os.finalizada != true || os.cancelada != true ? '' : alterarButton}
+                                ${os.cancelada != true ? finalizarButton : ''}
                                 ${finalizadaBadge}
                             </td>
                         </tr>
@@ -236,7 +249,13 @@ $(document).ready(function () {
                 $('#cidadeConsumidor').text(data.cidade);
                 $('#estadoConsumidor').text(data.estado);
                 $('#produtoCodigoDescricao').text(data.codigo_descricao);
-                $('#status').html((data.finalizada === true || data.finalizada === 't') ? '<span class="badge bg-success">Finalizada</span>' : '<span class="badge bg-warning">Em Aberto</span>');
+                if (data.finalizada === 't') {
+                    $('#status').html('<span class="badge bg-success">Finalizada</span>');
+                } else if (data.cancelada === 't') {
+                    $('#status').html('<span class="badge bg-danger">Cancelada</span>');
+                } else {
+                    $('#status').html('<span class="badge bg-warning">Em Aberto</span>');
+                }
             },
             error: function (xhr, status, error) {
                 Swal.fire({
@@ -268,9 +287,20 @@ $(document).ready(function () {
             success: function (data) {
                 $('#osTable tbody').empty();
                 data.forEach(function (os) {
+                    if (os.finalizada != true) {
+                        var canceladaButton = os.cancelada ? '' : '<button class="btn btn-danger btn-sm cancelar-os" data-os="' + os.os + '">Cancelar</button>';
+                    }
+
+                    if (os.cancelada != true) {
+                        var finalizarButton = os.finalizada ? '' : '<button class="btn btn-success btn-sm finalizar-os" data-os="' + os.os + '">Finalizar</button>';
+                    }
+
+                    if (os.finalizada != true || os.cancelada != true) {
+                        var alterarButton = '<a href="cadastra_os.php?os=${os.os}" class="btn btn-warning btn-sm">Alterar</a>';
+                    }
+
+                    var canceladaBadge = os.cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '';
                     var finalizadaBadge = os.finalizada ? '<span class="badge bg-success">Finalizada</span>' : '';
-                    var finalizarButton = os.finalizada ? '' : '<button class="btn btn-success finalizar-os btn-sm" data-os="' + os.os + '">Finalizar</button>';
-                    var alterarButton = os.finalizada ? '' : `<a href="cadastra_os.php?os=${os.os}" class="btn btn-warning btn-sm">Alterar</a>`;
 
                     $('#osTable tbody').append(`
                             <tr>
@@ -280,8 +310,10 @@ $(document).ready(function () {
                                 <td>${os.produto}</td>
                                 <td>${os.data_abertura}</td>
                                 <td>
-                                    ${alterarButton}
-                                    ${finalizarButton}
+                                    ${canceladaBadge}
+                                    ${os.finalizada != true ? canceladaButton : ''}
+                                    ${os.finalizada != true || os.cancelada != true ? '' : alterarButton}
+                                    ${os.cancelada != true ? finalizarButton : ''}
                                     ${finalizadaBadge}
                                 </td>
                             </tr>
@@ -332,6 +364,42 @@ $(document).ready(function () {
                             icon: 'error',
                             title: 'Erro',
                             text: 'Erro ao finalizar a OS!',
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.cancelar-os', function () {
+        var os = $(this).data('os');
+        Swal.fire({
+            title: `Deseja cancelar a ordem de serviço ${os}?`,
+            text: 'Essa ação não pode ser desfeita.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim, cancelar!',
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../public/os/cancelar.php',
+                    method: 'POST',
+                    data: { os: os },
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Cancelado!',
+                            text: response.message,
+                        }).then(() => {
+                            carregarOs();
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erro',
+                            text: 'Erro ao cancelar a OS!',
                         });
                     }
                 });

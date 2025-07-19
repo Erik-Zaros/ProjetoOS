@@ -20,6 +20,7 @@ $(document).ready(function () {
                                 <td>
                                     <button class='btn btn-warning btn-sm editar-peca' data-codigo='${peca.codigo}'>Editar</button>
                                     <button class='btn btn-danger btn-sm excluir-peca' data-peca='${peca.peca}'>Excluir</button>
+                                    <button class='btn btn-info btn-sm btn-log-auditor' data-id='${peca.peca}'data-tabela='tbl_peca'>Ver Log</button>
                                 </td>
                             </tr>
                         `);
@@ -188,4 +189,18 @@ $(document).ready(function () {
             }
         });
     });
+
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const alerta = urlParams.get('alerta');
+
+    if (alerta === 'true') {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Atenção',
+            text: 'Nenhuma peça cadastrado!',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#007bff'
+        });
+    }
 });

@@ -15,6 +15,7 @@ $os = $_GET['os'];
 $posto = Autenticador::getPosto();
 $osInfo = OsController::buscarPorNumero($os, $posto);
 $osFinalizada = $osInfo['finalizada'] ?? false;
+$osCancelada = $osInfo['cancelada'] ?? false;
 ?>
 
 <div class="card shadow-sm mb-4">
@@ -64,7 +65,14 @@ $osFinalizada = $osInfo['finalizada'] ?? false;
         </table>
 
         <div class="text-end mt-3">
-            <?= $osFinalizada == 't' ? "" : "<a href='cadastra_os.php?os=$os' class='btn btn-primary btn-sm me-2'>Alterar</a>" ?>
+
+            <?php if ($osFinalizada == 't' || $osCancelada == 't') {
+                $botaoAlterar = "";
+            } else {
+                $botaoAlterar = "<a href='cadastra_os.php?os=$os' class='btn btn-primary btn-sm me-2'>Alterar</a>";
+            } ?>
+
+            <?= $botaoAlterar ?>
             <a href="consulta_os.php" class="btn btn-secondary btn-sm">Voltar</a>
         </div>
     </div>

@@ -18,15 +18,15 @@
         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%232e2e48'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'%3EOS%3C/text%3E%3C/svg%3E" alt="Logo ProjetoOS" class="logo">
       </div>
       <h2 class="login-title">Projeto OS</h2>
-      
+
       <div id="msgErro"></div>
-      
+
       <form id="formLogin">
         <div class="form-group">
           <i class="bi bi-person-fill input-icon"></i>
           <input type="text" name="login" id="login" class="form-control" placeholder="Digite seu login" required>
         </div>
-        
+
         <div class="form-group">
           <i class="bi bi-lock-fill input-icon"></i>
           <input type="password" name="senha" id="senha" class="form-control" placeholder="Digite sua senha" required>
@@ -34,13 +34,13 @@
             <i class="bi bi-eye-fill"></i>
           </button>
         </div>
-        
+
         <button type="submit" class="btn btn-login">
           <i class="bi bi-box-arrow-in-right" id="loginIcon"></i>
           <span id="loginText">Entrar</span>
         </button>
       </form>
-      
+
 <!--  <div class="forgot-password">
         <a href="#" onclick="showMessage('Funcionalidade em desenvolvimento!', 'info')">Esqueceu sua senha?</a>
       </div> -->
@@ -51,3 +51,4 @@
   <script src="public/js/login.js"></script>
 </body>
 </html>
+

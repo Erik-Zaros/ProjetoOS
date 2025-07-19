@@ -81,6 +81,7 @@ class Os
             if (pg_num_rows($res_check) === 0) throw new \Exception("OS não encontrada.");
             $row = pg_fetch_assoc($res_check);
             if ($row['finalizada'] === 't') throw new \Exception("OS já finalizada. Não é possível editar.");
+            if ($row['cancelada'] === 't') throw new \Exception("OS já cancelada. Não é possível editar.");
 
             $sqlCliente = "SELECT cliente, nome FROM tbl_cliente WHERE cpf = '{$cpf}' AND posto = {$posto}";
             $res_cliente = pg_query($con, $sqlCliente);
@@ -124,7 +125,8 @@ class Os
                     os.cpf_consumidor AS cpf,
                     CONCAT(p.codigo, ' - ', p.descricao) AS produto,
                     os.data_abertura,
-                    os.finalizada
+                    os.finalizada,
+                    os.cancelada
                 FROM tbl_os os
                 INNER JOIN tbl_produto p ON os.produto = p.produto
                 WHERE os.posto = $posto";
@@ -158,7 +160,8 @@ class Os
                     'cpf'           => $row['cpf'],
                     'produto'       => $row['produto'],
                     'data_abertura' => date('d/m/Y', strtotime($row['data_abertura'])),
-                    'finalizada'    => $row['finalizada'] === 't'
+                    'finalizada'    => $row['finalizada'] === 't',
+                    'cancelada'     => $row['cancelada'] === 't'
                 ];
             }
         }
@@ -193,18 +196,30 @@ class Os
             : ['status' => 'error', 'message' => 'Erro ao finalizar OS.'];
     }
 
+    public static function cancelar($os, $posto)
+    {
+        $con = Db::getConnection();
+        $sql = "UPDATE tbl_os SET cancelada = true WHERE os = $os AND posto = $posto";
+        $res = pg_query($con, $sql);
+
+        return $res
+            ? ['status' => 'success', 'message' => 'OS cancelada com sucesso!']
+            : ['status' => 'error', 'message' => 'Erro ao cancelar OS.'];
+    }
+
     public static function listarTodos($posto)
     {
         $con = Db::getConnection();
         $posto = intval($posto);
 
-        $sql = "SELECT os, 
-                       nome_consumidor AS cliente, 
-                       cpf_consumidor AS cpf, 
-                       to_char(data_abertura, 'DD/MM/YYYY') AS data_abertura, 
+        $sql = "SELECT os,
+                       nome_consumidor AS cliente,
+                       cpf_consumidor AS cpf,
+                       to_char(data_abertura, 'DD/MM/YYYY') AS data_abertura,
                        finalizada,
+                       cancelada,
                        (SELECT CONCAT(codigo, ' - ', descricao) AS codigo_descricao
-                        FROM tbl_produto 
+                        FROM tbl_produto
                         WHERE produto = tbl_os.produto) AS produto
                 FROM tbl_os
                 WHERE posto = {$posto}
@@ -215,6 +230,7 @@ class Os
 
         while ($row = pg_fetch_assoc($res)) {
             $row['finalizada'] = $row['finalizada'] === 't';
+            $row['cancelada'] = $row['cancelada'] === 't';
             $lista[] = $row;
         }
 
@@ -239,7 +255,8 @@ class Os
                     c.cidade,
                     c.estado,
                     CONCAT(p.codigo, ' - ', p.descricao) AS codigo_descricao,
-                    os.finalizada
+                    os.finalizada,
+                    os.cancelada
                 FROM tbl_os os
                 INNER JOIN tbl_produto p ON os.produto = p.produto
                 LEFT JOIN tbl_cliente c ON os.cliente = c.cliente

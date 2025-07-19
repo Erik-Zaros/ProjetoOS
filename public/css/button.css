@@ -50,3 +50,15 @@
     background-color: #6c757d;
     border-color: #6c757d;
 }
+
+.btn-info {
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+    color: #ffffff;
+}
+
+.btn-info:hover {
+    background-color: #0dcac0;
+    border-color: #0dcac0;
+    color: #ffffff;
+}

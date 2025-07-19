@@ -39,6 +39,11 @@ class OsController
         return Os::finalizar($os, $posto);
     }
 
+    public static function cancelar($os, $posto)
+    {
+        return Os::cancelar($os, $posto);
+    }
+
     public static function buscarPorNumero($os, $posto)
     {
         $resultado = Os::buscarPorNumero($os, $posto);

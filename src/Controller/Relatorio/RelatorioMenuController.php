@@ -18,64 +18,89 @@ class RelatorioMenuController
                 (SELECT COUNT(*) FROM tbl_os WHERE posto = {$posto}) AS total_ordens_servico
         ";
         $resVerifica = pg_query($con, $sqlVerifica);
-
         $dados = pg_fetch_assoc($resVerifica);
-
         if (in_array(0, $dados)) {
             header("Location: ../../view/menu.php?alerta=true");
+            exit;
         }
-
-        $sql = "
-            SELECT
-                os.os AS ordem_servico,
-                to_char(os.data_abertura, 'DD/MM/YYYY') AS data_abertura, 
-                os.finalizada,
-                prod.codigo AS codigo_produto,
-                prod.descricao AS descricao_produto,
-                prod.ativo AS ativo_produto,
-                cli.nome AS nome_consumidor,
-                cli.cpf AS cpf_consumidor,
-                cli.cep AS cep_consumidor,
-                cli.endereco AS endereco_consumidor,
-                cli.bairro AS bairro_consumidor,
-                cli.numero AS numero_consumidor,
-                cli.cidade AS cidade_consumidor,
-                cli.estado AS estado_consumidor
-            FROM tbl_os os
-            LEFT JOIN tbl_produto prod ON os.produto = prod.produto
-            LEFT JOIN tbl_cliente cli ON os.cliente = cli.cliente
-            WHERE os.posto = {$posto}
-            ORDER BY os.os ASC
-        ";
-
-        $res = pg_query($con, $sql);
 
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Disposition: attachment; filename=Relatorio_Completo_Sistema.csv');
+        $fp = fopen('php://output', 'w');
 
-        $output = fopen('php://output', 'w');
-
-        $cabecalho = [
-            'OS', 'Data Abertura', 'Finalizada', 'Nome Consumidor', 'CPF Consumidor',
-            'CEP Consumidor', 'Endereço Consumidor', 'Bairro Consumidor', 'Número Consumidor',
-            'Cidade Consumidor', 'Estado Consumidor', 'Código Produto', 'Descrição Produto', 'Status Produto'
-        ];
-        fputcsv($output, $cabecalho, ';');
-
-        while ($row = pg_fetch_assoc($res)) {
-            $finalizada = $row['finalizada'] === 't' ? 'Sim' : 'Não';
-            $ativo = $row['ativo_produto'] === 't' ? 'Ativo' : 'Inativo';
-
-            fputcsv($output, [
-                $row['ordem_servico'], $row['data_abertura'], $finalizada,
-                $row['nome_consumidor'], $row['cpf_consumidor'],
-                $row['cep_consumidor'], $row['endereco_consumidor'], $row['bairro_consumidor'],
-                $row['numero_consumidor'], $row['cidade_consumidor'], $row['estado_consumidor'],
-                $row['codigo_produto'], $row['descricao_produto'], $ativo
-            ], ';');
+        function escreverSecao($fp, $titulo, $cabecalho, $dados)
+        {
+            fputcsv($fp, []); // linha em branco
+            fputcsv($fp, [$titulo]);
+            fputcsv($fp, $cabecalho);
+            foreach ($dados as $linha) {
+                fputcsv($fp, $linha);
+            }
         }
 
-        fclose($output);
+        $sql = "
+            SELECT os.os, to_char(os.data_abertura, 'DD/MM/YYYY') AS data_abertura, os.finalizada,
+                   prod.codigo AS produto_codigo, prod.descricao AS produto_descricao, prod.ativo AS ativo_produto,
+                   cli.nome AS cliente_nome, cli.cpf AS cliente_cpf
+              FROM tbl_os os
+         LEFT JOIN tbl_produto prod ON os.produto = prod.produto
+         LEFT JOIN tbl_cliente cli ON os.cliente = cli.cliente
+             WHERE os.posto = {$posto}
+          ORDER BY os.os ASC
+        ";
+        $res = pg_query($con, $sql);
+        $dados = [];
+        while ($row = pg_fetch_assoc($res)) {
+            $dados[] = [
+                $row['os'], $row['data_abertura'],
+                $row['finalizada'] === 't' ? 'Sim' : 'Não',
+                $row['cliente_nome'], $row['cliente_cpf'],
+                $row['produto_codigo'], $row['produto_descricao'],
+                $row['ativo_produto'] === 't' ? 'Ativo' : 'Inativo'
+            ];
+        }
+        $cabecalho = ['OS', 'Data Abertura', 'Finalizada', 'Nome Consumidor', 'CPF Consumidor', 'Código Produto', 'Descrição Produto', 'Status Produto'];
+        escreverSecao($fp, 'RELATÓRIO DE ORDENS DE SERVIÇO', $cabecalho, $dados);
+
+        $sql = "SELECT nome, cpf, cep, endereco, bairro, numero, cidade, estado FROM tbl_cliente WHERE posto = {$posto} ORDER BY cliente ASC";
+        $res = pg_query($con, $sql);
+        $dados = [];
+        while ($row = pg_fetch_assoc($res)) {
+            $dados[] = [
+                $row['nome'], $row['cpf'], $row['cep'], $row['endereco'],
+                $row['bairro'], $row['numero'], $row['cidade'], $row['estado']
+            ];
+        }
+        $cabecalho = ['Nome', 'CPF', 'CEP', 'Endereço', 'Bairro', 'Número', 'Cidade', 'Estado'];
+        escreverSecao($fp, 'RELATÓRIO DE CLIENTES', $cabecalho, $dados);
+
+        $sql = "SELECT codigo, descricao, ativo, to_char(data_input, 'DD/MM/YYYY') as data_input FROM tbl_produto WHERE posto = {$posto} ORDER BY produto ASC";
+        $res = pg_query($con, $sql);
+        $dados = [];
+        while ($row = pg_fetch_assoc($res)) {
+            $dados[] = [
+                $row['codigo'], $row['descricao'],
+                $row['ativo'] === 't' ? 'Ativo' : 'Inativo',
+                $row['data_input']
+            ];
+        }
+        $cabecalho = ['Código', 'Descrição', 'Ativo', 'Data de Cadastro'];
+        escreverSecao($fp, 'RELATÓRIO DE PRODUTOS', $cabecalho, $dados);
+
+        $sql = "SELECT codigo, descricao, ativo, to_char(data_input, 'DD/MM/YYYY') as data_input FROM tbl_peca WHERE posto = {$posto} ORDER BY peca ASC";
+        $res = pg_query($con, $sql);
+        $dados = [];
+        while ($row = pg_fetch_assoc($res)) {
+            $dados[] = [
+                $row['codigo'], $row['descricao'],
+                $row['ativo'] === 't' ? 'Ativo' : 'Inativo',
+                $row['data_input']
+            ];
+        }
+        $cabecalho = ['Código', 'Descrição', 'Ativo', 'Data de Cadastro'];
+        escreverSecao($fp, 'RELATÓRIO DE PEÇAS', $cabecalho, $dados);
+
+        fclose($fp);
         exit;
     }
 }

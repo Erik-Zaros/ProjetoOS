@@ -64,6 +64,10 @@ ob_start();
     </div>
 </div>
 
+<div class="text-center mt-4 mb-3">
+    <a href="../public/os/relatorio.php" class="btn btn-success btn-sm">Download Excel</a>
+</div>
+
 <?php
 $content = ob_get_clean();
 include 'layout.php';
