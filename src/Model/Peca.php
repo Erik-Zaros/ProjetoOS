@@ -129,10 +129,10 @@ class Peca
                 $usuario
             );
 
-        return $update
-            ? ['status' => 'success', 'message' => 'Peça atualizado com sucesso!']
-            : ['status' => 'error', 'message' => 'Erro ao atualizar peça.'];
+        return ['status' => 'success', 'message' => 'Peça atualizado com sucesso!'];
         }
+
+        return ['status' => 'error', 'message' => 'Erro ao atualizar peça.'];
     }
 
     public static function listarTodos($posto)

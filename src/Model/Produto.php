@@ -3,6 +3,8 @@
 namespace App\Model;
 
 use App\Core\Db;
+use App\Auth\Autenticador;
+use App\Model\LogAuditor;
 
 class Produto
 {
@@ -18,6 +20,7 @@ class Produto
     public function salvar()
     {
         $con = Db::getConnection();
+        $usuario = Autenticador::getUsuario();
 
         $codigo    = pg_escape_string($this->dados['codigo']);
         $descricao = pg_escape_string($this->dados['descricao']);
@@ -32,12 +35,32 @@ class Produto
         }
 
         $sqlInsert = "INSERT INTO tbl_produto (codigo, descricao, ativo, posto)
-                      VALUES ('{$codigo}', '{$descricao}', '{$ativo}', {$posto})";
+                      VALUES ('{$codigo}', '{$descricao}', '{$ativo}', {$posto}) RETURNING produto";
         $insert = pg_query($con, $sqlInsert);
 
-        return $insert
-            ? ['status' => 'success', 'message' => 'Produto cadastrado com sucesso!']
-            : ['status' => 'error', 'message' => 'Erro ao cadastrar produto.'];
+        if ($insert && pg_num_rows($insert) > 0) {
+            $produto = pg_fetch_result($insert, 0, 'produto');
+            $depois = [
+                'codigo'    => $codigo,
+                'descricao' => $descricao,
+                'ativo'     => $ativo
+            ];
+
+            $antes = null;
+
+            LogAuditor::registrar(
+                'tbl_produto',
+                $produto,
+                'insert',
+                $antes,
+                $depois,
+                $usuario
+            );
+
+            return ['status' => 'success', 'message' => 'Produto cadastrado com sucesso!'];
+        }
+
+        return ['status' => 'error', 'message' => 'Erro ao cadastrar produto!'];
     }
 
     public static function buscarPorCodigo($codigo, $posto)
@@ -57,6 +80,7 @@ class Produto
     public function atualizar()
     {
         $con = Db::getConnection();
+        $usuario = Autenticador::getUsuario();
 
         $codigo    = pg_escape_string($this->dados['codigo']);
         $descricao = pg_escape_string($this->dados['descricao']);
@@ -71,13 +95,45 @@ class Produto
             return ['status' => 'error', 'message' => 'Já existe um produto com esse código e descrição.'];
         }
 
+        $sqlAntes = "SELECT codigo, descricao, ativo FROM tbl_produto WHERE produto = $produto AND posto = $posto";
+        $resAntes = pg_query($con, $sqlAntes);
+
+        if (pg_num_rows($resAntes) > 0) {
+            $codigoAntes = pg_fetch_result($resAntes, 0, 'codigo');
+            $codigoDepois = pg_fetch_result($resAntes, 0, 'descricao');
+            $ativoAntes = pg_fetch_result($resAntes, 0, 'ativo');
+
+            $antes = [
+                'codigo'    => $codigoAntes,
+                'descricao' => $codigoDepois,
+                'ativo'     => $ativoAntes
+            ];
+        }
+
         $sqlUpdate = "UPDATE tbl_produto SET codigo = '{$codigo}', descricao = '{$descricao}', ativo = '{$ativo}'
                       WHERE produto = {$produto} AND posto = {$posto}";
         $update = pg_query($con, $sqlUpdate);
 
-        return $update
-            ? ['status' => 'success', 'message' => 'Produto atualizado com sucesso!']
-            : ['status' => 'error', 'message' => 'Erro ao atualizar produto.'];
+        if ($update) {
+            $depois = [
+                'codigo'    => $codigo,
+                'descricao' => $descricao,
+                'ativo'     => $ativo
+            ];
+
+            LogAuditor::registrar(
+                'tbl_produto',
+                $produto,
+                'update',
+                $antes,
+                $depois,
+                $usuario
+            );
+
+        return ['status' => 'success', 'message' => 'Produto atualizado com sucesso!'];
+        }
+
+        return ['status' => 'error', 'message' => 'Erro ao atualizar produto.'];
     }
 
     public static function listarTodos($posto)

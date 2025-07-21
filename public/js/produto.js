@@ -20,6 +20,7 @@ $(document).ready(function () {
                                 <td>
                                     <button class='btn btn-warning btn-sm editar-produto' data-codigo='${produto.codigo}'>Editar</button>
                                     <button class='btn btn-danger btn-sm excluir-produto' data-produto='${produto.produto}'>Excluir</button>
+                                    <button class='btn btn-info btn-sm btn-log-auditor' data-id='${produto.produto}'data-tabela='tbl_produto'>Ver Log</button>
                                 </td>
                             </tr>
                         `);
@@ -44,7 +45,7 @@ $(document).ready(function () {
                     icon: 'error',
                     title: 'Erro!',
                     text: 'Erro ao carregar os produtos.',
-                });
+                }); 
             }
         });
     }

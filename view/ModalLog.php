@@ -4,6 +4,10 @@
     height: 90vh;
   }
 
+  .modal-header {
+    background-color: #2e2e48 !important;
+  }
+
 </style>
 
 <div class="modal fade" id="logAuditorModal" tabindex="-1" aria-labelledby="modalLogLabel" aria-hidden="true">
