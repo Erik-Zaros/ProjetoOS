@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
     function carregarGraficoPizzaStatusOS(dados) {
-        console.log(dados);
         const osAbertas = Number(dados.os_abertas) || 0;
         const osFinalizadas = Number(dados.os_finalizadas) || 0;
         const osCanceladas = Number(dados.os_canceladas) || 0;
