@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const osParam = urlParams.get('os');
     const page = window.location.pathname.split("/").pop();
 
-    if (page === 'cadastra_os.php') {
+    if (page === 'cadastra_os') {
         if (osParam) {
             carregarDadosOS(osParam);
         } else {
@@ -163,7 +163,7 @@ $(document).ready(function () {
         });
     }
 
-    if (window.location.pathname.includes('consulta_os.php')) {
+    if (window.location.pathname.includes('consulta_os')) {
         carregarOs();
     }
 
@@ -192,7 +192,7 @@ $(document).ready(function () {
 
                     $('#osTable tbody').append(`
                         <tr>
-                            <td><a href="os_press.php?os=${os.os}" class="text-primary">${os.os}</a></td>
+                            <td><a href="os_press?os=${os.os}" class="text-primary">${os.os}</a></td>
                             <td>${os.cliente}</td>
                             <td>${os.cpf}</td>
                             <td>${os.produto}</td>
@@ -296,7 +296,7 @@ $(document).ready(function () {
                     }
 
                     if (os.finalizada != true || os.cancelada != true) {
-                        var alterarButton = '<a href="cadastra_os.php?os=${os.os}" class="btn btn-warning btn-sm">Alterar</a>';
+                        var alterarButton = '<a href="cadastra_os?os=${os.os}" class="btn btn-warning btn-sm">Alterar</a>';
                     }
 
                     var canceladaBadge = os.cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '';
@@ -304,7 +304,7 @@ $(document).ready(function () {
 
                     $('#osTable tbody').append(`
                             <tr>
-                                <td><a href="cadastra_os.php?os=${os.os}">${os.os}</a></td>
+                                <td><a href="cadastra_os?os=${os.os}">${os.os}</a></td>
                                 <td>${os.cliente}</td>
                                 <td>${os.cpf}</td>
                                 <td>${os.produto}</td>
@@ -410,7 +410,7 @@ $(document).ready(function () {
 
 $(function() {
   $("#nome_consumidor").autocomplete({
-    minLength: 2,
+    minLength: 3,
     source: function(request, response) {
       $.ajax({
         url: "../public/cliente/autocomplete.php",

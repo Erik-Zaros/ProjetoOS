@@ -6,7 +6,7 @@ use App\Core\Db;
 
 class RelatorioPecaController
 {
-    public static function gerarCSV($posto)
+    public static function gerarXLS($posto)
     {
         $con = Db::getConnection();
         $posto = intval($posto);
@@ -30,24 +30,30 @@ class RelatorioPecaController
                 ";
         $res = pg_query($con, $sql);
 
-        header('Content-Type: text/csv; charset=UTF-8');
-        header('Content-Disposition: attachment; filename=Relatorio_Peça.csv');
+        header("Content-Type: application/vnd.ms-excel; charset=utf-8");
+        header("Content-Disposition: attachment; filename=Relatorio_Peca.xls");
+        header("Cache-Control: max-age=0");
 
-        $output = fopen('php://output', 'w');
-
-        $cabecalho = ['Código Peça', 'Descrição Peça', 'Status', 'Data Cadastro'];
-        fputcsv($output, $cabecalho, ';');
+        echo "<table border='1'>";
+        echo "<tr bgcolor='#2e2e48' style='color: #ffffff; font-weight: bold;'>
+                <th>Código Peça</th>
+                <th>Descrição Peça</th>
+                <th>Status</th>
+                <th>Data Cadastro</th>
+              </tr>";
 
         while ($row = pg_fetch_assoc($res)) {
             $ativo = $row['ativo'] === 't' ? 'Ativo' : 'Inativo';
 
-            fputcsv($output, [
-                $row['codigo'], $row['descricao'], $ativo,
-                $row['data_input']
-            ], ';');
+            echo "<tr>";
+            echo "<td>{$row['codigo']}</td>";
+            echo "<td>{$row['descricao']}</td>";
+            echo "<td>{$ativo}</td>";
+            echo "<td>{$row['data_input']}</td>";
+            echo "</tr>";
         }
 
-        fclose($output);
+        echo "</table>";
         exit;
     }
 }

@@ -3,12 +3,12 @@ $rotas = [
     "usuarios" => [
         "titulo" => "Usuários Admin",
         "icone" => "bi bi-person-circle",
-        "link" => "usuarios.php"
+        "link" => "usuarios"
     ],
     "dashboard" => [
         "titulo" => "Dashboard Geral",
         "icone" => "bi bi-pie-chart-fill",
-        "link" => "menu.php",
+        "link" => "menu",
     ],
     "clientes" => [
         "titulo" => "Clientes",
@@ -16,7 +16,7 @@ $rotas = [
         "submenus" => [
             [
                 "titulo" => "Cadastrar Cliente",
-                "link" => "cliente.php",
+                "link" => "cliente",
             ]
         ]
     ],
@@ -26,7 +26,7 @@ $rotas = [
         "submenus" => [
             [
                 "titulo" => "Cadastrar Produto",
-                "link" => "produto.php",
+                "link" => "produto",
             ]
         ]
     ],
@@ -36,7 +36,7 @@ $rotas = [
         "submenus" => [
             [
                 "titulo" => "Cadastrar Peças",
-                "link" => "peca.php",
+                "link" => "peca",
             ]
         ]
     ],
@@ -46,11 +46,11 @@ $rotas = [
         "submenus" => [
             [
                 "titulo" => "Cadastrar OS",
-                "link" => "cadastra_os.php",
+                "link" => "cadastra_os",
             ],
             [
                 "titulo" => "Consultar OS",
-                "link" => "consulta_os.php",
+                "link" => "consulta_os",
             ]
         ]
     ]

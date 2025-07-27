@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
     function carregarGraficoPizzaStatusOS(dados) {
+        console.log(dados);
         const osAbertas = Number(dados.os_abertas) || 0;
         const osFinalizadas = Number(dados.os_finalizadas) || 0;
+        const osCanceladas = Number(dados.os_canceladas) || 0;
 
         Highcharts.chart('grafico-pizza-os-status', {
             chart: {
@@ -12,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: 'STATUS DAS ORDENS DE SERVIÇO'
             },
             subtitle: {
-                text: 'ABERTAS x FINALIZADAS',
+                text: 'ABERTAS X FINALIZADAS X CANCELADAS',
                 align: 'center',
                 style: {
                     fontSize: '16px'
@@ -40,10 +42,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 colorByPoint: true,
                 data: [
                     { name: 'Abertas', y: osAbertas },
-                    { name: 'Finalizadas', y: osFinalizadas }
+                    { name: 'Finalizadas', y: osFinalizadas },
+                    { name: 'Canceladas', y: osCanceladas}
                 ]
             }],
-            colors: ['#ffc107', '#28a745'],
+            colors: ['#ffc107', '#28a745', '#ff0000'],
             accessibility: {
                 point: { valueSuffix: '%' }
             }
@@ -155,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 series: [{
                     name: 'Registros',
                     data: [usuarios, clientes, produtos, pecas, ordensServico],
-                    color: '#007bff'
+                    color: '#2e2e48'
                 }]
             });
         }

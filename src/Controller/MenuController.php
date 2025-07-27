@@ -42,7 +42,8 @@ class MenuController
         $sqlStatusOS = "
             SELECT 
                 COUNT(*) FILTER (WHERE finalizada IS TRUE) AS finalizadas,
-                COUNT(*) FILTER (WHERE finalizada IS FALSE OR finalizada IS NULL) AS abertas
+                COUNT(*) FILTER (WHERE (finalizada IS FALSE OR finalizada IS NULL) AND (cancelada IS FALSE OR cancelada IS NULL)) AS abertas,
+                COUNT(*) FILTER (WHERE cancelada IS TRUE AND (finalizada IS FALSE OR finalizada IS NULL)) AS canceladas
             FROM tbl_os
             WHERE posto = $1
         ";
@@ -51,9 +52,11 @@ class MenuController
         if ($resStatusOs && $row = pg_fetch_assoc($resStatusOs)) {
             $res['os_finalizadas'] = (int)$row['finalizadas'];
             $res['os_abertas'] = (int)$row['abertas'];
+            $res['os_canceladas'] = (int)($row['canceladas']);
         } else {
             $res['os_finalizadas'] = 0;
             $res['os_abertas'] = 0;
+            $res['os_canceladas'] = 0;
         }
 
         return $res;
