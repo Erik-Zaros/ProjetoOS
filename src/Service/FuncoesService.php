@@ -19,5 +19,6 @@ class FuncoesService
             $nome_posto = pg_fetch_result($res, 0, 'nome');
             return $nome_posto;
         }
+        return null;
     }
 }
