@@ -1,46 +1,65 @@
 # ProjetoOS
 
- Este sistema é baseado em um fluxo simplificado de abertura de Ordem de Serviço, com funcionalidades para cadastro de clientes, produtos e ordens de serviço.
+Sistema de gestão simplificada para abertura e acompanhamento de Ordens de Serviço, com funcionalidades para cadastro de clientes, produtos e peças.
 
- ## MENU
- - Arquivo: menu.php
- - Esta é a tela principal do sistema, onde o usuário é recebido com um gráfico de pizza e um gráfico de colunas que indicam a quantidade atual de registros de clientes, produtos e ordens de serviço. Também é apresentado um gráfico com a quantidade de produtos ativos e inativos do sistema.
- - Para exibir os gráficos, foi utilizada a biblioteca "Highcharts". No arquivo graficoPizza.php, constam as queries SQL para obter os dados referentes aos clientes, produtos e ordens de serviço, além dos dados dos produtos ativos e inativos. A configuração do gráfico de pizza e do gráfico de colunas, assim como as chamadas AJAX para buscar os dados, estão no arquivo menu.js. Além disso, o sistema permite gerar um arquivo CSV com todos os registros de clientes, produtos e ordens de serviço cadastrados.
+ ## Login
+ - Arquivo: login.php
+- Tela inicial de acesso ao sistema. Usuários (Postos Autorizados) utilizam suas credenciais para autenticação.
+ <img width="1833" height="961" alt="image" src="https://github.com/user-attachments/assets/a7f040e5-493d-4df9-ac88-8d02dee2c353" />
 
- ![image](https://github.com/user-attachments/assets/93f1e866-0a78-4a27-9ec6-c6c231a02979)
+ ## Menu
+ - Arquivo: view/menu.php
+ - Primeira tela após o login. Exibe painéis com gráficos informativos sobre:
+ - Status das Ordens de Serviço
+ - Situação dos Produtos cadastrados
+ - Situação das Peças
+ - Também é possível gerar relatórios CSV contendo os registros do sistema.
+ 
+<img width="1834" height="962" alt="image" src="https://github.com/user-attachments/assets/bd12ae1a-0a48-4c00-beb7-93a74a310e9e" />
 
- ## CLIENTE
- - Arquivo: cliente.php
- - Nesta tela, o usuário pode cadastrar clientes e editar aqueles já cadastrados. Entretanto, durante a edição, não é permitido alterar o CPF do cliente.
- - Foi criado o arquivo `cadastraCliente.php` para cadastrar clientes, o arquivo `listaCliente.php` para listar os clientes, o arquivo `buscaCliente.php` para buscar os dados de um cliente específico e o arquivo `editaCliente.php` para editar os dados de um cliente. No arquivo `buscaCep.php` existe a chamada ao serviço web viacep para buscar o CEP do usuário. No arquivo `cliente.js` estão todas as chamadas AJAX para cada arquivo PHP. O bloqueio da edição do CPF também é implementado no `cliente.js` quando o sistema busca as informações de um cliente específico para realizar a edição.
+ ## Usuários Admin
+ - Arquivo: view/usuarios.php
+ - Tela para cadastrar e editar os usuários com acesso administrativo ao sistema.
 
- ![image](https://github.com/user-attachments/assets/a27acdf5-5080-4ac3-a7e9-4b6eddbb7ec2)
+ <img width="1836" height="964" alt="image" src="https://github.com/user-attachments/assets/81606a58-031f-46b4-aaab-e967d9a3f431" />
 
- ## PRODUTO
- - Arquivo: produto.php
- - Nesta tela, o usuário pode cadastrar produtos e editar aqueles já cadastrados, podendo ativar ou inativar o produto no sistema.
- - Foi criado o arquivo `cadastraProduto.php` para cadastrar produtos, o arquivo `listaProduto.php` para listar os produtos cadastrados, o arquivo `buscaProduto.php` para buscar os dados de um produto específico, e o arquivo `editaProduto.php` para editar os dados de um produto. No arquivo `produto.js`, estão todas as chamadas AJAX para cada arquivo PHP.
+ ## Cliente
+ - Arquivo: view/cliente.php
+ - Tela para cadastrar e editar os clientes (consumidores finais), que serão vinculados às ordens de serviço.
 
- ![image](https://github.com/user-attachments/assets/a467ea62-9d76-418a-baf9-fe200f03f04d)
+ <img width="1836" height="964" alt="image" src="https://github.com/user-attachments/assets/a89130ce-d0ba-43a2-b8be-1d19e6239352" />
 
- ## CADASTRA OS
- - Arquivo: cadastra_os.php
- - Nesta tela, o usuário pode cadastrar uma ordem de serviço. Se o cliente que está sendo cadastrado não existir, o sistema cria o cliente normalmente. Além disso, o sistema lista apenas os produtos ativos para a abertura da ordem de serviço.
- - Foi criado o arquivo `cadastraOS.php` para que o usuário possa cadastrar a ordem de serviço. Nesse arquivo, já existe a verificação para inserir um novo cliente na tabela de clientes caso o cliente não exista. A chamada AJAX para o arquivo `cadastraOS.php` está no arquivo `os.js`. Além disso, no arquivo `os.js`, foi implementada a lógica para listar somente produtos ativos para que o usuário não possa cadastrar uma ordem de serviço com produtos inativos.
+ ## Produto
+ - Arquivo: view/produto.php
+ - Tela para cadastrar, editar e excluir produtos disponíveis no sistema.
 
- ![image](https://github.com/user-attachments/assets/cc424cd9-c6de-4ca5-be63-99163fb9a420)
+ <img width="1837" height="964" alt="image" src="https://github.com/user-attachments/assets/7cebc596-3dae-434e-af09-9529a5760be8" />
 
- ## CONSULTA OS
- - Arquivo: consulta_os.php
- - Nesta tela, o usuário pode visualizar as ordens de serviço cadastradas na tela anterior, podendo utilizar filtros para consultar ordens específicas. Também é possível finalizar as ordens de serviço que estão abertas. Além disso, o número da ordem de serviço é um link que direciona o usuário para o arquivo `os_press.php`, onde poderá visualizar melhor as informações da ordem. Para as ordens que não foram finalizadas, é exibido o botão "alterar", permitindo que o usuário edite os dados. O sistema não permite a edição de ordens de serviço já finalizadas.
- - Foi criado o arquivo `finalizaOS.php` para que o usuário finalize a ordem de serviço. O arquivo `listaOS.php` exibe as ordens de serviço cadastradas. O arquivo `filtraOS.php` possibilita que o usuário filtre as ordens por nome do consumidor ou por intervalos de datas. O arquivo `buscaOS.php` é responsável por buscar os dados da ordem de serviço, enquanto o arquivo `editaOS.php` permite a edição dos dados. Além disso, o arquivo `os_press.php` possibilita ao usuário visualizar as informações detalhadas da ordem. Todas as chamadas AJAX para os arquivos PHP estão centralizadas no arquivo `os.js`.
+ ## Peça
+ - Arquivo: view/peca.php
+ - Tela para cadastrar, editar e excluir peças utilizadas nas ordens de serviço.
 
- ![image](https://github.com/user-attachments/assets/94b8dde4-6740-4bea-9ee8-5334943323df)
+ <img width="1836" height="964" alt="image" src="https://github.com/user-attachments/assets/72cee092-28c9-4608-ace5-28e10fa5497b" />
 
- ## DETALHES DA ORDEM DE SERVIÇO
+ ## Cadastro Os
+ - Arquivo: view/cadastra_os.php
+ - Tela de cadastro de Ordem de Serviço, onde é possível:
+ - Selecionar um cliente já cadastrado ou cadastrar um novo automaticamente
+ - Selecionar o produto relacionado à OS
+ <img width="1837" height="955" alt="image" src="https://github.com/user-attachments/assets/97151170-b7ea-49e3-a4b5-cefea5091312" />
+
+ ## Consulta Os
+ - Arquivo: view/consulta_os.php
+ - Tela para visualizar todas as Ordens de Serviço cadastradas.
+ - É possível editar, cancelar ou finalizar uma OS existente.
+ - Ao clicar no número da OS, o usuário é redirecionado para a tela de detalhamento completo da ordem.
+
+<img width="1835" height="964" alt="image" src="https://github.com/user-attachments/assets/f5da4ba7-81d5-453b-a3f3-172f65c7fb71" />
+
+ ## Detalhes da ordem de serviço
  - Arquivo: os_press.php
+ - Tela exibida ao clicar no número da OS na consulta. Apresenta todos os dados da ordem em detalhes.
 
- ![image](https://github.com/user-attachments/assets/99b85c76-ad72-45c5-be12-573c4893f238)
-
+ <img width="1837" height="961" alt="image" src="https://github.com/user-attachments/assets/6843fb6a-eaa1-489d-bab5-6a9205826978" />
 
  ## Erik Delanda Zaros
