@@ -192,7 +192,7 @@ $(document).ready(function () {
 
                     $('#osTable tbody').append(`
                         <tr>
-                            <td><a href="os_press?os=${os.os}" class="text-primary">${os.os}</a></td>
+                            <td><a href="os_press?os=${os.os}" class="link">${os.os}</a></td>
                             <td>${os.cliente}</td>
                             <td>${os.cpf}</td>
                             <td>${os.produto}</td>

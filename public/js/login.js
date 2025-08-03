@@ -12,7 +12,7 @@ $(document).ready(function () {
       data: { login, senha },
       success: function (res) {
         if (res.success) {
-          window.location.href = 'view/menu.php';
+          window.location.href = 'view/menu';
         } else {
           showMessage(res.message, 'error');
         }
@@ -26,7 +26,7 @@ $(document).ready(function () {
 
 function createParticles() {
   const container = document.getElementById('bgAnimation');
-  const particleCount = 50;
+  const particleCount = 60;
 
   const toolIcons = [
     'bi-wrench',

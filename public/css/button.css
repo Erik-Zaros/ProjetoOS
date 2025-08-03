@@ -52,13 +52,13 @@
 }
 
 .btn-info {
-    background-color: #0dcaf0;
-    border-color: #0dcaf0;
+    background-color: #0bb5d8;
+    border-color: #0bb5d8;
     color: #ffffff;
 }
 
 .btn-info:hover {
-    background-color: #0dcac0;
-    border-color: #0dcac0;
+    background-color: #098da8;
+    border-color: #098da8;
     color: #ffffff;
 }

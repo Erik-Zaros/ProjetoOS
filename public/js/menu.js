@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { name: 'Canceladas', y: osCanceladas}
                 ]
             }],
-            colors: ['#ffc107', '#28a745', '#ff0000'],
+            colors: ['#ffc107', '#28a745', '#ca2320'],
             accessibility: {
                 point: { valueSuffix: '%' }
             }

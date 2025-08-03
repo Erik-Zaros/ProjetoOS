@@ -5,7 +5,17 @@ $(document).ready(function () {
 
         if (!tabela || !id) return;
 
+        Swal.fire({
+            title: 'Buscando log...',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
         $.post('../public/logAuditor/buscar.php', { tabela: tabela, id: id }, function (response) {
+            Swal.close();
             if (response.logs && response.logs.length > 0) {
                 let html = '';
                 response.logs.forEach(log => {
@@ -29,7 +39,12 @@ $(document).ready(function () {
 
             $('#logAuditorModal').modal('show');
         }).fail(function () {
-            alert('Erro ao buscar logs.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro ao buscar logs',
+                text: 'Não foi possível recuperar os dados do Log.',
+                confirmButtonText: 'Ok'
+            });
         });
     });
 

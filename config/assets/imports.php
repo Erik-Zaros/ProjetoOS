@@ -8,7 +8,8 @@ $imports = [
             "https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css",
             "../public/css/style.css",
             "../public/css/form.css",
-            "../public/css/button.css"
+            "../public/css/button.css",
+            "../public/css/link.css"
         ],
         "js" => [
             "https://code.jquery.com/jquery-3.6.0.min.js",
