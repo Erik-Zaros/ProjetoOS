@@ -1,40 +1,23 @@
 document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".toggle-menu").forEach(menu => {
-        menu.addEventListener("click", function (e) {
-            e.preventDefault();
-            let submenu = this.nextElementSibling;
-            submenu.classList.toggle("submenu-open");
+    const currentPath = window.location.pathname.split("/").pop().replace(/\.php$/, '').replace(/\/$/, '');
 
-            if (submenu.style.display === "block") {
-                submenu.style.display = "none";
-            } else {
-                submenu.style.display = "block";
-            }
-        });
-    });
-
-    const page = window.location.pathname.split("/").pop();
     document.querySelectorAll(".nav-link").forEach(link => {
-        if (link.getAttribute("href") === page) {
+        let href = link.getAttribute("href").replace(/\.php$/, '');
+        if (href === currentPath) {
             link.classList.add("active");
-
-            let submenu = link.closest(".submenu");
-            if (submenu) {
-                submenu.style.display = "block";
-            }
+            let parentItem = link.closest(".has-treeview");
+            if (parentItem) parentItem.classList.add("menu-open");
         }
     });
 
-    document.getElementById("sidebarSearch").addEventListener("keyup", function () {
-        let filter = this.value.toLowerCase();
-        document.querySelectorAll("#menuSidebar .nav-item").forEach(item => {
-            let text = item.textContent.toLowerCase();
-            item.style.display = text.includes(filter) ? "block" : "none";
+    const sidebarSearch = document.getElementById("sidebarSearch");
+    if (sidebarSearch) {
+        sidebarSearch.addEventListener("keyup", function () {
+            let filter = this.value.toLowerCase();
+            document.querySelectorAll("#menuSidebar .nav-item").forEach(item => {
+                let text = item.textContent.toLowerCase();
+                item.style.display = text.includes(filter) ? "block" : "none";
+            });
         });
-    });
-});
-
-document.getElementById("sidebarToggle").addEventListener("click", function () {
-    const layout = document.getElementById("layoutContainer");
-    layout.classList.toggle("sidebar-hidden");
+    }
 });

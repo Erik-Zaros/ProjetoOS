@@ -11,7 +11,7 @@ $pageTitle = 'MENU';
 ob_start();
 ?>
 
-    <div class="text-center mt-4 mb-3">
+    <div class="text-center mt-2 mb-3">
         <a href="../public/menu/relatorio.php" class="btn btn-success btn-sm">Download Excel</a>
     </div>
 
