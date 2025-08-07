@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     animation: {
                         duration: 700
                     }
-                },
+                },  
                 title: {
                     text: 'PEÇAS ATIVAS E INATIVAS NO SISTEMA'
                 },

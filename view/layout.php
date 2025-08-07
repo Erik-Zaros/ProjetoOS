@@ -8,7 +8,6 @@ use App\Service\FuncoesService;
 Autenticador::iniciar();
 
 $con = Db::getConnection();
-
 $posto = Autenticador::getPosto();
 
 require_once __DIR__ . '/../config/menus/rotas.php';
@@ -20,99 +19,146 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%232e2e48'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'%3EOS%3C/text%3E%3C/svg%3E" type="image/x-icon">
-    <title><?= $title ?? 'Projeto OS'; ?></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><?= $title ?? 'Projeto OS'; ?></title>
+  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%232e2e48'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'%3EOS%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../public/adminlte/plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="../public/adminlte/dist/css/adminlte.min.css">
 
-    <?php foreach ($imports["global"]["css"] as $css): ?>
-        <link rel="stylesheet" href="<?= $css ?>">
-    <?php endforeach; ?>
+  <?php foreach ($imports["global"]["css"] as $css): ?>
+    <link rel="stylesheet" href="<?= $css ?>">
+  <?php endforeach; ?>
 
-    <?php
-    foreach ($imports as $key => $import) {
-        if (strpos($current_page, $key) !== false && isset($import["css"])) {
-            foreach ($import["css"] as $css) {
-                echo '<link rel="stylesheet" href="' . $css . '">' . PHP_EOL;
-            }
-        }
+  <?php
+  foreach ($imports as $key => $import) {
+    if (strpos($current_page, $key) !== false && isset($import["css"])) {
+      foreach ($import["css"] as $css) {
+        echo '<link rel="stylesheet" href="' . $css . '">' . PHP_EOL;
+      }
     }
-    ?>
+  }
+  ?>
 
-    <?= $customCss ?? ''; ?>
+  <?= $customCss ?? '' ?>
 </head>
 
-<body id="layoutContainer" class="sidebar-visible">
-    <div class="d-flex">
-        <nav id="sidebar" class="vh-100 sidebar-transition">
-            <div class="sidebar-header p-3 text-center">
-                <h4 class="text-white">Projeto OS</h4>
-            </div>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
 
-            <div class="px-3">
-                <input type="text" id="sidebarSearch" class="form-control" placeholder="Pesquisar">
-            </div>
-
-            <ul class="nav flex-column mt-2" id="menuSidebar">
-                <?php foreach ($rotas as $chave => $menu): ?>
-                    <?php if (!isset($menu['submenus'])): ?>
-                        <li class="nav-item">
-                            <a href="<?= $menu['link'] ?>" class="nav-link <?= ($current_page == $menu['link']) ? 'active' : '' ?>">
-                                <i class="<?= $menu['icone'] ?>"></i> <?= $menu['titulo'] ?>
-                            </a>
-                        </li>
-                    <?php else: ?>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link toggle-menu">
-                                <i class="<?= $menu['icone'] ?>"></i> <?= $menu['titulo'] ?>
-                                <i class="bi bi-chevron-down float-end"></i>
-                            </a>
-                            <ul class="submenu <?= (in_array($current_page, array_column($menu['submenus'], 'link'))) ? 'submenu-open' : '' ?>">
-                                <?php foreach ($menu['submenus'] as $submenu): ?>
-                                    <li>
-                                        <a href="<?= $submenu['link'] ?>" class="nav-link <?= ($current_page == $submenu['link']) ? 'active' : '' ?>">
-                                            <?= $submenu['titulo'] ?>
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </li>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-            </ul>
-                <a href="../logout.php" class="nav-link text-danger">
-                    <i class="bi bi-box-arrow-right"></i> Sair
-                </a>
-        </nav>
-
-
-        <div id="main-content" class="flex-grow-1">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-                <div class="container-fluid">
-                    <button class="btn btn-dark" id="sidebarToggle">&#9776;</button>
-                     <span class="navbar-brand w-100 text-center"><?php echo FuncoesService::buscaNomePosto($posto); ?></span>
-                    <span class="navbar-brand ms-auto"><?= $pageTitle ?? ''; ?></span>
-                </div>
-            </nav>
-            <div class="container-fluid mt-4">
-                <?= $content ?? ''; ?>
-            </div>
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <div class="container-fluid">
+      <div class="row w-100 align-items-center">
+        <div class="col-2 d-flex align-items-center pl-3">
+          <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+            <i class="fas fa-bars"></i>
+          </a>
         </div>
+
+        <div class="col-8 text-center">
+          <span class="navbar-text text-dark" style="font-size: 1.1rem;">
+            <?= FuncoesService::buscaNomePosto($posto); ?>
+          </span>
+        </div>
+
+        <div class="col-2 text-right">
+          <span class="navbar-text text-dark" style="font-size: 0.9rem;">
+            <?= $pageTitle ?? '' ?>
+          </span>
+        </div>
+      </div>
     </div>
+  </nav>
 
-    <?php foreach ($imports["global"]["js"] as $js): ?>
-        <script src="<?= $js ?>"></script>
-    <?php endforeach; ?>
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
-    <?php
-    foreach ($imports as $key => $import) {
-        if (strpos($current_page, $key) !== false && isset($import["js"])) {
-            foreach ($import["js"] as $js) {
-                echo '<script src="' . $js . '"></script>' . PHP_EOL;
-            }
-        }
+    <a class="brand-link text-center">
+      <span class="brand-text font-weight-light">Projeto OS</span>
+    </a>
+
+    <div class="sidebar">
+
+      <div class="form-inline p-2">
+        <div class="input-group" data-widget="sidebar-search">
+          <input class="form-control form-control-sidebar" type="search" placeholder="Buscar..." aria-label="Search" id="sidebarSearch">
+          <div class="input-group-append">
+            <button class="btn btn-sidebar">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" id="menuSidebar">
+          <?php foreach ($rotas as $chave => $menu): ?>
+            <?php if (!isset($menu['submenus'])): ?>
+              <li class="nav-item">
+                <a href="<?= $menu['link'] ?>" class="nav-link <?= ($current_page == $menu['link']) ? 'active' : '' ?>">
+                  <i class="nav-icon <?= $menu['icone'] ?>"></i>
+                  <p><?= $menu['titulo'] ?></p>
+                </a>
+              </li>
+            <?php else: ?>
+              <li class="nav-item has-treeview <?= in_array($current_page, array_column($menu['submenus'], 'link')) ? 'menu-open' : '' ?>">
+                <a href="#" class="nav-link <?= in_array($current_page, array_column($menu['submenus'], 'link')) ? 'active' : '' ?>">
+                  <i class="nav-icon <?= $menu['icone'] ?>"></i>
+                  <p>
+                    <?= $menu['titulo'] ?>
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <?php foreach ($menu['submenus'] as $submenu): ?>
+                    <li class="nav-item">
+                      <a href="<?= $submenu['link'] ?>" class="nav-link <?= ($current_page == $submenu['link']) ? 'active' : '' ?>">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p><?= $submenu['titulo'] ?></p>
+                      </a>
+                    </li>
+                  <?php endforeach; ?>
+                </ul>
+              </li>
+            <?php endif; ?>
+          <?php endforeach; ?>
+
+          <li class="nav-item">
+            <a href="../logout.php" class="nav-link text-danger">
+              <i class="nav-icon fas fa-sign-out-alt"></i>
+              <p>Sair</p>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="content-wrapper">
+    <section class="content pt-4 px-3">
+      <?= $content ?? '' ?>
+    </section>
+  </div>
+
+</div>
+
+<!-- Carrega novo layout antes -->
+<script src="../public/adminlte/plugins/jquery/jquery.min.js"></script>
+<script src="../public/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../public/adminlte/dist/js/adminlte.min.js"></script>
+
+<?php foreach ($imports["global"]["js"] as $js): ?>
+  <script src="<?= $js ?>"></script>
+<?php endforeach; ?>
+
+<?php
+foreach ($imports as $key => $import) {
+  if (strpos($current_page, $key) !== false && isset($import["js"])) {
+    foreach ($import["js"] as $js) {
+      echo '<script src="' . $js . '"></script>' . PHP_EOL;
     }
-    ?>
+  }
+}
+?>
 
 <?php include __DIR__ . '/ModalLog.php'; ?>
 
