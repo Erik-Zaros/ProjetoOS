@@ -20,6 +20,7 @@ function carregarUsuarios() {
                             </td>
                             <td>
                                 <button class="btn btn-warning btn-sm editar" data-usuario="${usuario.usuario}">Editar</button>
+                                <button class='btn btn-info btn-sm btn-log-auditor' data-id='${usuario.usuario}'data-tabela='tbl_usuario'>Ver Log</button>
                             </td>
                         </tr>
                     `);

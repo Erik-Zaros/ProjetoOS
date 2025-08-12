@@ -3,6 +3,8 @@
 namespace App\Model;
 
 use App\Core\Db;
+use App\Auth\Autenticador;
+use App\Model\LogAuditor;
 
 class Usuario
 {
@@ -18,6 +20,7 @@ class Usuario
     public function salvar()
     {
         $con = Db::getConnection();
+        $usuario = Autenticador::getUsuario();
 
         $login = pg_escape_string($this->dados['login']);
         $nome = pg_escape_string($this->dados['nome']);
@@ -33,12 +36,32 @@ class Usuario
         }
 
         $sqlInsert = "INSERT INTO tbl_usuario (login, nome, senha, ativo, posto)
-                      VALUES ('{$login}', '{$nome}', '{$senha_hash}', '{$ativo}', {$posto})";
+                      VALUES ('{$login}', '{$nome}', '{$senha_hash}', '{$ativo}', {$posto}) RETURNING usuario";
         $res = pg_query($con, $sqlInsert);
 
-        return $res
-            ? ['status' => 'success', 'message' => 'Usuário cadastrado com sucesso!']
-            : ['status' => 'error', 'message' => 'Erro ao cadastrar usuário.'];
+        if (pg_num_rows($res) > 0) {
+            $usuario_id = pg_fetch_result($insert, 0, 'usuario');
+            $depois = [
+                'login'    => $login,
+                'nome' => $nome,
+                'ativo'     => $ativo
+            ];
+
+            $antes = null;
+
+            LogAuditor::registrar(
+                'tbl_usuario',
+                $usuario_id,
+                'insert',
+                $antes,
+                $depois,
+                $usuario
+            );
+
+            return ['status' => 'success', 'message' => 'Usuário cadastrado com sucesso!'];
+        }
+
+        return ['status' => 'error', 'message' => 'Erro ao cadastrar usuário.'];
     }
 
     public static function listar($posto)
@@ -75,12 +98,28 @@ class Usuario
     public function editar()
     {
         $con = Db::getConnection();
+        $usuario = Autenticador::getUsuario();
 
         $usuarioId = intval($this->dados['usuario']);
         $login = pg_escape_string($this->dados['login']);
         $nome = pg_escape_string($this->dados['nome']);
         $ativo = (isset($this->dados['ativo']) && $this->dados['ativo'] === 'on') ? 't' : 'f';
         $posto = intval($this->posto);
+
+        $sqlAntes = "SELECT login, nome, ativo FROM tbl_usuario WHERE usuario = $usuarioId AND posto = $posto";
+        $resAntes = pg_query($con, $sqlAntes);
+
+        if (pg_num_rows($resAntes) > 0) {
+            $loginAntes = pg_fetch_result($resAntes, 0, 'login');
+            $nomeAntes = pg_fetch_result($resAntes, 0, 'nome');
+            $ativoAntes = pg_fetch_result($resAntes, 0, 'ativo');
+
+            $antes = [
+                'login'    => $loginAntes,
+                'nome' => $nomeAntes,
+                'ativo'     => $ativoAntes
+            ];
+        }
 
         if (!empty($this->dados['senha'])) {
             $senha_hash = pg_escape_string(password_hash($this->dados['senha'], PASSWORD_DEFAULT));
@@ -93,8 +132,25 @@ class Usuario
 
         $res = pg_query($con, $sql);
 
-        return $res
-            ? ['status' => 'success', 'message' => 'Usuário atualizado com sucesso!']
-            : ['status' => 'error', 'message' => 'Erro ao atualizar usuário.'];
+        if ($res) {
+            $depois = [
+                'login'    => $login,
+                'nome' => $nome,
+                'ativo'     => $ativo
+            ];
+
+            LogAuditor::registrar(
+                'tbl_usuario',
+                $usuarioId,
+                'update',
+                $antes,
+                $depois,
+                $usuario
+            );
+
+        return ['status' => 'success', 'message' => 'Usuário atualizado com sucesso!'];
+        }
+
+        return ['status' => 'error', 'message' => 'Erro ao atualizar usuário.'];
     }
 }

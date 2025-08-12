@@ -111,7 +111,7 @@ function editaOS(os) {
                     title: 'Sucesso',
                     text: response.message,
                 }).then(() => {
-                    window.location.href = 'consulta_os.php';
+                    window.location.href = 'consulta_os';
                 });
             }
         },
@@ -184,7 +184,7 @@ $(document).ready(function () {
                     }
 
                     if (os.finalizada != true || os.cancelada != true) {
-                        var alterarButton = '<a href="cadastra_os.php?os=${os.os}" class="btn btn-warning btn-sm">Alterar</a>';
+                        var alterarButton = '<a href="cadastra_os?os=${os.os}" class="btn btn-warning btn-sm">Alterar</a>';
                     }
 
                     var canceladaBadge = os.cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '';

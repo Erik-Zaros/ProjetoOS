@@ -69,7 +69,7 @@ $osCancelada = $osInfo['cancelada'] ?? false;
             <?php if ($osFinalizada == 't' || $osCancelada == 't') {
                 $botaoAlterar = "";
             } else {
-                $botaoAlterar = "<a href='cadastra_os.php?os=$os' class='btn btn-primary btn-sm me-2'>Alterar</a>";
+                $botaoAlterar = "<a href='cadastra_os?os=$os' class='btn btn-primary btn-sm me-2'>Alterar</a>";
             } ?>
 
             <?= $botaoAlterar ?>
