@@ -23,6 +23,7 @@ function carregarClientes() {
                             <td>${cliente.estado || ''}</td>
                             <td>
                                 <button class="btn btn-warning btn-sm editar" data-cpf="${cliente.cpf}">Editar</button>
+                                <button class='btn btn-info btn-sm btn-log-auditor' data-id='${cliente.cliente}'data-tabela='tbl_cliente'>Ver Log</button>
                             </td>
                         </tr>
                     `);
@@ -152,6 +153,7 @@ $(document).ready(function () {
                     url: '../public/cliente/editar.php',
                     method: 'POST',
                     data: {
+                        cliente: cliente.cliente,
                         cpf: cliente.cpf,
                         nome: $('#nome').val(),
                         cep: cepSemHifen,

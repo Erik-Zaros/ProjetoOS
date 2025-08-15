@@ -3,6 +3,8 @@
 namespace App\Model;
 
 use App\Core\Db;
+use App\Auth\Autenticador;
+use App\Model\LogAuditor;
 
 class Cliente
 {
@@ -18,6 +20,7 @@ class Cliente
     public function salvar()
     {
         $con = Db::getConnection();
+        $usuario = Autenticador::getUsuario();
 
         $cpf      = pg_escape_string($this->dados['cpf']);
         $nome     = pg_escape_string($this->dados['nome']);
@@ -40,9 +43,34 @@ class Cliente
                 VALUES ('{$cpf}','{$nome}','{$cep}','{$endereco}','{$bairro}','{$numero}','{$cidade}','{$estado}',{$posto})";
         $res = pg_query($con, $sql);
 
-        return $res
-            ? ['status' => 'success', 'message' => 'Cliente cadastrado com sucesso!']
-            : ['status' => 'error', 'message' => 'Erro ao cadastrar cliente.'];
+        if (pg_num_rows($res) > 0) {
+            $cliente = pg_fetch_result($res, 0, 'cliente');
+            $depois = [
+                'cpf'    => $cpf,
+                'nome' => $nome,
+                'cep'     => $cep,
+                'endereco' => $endereco,
+                'bairro'   => $bairro,
+                'numero'   => $numero,
+                'cidade'   => $cidade,
+                'estado'   => $estado
+            ];
+
+            $antes = null;
+
+            LogAuditor::registrar(
+                'tbl_cliente',
+                $cliente,
+                'insert',
+                $antes,
+                $depois,
+                $usuario
+            );
+
+            return ['status' => 'success', 'message' => 'Produto cadastrado com sucesso!'];
+        }
+
+        return ['status' => 'error', 'message' => 'Erro ao cadastrar produto!'];
     }
 
     public static function buscarPorCpf($cpf, $posto)
@@ -51,7 +79,7 @@ class Cliente
         $cpf = pg_escape_string($cpf);
         $posto = intval($posto);
 
-        $sql = "SELECT cpf, nome, cep, endereco, bairro, numero, cidade, estado
+        $sql = "SELECT cliente, cpf, nome, cep, endereco, bairro, numero, cidade, estado
                 FROM tbl_cliente WHERE cpf = '{$cpf}' AND posto = {$posto}";
 
         $res = pg_query($con, $sql);
@@ -61,6 +89,7 @@ class Cliente
     public function atualizar()
     {
         $con = Db::getConnection();
+        $usuario = Autenticador::getUsuario();
 
         $nome  = pg_escape_string($this->dados['nome']);
         $cep   = pg_escape_string(str_replace('-', '', $this->dados['cep']));
@@ -71,15 +100,63 @@ class Cliente
         $estado   = pg_escape_string($this->dados['estado']);
         $cpf      = pg_escape_string($this->dados['cpf']);
         $posto    = intval($this->posto);
+        $cliente = intval($this->dados['cliente']);
+
+        $sqlAntes = "SELECT nome, cpf, cep, endereco, bairro, numero, cidade, estado FROM tbl_cliente WHERE cliente = $cliente AND posto = $posto";
+        $resAntes = pg_query($con, $sqlAntes);
+
+        if (pg_num_rows($resAntes) > 0) {
+            $nomeAntes = pg_fetch_result($resAntes, 0, 'nome');
+            $cpfAntes = pg_fetch_result($resAntes, 0, 'cpf');
+            $cepAntes = pg_fetch_result($resAntes, 0, 'cep');
+            $enderecoAntes = pg_fetch_result($resAntes, 0, 'endereco');
+            $bairroAntes = pg_fetch_result($resAntes, 0, 'bairro');
+            $numeroAntes = pg_fetch_result($resAntes, 0, 'numero');
+            $cidadeAntes = pg_fetch_result($resAntes, 0, 'cidade');
+            $estadoAntes = pg_fetch_result($resAntes, 0, 'estado');
+
+            $antes = [
+                'nome'     => $nomeAntes,
+                'cpf'      => $cpfAntes,
+                'cep'      => $cepAntes,
+                'endereco' => $enderecoAntes,
+                'bairro'   => $bairroAntes,
+                'numero'   => $numeroAntes,
+                'cidade'   => $cidadeAntes,
+                'estado'   => $estadoAntes
+            ];
+        }
 
         $sql = "UPDATE tbl_cliente SET nome='{$nome}', cep='{$cep}', endereco='{$endereco}', bairro='{$bairro}', numero='{$numero}', cidade='{$cidade}', estado='{$estado}'
                 WHERE cpf = '{$cpf}' AND posto = {$posto}";
 
         $res = pg_query($con, $sql);
 
-        return $res
-            ? ['status' => 'success', 'message' => 'Cliente atualizado com sucesso!']
-            : ['status' => 'error', 'message' => 'Erro ao atualizar cliente.'];
+        if ($res) {
+            $depois = [
+                'nome'     => $nome,
+                'cpf'      => $cpf,
+                'cep'      => $cep,
+                'endereco' => $endereco,
+                'bairro'   => $bairro,
+                'numero'   => $numero,
+                'cidade'   => $cidade,
+                'estado'   => $estado
+            ];
+
+            LogAuditor::registrar(
+                'tbl_cliente',
+                $cliente,
+                'update',
+                $antes,
+                $depois,
+                $usuario
+            );
+
+        return ['status' => 'success', 'message' => 'Cliente atualizado com sucesso!'];
+        }
+
+        return ['status' => 'error', 'message' => 'Erro ao atualizar cliente.'];
     }
 
     public static function listarTodos($posto)
@@ -87,7 +164,7 @@ class Cliente
         $con = Db::getConnection();
         $posto = intval($posto);
 
-        $sql = "SELECT cpf, nome, cep, endereco, bairro, numero, cidade, estado
+        $sql = "SELECT cliente, cpf, nome, cep, endereco, bairro, numero, cidade, estado
                 FROM tbl_cliente WHERE posto = {$posto} ORDER BY cpf ASC";
 
         $res = pg_query($con, $sql);
@@ -106,8 +183,8 @@ class Cliente
         $termo = pg_escape_string($termo);
         $posto = intval($posto);
 
-        $sql = "SELECT nome, cpf, cep FROM tbl_cliente 
-                WHERE cep IS NOT NULL AND cep <> '' 
+        $sql = "SELECT nome, cpf, cep FROM tbl_cliente
+                WHERE cep IS NOT NULL AND cep <> ''
                 AND nome ILIKE '%{$termo}%'
                 AND posto = {$posto}
                 ORDER BY nome LIMIT 20";
