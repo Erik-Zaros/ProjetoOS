@@ -164,4 +164,34 @@ class Produto
             ? ['status' => 'success', 'message' => 'Produto excluido com sucesso']
             : ['status' => 'error', 'message' => 'Erro ao exlcuir produto.'];
     }
+
+    public static function autocompleteProdutos($termo, $posto)
+    {
+        $con   = Db::getConnection();
+        $termo = pg_escape_string($termo);
+        $posto = intval($posto);
+
+        // busca por descrição ou código (somente do posto); filtra ativos se quiser
+        $sql = "
+            SELECT produto, codigo, descricao
+              FROM tbl_produto
+             WHERE posto = {$posto}
+               AND (descricao ILIKE '%{$termo}%' OR codigo ILIKE '%{$termo}%')
+             ORDER BY descricao
+             LIMIT 20
+        ";
+
+        $res = pg_query($con, $sql);
+        $sugestoes = [];
+
+        while ($row = pg_fetch_assoc($res)) {
+            $sugestoes[] = [
+                'label'   => $row['descricao'] . " (" . $row['codigo'] . ")",
+                'value'   => $row['descricao'],
+                'produto' => $row['produto'],
+                'codigo'  => $row['codigo']
+            ];
+        }
+        return $sugestoes;
+    }
 }

@@ -35,13 +35,15 @@ function carregarClientes() {
                     </tr>
                 `);
             }
-            $('#clientesTable').DataTable({
-                language: {
-                    url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-                },
-                order: [[0, "asc"]],
-                stripeClasses: ['stripe1', 'stripe2'],
-            });
+            if (data.length > 0) {
+                $('#clientesTable').DataTable({
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+                    },
+                    order: [[0, "asc"]],
+                    stripeClasses: ['stripe1', 'stripe2'],
+                });
+            }
         },
         error: function (xhr, status, error) {
             Swal.fire({
@@ -128,79 +130,79 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('click', '.editar', function () {
-    var cpf = $(this).data('cpf');
-    $.ajax({
-        url: '../public/cliente/buscar.php',
-        method: 'GET',
-        data: { cpf: cpf },
-        success: function (data) {
-            var cliente = JSON.parse(data);
+        $(document).on('click', '.editar', function () {
+        var cpf = $(this).data('cpf');
+        $.ajax({
+            url: '../public/cliente/buscar.php',
+            method: 'GET',
+            data: { cpf: cpf },
+            success: function (data) {
+                var cliente = JSON.parse(data);
 
-            $('#cpf').val(cliente.cpf).prop('disabled', true);
-            $('#nome').val(cliente.nome || '');
-            $('#cep').val(cliente.cep ? cliente.cep.replace(/(\d{5})(\d{3})/, '$1-$2') : '');
-            $('#logradouro').val(cliente.endereco || '');
-            $('#bairro').val(cliente.bairro || '');
-            $('#numero').val(cliente.numero || '');
-            $('#cidade').val(cliente.cidade || '');
-            $('#estado').val(cliente.estado || '');
+                $('#cpf').val(cliente.cpf).prop('disabled', true);
+                $('#nome').val(cliente.nome || '');
+                $('#cep').val(cliente.cep ? cliente.cep.replace(/(\d{5})(\d{3})/, '$1-$2') : '');
+                $('#logradouro').val(cliente.endereco || '');
+                $('#bairro').val(cliente.bairro || '');
+                $('#numero').val(cliente.numero || '');
+                $('#cidade').val(cliente.cidade || '');
+                $('#estado').val(cliente.estado || '');
 
-            $('#clienteForm').off('submit').on('submit', function (e) {
-                e.preventDefault();
-                const cepSemHifen = $('#cep').val().replace('-', '');
-                $.ajax({
-                    url: '../public/cliente/editar.php',
-                    method: 'POST',
-                    data: {
-                        cliente: cliente.cliente,
-                        cpf: cliente.cpf,
-                        nome: $('#nome').val(),
-                        cep: cepSemHifen,
-                        endereco: $('#logradouro').val(),
-                        bairro: $('#bairro').val(),
-                        numero: $('#numero').val(),
-                        cidade: $('#cidade').val(),
-                        estado: $('#estado').val()
-                    },
-                    success: function (response) {
-                        let res = JSON.parse(response);
+                $('#clienteForm').off('submit').on('submit', function (e) {
+                    e.preventDefault();
+                    const cepSemHifen = $('#cep').val().replace('-', '');
+                    $.ajax({
+                        url: '../public/cliente/editar.php',
+                        method: 'POST',
+                        data: {
+                            cliente: cliente.cliente,
+                            cpf: cliente.cpf,
+                            nome: $('#nome').val(),
+                            cep: cepSemHifen,
+                            endereco: $('#logradouro').val(),
+                            bairro: $('#bairro').val(),
+                            numero: $('#numero').val(),
+                            cidade: $('#cidade').val(),
+                            estado: $('#estado').val()
+                        },
+                        success: function (response) {
+                            let res = JSON.parse(response);
 
-                        if (res.status === 'error') {
+                            if (res.status === 'error') {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Erro!',
+                                    text: res.message,
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Sucesso!',
+                                    text: res.message,
+                                }).then(() => {
+                                    carregarClientes();
+                                    $('#clienteForm')[0].reset();
+                                    $('#cpf').prop('disabled', false);
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Erro!',
-                                text: res.message,
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Sucesso!',
-                                text: res.message,
-                            }).then(() => {
-                                carregarClientes();
-                                $('#clienteForm')[0].reset();
-                                $('#cpf').prop('disabled', false);
+                                text: 'Erro ao editar cliente.',
                             });
                         }
-                    },
-                    error: function (xhr, status, error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Erro!',
-                            text: 'Erro ao editar cliente.',
-                        });
-                    }
+                    });
                 });
-            });
-        },
-        error: function (xhr, status, error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Erro!',
-                text: 'Erro ao buscar cliente.',
-            });
-        }
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro!',
+                    text: 'Erro ao buscar cliente.',
+                });
+            }
+        });
     });
-});
 });

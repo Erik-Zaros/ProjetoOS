@@ -1,4 +1,3 @@
-
 CREATE DATABASE ProjetoOS;
 USE ProjetoOS;
 
@@ -39,8 +38,8 @@ CREATE TABLE tbl_os (
     data_abertura DATE NOT NULL,
     nome_consumidor VARCHAR(255) NOT NULL,
     cpf_consumidor VARCHAR(14) NOT NULL,
-    produto_id INTEGER REFERENCES tbl_produto(id),
-    cliente_id INTEGER REFERENCES tbl_cliente(id),
+    produto INTEGER REFERENCES tbl_produto(produto),
+    cliente INTEGER REFERENCES tbl_cliente(cliente),
     finalizada BOOLEAN DEFAULT FALSE,
     posto INTEGER REFERENCES tbl_posto(posto),
     cancelada BOOLEAN DEFAULT FALSE
@@ -70,4 +69,28 @@ CREATE TABLE tbl_log_auditor (
     depois JSONB,
     usuario INT REFERENCES tbl_usuario(usuario),
     data_log TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE tbl_estoque (
+    estoque SERIAL PRIMARY KEY,
+    qtde INTEGER NOT NULL,
+    produto INTEGER REFERENCES tbl_produto(produto),
+    peca INTEGER REFERENCES tbl_peca(peca),
+    posto INTEGER REFERENCES tbl_posto(posto) NOT NULL,
+    data_input TIMESTAMPTZ DEFAULT NOW(),
+    CHECK ( (produto IS NOT NULL) <> (peca IS NOT NULL) )
+);
+
+CREATE TABLE tbl_estoque_movimento (
+    estoque_movimento SERIAL PRIMARY KEY,
+    posto INTEGER REFERENCES tbl_posto(posto) NOT NULL,
+    produto INTEGER REFERENCES tbl_produto(produto),
+    peca INTEGER REFERENCES tbl_peca(peca),
+    tipo CHAR(1) NOT NULL CHECK (tipo IN ('E','S')),
+    qtde INTEGER NOT NULL CHECK (qtde > 0),
+    os BIGINT REFERENCES tbl_os(os),
+    motivo TEXT,
+    usuario INTEGER,
+    data_input TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CHECK ( (produto IS NOT NULL) <> (peca IS NOT NULL) )
 );

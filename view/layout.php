@@ -56,13 +56,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </div>
 
         <div class="col-8 text-center">
-          <span class="navbar-text text-dark" style="font-size: 1.1rem;">
+          <span class="navbar-text text-dark" style="font-size: 1.3rem;">
             <?= FuncoesService::buscaNomePosto($posto); ?>
           </span>
         </div>
 
         <div class="col-2 text-right">
-          <span class="navbar-text text-dark" style="font-size: 0.9rem;">
+          <span class="navbar-text text-dark" style="font-size: 1.0rem;">
             <?= $pageTitle ?? '' ?>
           </span>
         </div>
@@ -82,7 +82,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="input-group" data-widget="sidebar-search">
           <input class="form-control form-control-sidebar" type="search" placeholder="Buscar..." aria-label="Search" id="sidebarSearch">
           <div class="input-group-append">
-            <button class="btn btn-sidebar">
+            <button class="btn btn-sidebar" id="sidebarSearchIcon">
               <i class="fas fa-search"></i>
             </button>
           </div>

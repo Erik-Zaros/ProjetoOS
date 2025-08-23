@@ -6,7 +6,7 @@ use App\Core\Db;
 
 class RelatorioProdutoController
 {
-    public static function gerarCSV($posto)
+    public static function gerarXLS($posto)
     {
         $con = Db::getConnection();
         $posto = intval($posto);
@@ -22,7 +22,10 @@ class RelatorioProdutoController
 
         $sql = " SELECT tbl_produto.codigo,
                         tbl_produto.descricao,
-                        tbl_produto.ativo,
+                        CASE WHEN tbl_produto.ativo IS TRUE
+                             THEN 'Ativo'
+                             ELSE 'Inativo'
+                        END AS ativo,
                         to_char(tbl_produto.data_input, 'DD/MM/YYYY') AS data_input
                     FROM tbl_produto
                     WHERE posto = $posto
@@ -30,24 +33,29 @@ class RelatorioProdutoController
                 ";
         $res = pg_query($con, $sql);
 
-        header('Content-Type: text/csv; charset=UTF-8');
-        header('Content-Disposition: attachment; filename=Relatorio_Produto.csv');
+        header("Content-Type: application/vnd.ms-excel; charset=utf-8");
+        header("Content-Disposition: attachment; filename=Relatorio_Produto.xls");
+        header("Cache-Control: max-age=0");
 
-        $output = fopen('php://output', 'w');
-
-        $cabecalho = ['Código Produto', 'Descrição Produto', 'Status', 'Data Cadastro'];
-        fputcsv($output, $cabecalho, ';');
+        echo "<table border='1'>";
+        echo "<tr bgcolor='#2e2e48' style='color: #ffffff; font-weight: bold;'>
+                <th>Código Produto</th>
+                <th>Descrição Produto</th>
+                <th>Status</th>
+                <th>Data Cadastro</th>
+              </tr>";
 
         while ($row = pg_fetch_assoc($res)) {
-            $ativo = $row['ativo'] === 't' ? 'Ativo' : 'Inativo';
 
-            fputcsv($output, [
-                $row['codigo'], $row['descricao'], $ativo,
-                $row['data_input']
-            ], ';');
+            echo "<tr>";
+            echo "<td>{$row['codigo']}</td>";
+            echo "<td>{$row['descricao']}</td>";
+            echo "<td>{$row['ativo']}</td>";
+            echo "<td>{$row['data_input']}</td>";
+            echo "</tr>";
         }
 
-        fclose($output);
+        echo "</table>";
         exit;
     }
 }

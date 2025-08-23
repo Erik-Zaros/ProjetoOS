@@ -31,4 +31,9 @@ class ProdutoController
     {
         return Produto::excluir($dados, $posto);
     }
+
+    public static function autocomplete($termo, $posto)
+    {
+        return Produto::autocompleteProdutos($termo, $posto);
+    }
 }

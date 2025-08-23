@@ -40,7 +40,7 @@ class Cliente
         }
 
         $sql = "INSERT INTO tbl_cliente (cpf, nome, cep, endereco, bairro, numero, cidade, estado, posto)
-                VALUES ('{$cpf}','{$nome}','{$cep}','{$endereco}','{$bairro}','{$numero}','{$cidade}','{$estado}',{$posto})";
+                VALUES ('{$cpf}','{$nome}','{$cep}','{$endereco}','{$bairro}','{$numero}','{$cidade}','{$estado}',{$posto}) RETURNING cliente";
         $res = pg_query($con, $sql);
 
         if (pg_num_rows($res) > 0) {
@@ -67,10 +67,10 @@ class Cliente
                 $usuario
             );
 
-            return ['status' => 'success', 'message' => 'Produto cadastrado com sucesso!'];
+            return ['status' => 'success', 'message' => 'Cliente cadastrado com sucesso!'];
         }
 
-        return ['status' => 'error', 'message' => 'Erro ao cadastrar produto!'];
+        return ['status' => 'error', 'message' => 'Erro ao cadastrar cliente!'];
     }
 
     public static function buscarPorCpf($cpf, $posto)

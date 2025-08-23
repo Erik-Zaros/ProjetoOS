@@ -40,6 +40,20 @@ $rotas = [
             ]
         ]
     ],
+    "estoque" => [
+        "titulo" => "Estoque",
+        "icone" => "bi bi-box-seam-fill",
+        "submenus" => [
+            [
+                "titulo" => "Lança Movimentação",
+                "link" => "cadastra_movimentacao",
+            ],
+            [
+                "titulo" => "Consulta Estoque",
+                "link" => "consulta_estoque",
+            ]
+        ]
+    ],
     "ordem_servico" => [
         "titulo" => "Ordem de Serviço",
         "icone" => "bi bi-tools",

@@ -31,4 +31,9 @@ class PecaController
     {
         return Peca::excluir($dados, $posto);
     }
+
+    public static function autocomplete($termo, $posto)
+    {
+        return Peca::autocompletePecas($termo, $posto);
+    }
 }

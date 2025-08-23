@@ -1,46 +1,38 @@
-/* Fundo geral */
 body {
   background-color: #f3f6fe !important;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Sidebar fundo geral */
 .sidebar-dark-primary {
   background-color: #2e2e48 !important;
 }
 
-/* Sidebar - itens inativos */
 .sidebar-dark-primary .nav-sidebar .nav-link {
   color: #c2c7d0;
   background-color: #2e2e48;
   transition: background-color 0.3s;
 }
 
-/* Hover nos itens */
 .sidebar-dark-primary .nav-sidebar .nav-link:hover {
   background-color: #3b3b5c !important;
   color: #ffffff !important;
 }
 
-/* Item ativo */
 .sidebar-dark-primary .nav-sidebar .nav-link.active {
   background-color: #3b3b5c !important;
   color: #ffffff !important;
   font-weight: bold;
 }
 
-/* setas - cor sempre amarela */
 .sidebar-dark-primary .nav-sidebar .nav-link i.right {
   color: #fac927 !important;
 }
 
-/* Ícones de submenus ativos ou hover */
 .sidebar-dark-primary .nav-sidebar .nav-treeview > .nav-item > .nav-link.active i,
 .sidebar-dark-primary .nav-sidebar .nav-treeview > .nav-item > .nav-link:hover i {
   color: #fac927 !important;
 }
 
-/* Exemplo opcional extra no seu CSS */
 .form-inline {
   border-bottom: 1px solid #444;
 }
@@ -51,4 +43,12 @@ body {
 }
 .form-control-sidebar::placeholder {
   color: #ccc;
+}
+
+#sidebarSearch {
+  background-color: #2e2e48 !important;
+}
+
+#sidebarSearchIcon {
+  background-color: #2e2e48 !important;
 }

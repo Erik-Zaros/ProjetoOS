@@ -16,8 +16,9 @@ class RelatorioClienteController
 
         $dados = pg_fetch_assoc($resVerifica);
 
-        if ($dados['cliente'] === 0) {
-            header("Location: ../../view/cliente.php?alerta=true");
+        if (in_array(0, $dados)) {
+            header("Location: ../../view/cliente?alerta=true");
+            exit;
         }
 
         $sql = "SELECT tbl_cliente.nome,
@@ -35,37 +36,37 @@ class RelatorioClienteController
                 ";
         $res = pg_query($con, $sql);
 
-        header('Content-Type: text/csv; charset=UTF-8');
-        header('Content-Disposition: attachment; filename=Relatorio_Cliente.csv');
+        header("Content-Type: application/vnd.ms-excel; charset=utf-8");
+        header("Content-Disposition: attachment; filename=Relatorio_Cliente.xls");
+        header("Cache-Control: max-age=0");
 
-        $output = fopen('php://output', 'w');
-
-        $cabecalho = ['NOME',
-                      'CPF',
-                      'CEP',
-                      'ENDERECO',
-                      'BAIRRO',
-                      'NUMERO',
-                      'CIDADE',
-                      'ESTADO',
-                      'DATA CADASTRO'];
-
-        fputcsv($output, $cabecalho, ';');
+        echo "<table border='1'>";
+        echo "<tr bgcolor='#2e2e48' style='color: #ffffff; font-weight: bold;'>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Endereço</th>
+                <th>Bairro</th>
+                <th>Número</th>
+                <th>Cidade</th>
+                <th>Estado</th>
+                <th>Data Cadastro</th>
+              </tr>";
 
         while ($row = pg_fetch_assoc($res)) {
-            fputcsv($output, [
-                $row['nome'],
-                $row['cpf'],
-                $row['cep'],
-                $row['endereco'],
-                $row['bairro'],
-                $row['numero'],
-                $row['cidade'],
-                $row['estado'],
-                $row['data_input']
-            ], ';');
+
+            echo "<tr>";
+            echo "<td>{$row['nome']}</td>";
+            echo "<td>{$row['cpf']}</td>";
+            echo "<td>{$row['endereco']}</td>";
+            echo "<td>{$row['bairro']}</td>";
+            echo "<td>{$row['numero']}</td>";
+            echo "<td>{$row['cidade']}</td>";
+            echo "<td>{$row['estado']}</td>";
+            echo "<td>{$row['data_input']}</td>";
+            echo "</tr>";
         }
-        fclose($output);
+
+        echo "</table>";
         exit;
     }
 }

@@ -42,6 +42,14 @@ $imports = [
         "css" => ["../public/css/peca.css"],
         "js" => ["../public/js/peca.js"]
     ],
+    "cadastra_movimentacao" => [
+        "css" => ["../public/css/estoque.css"],
+        "js" => ["../public/js/estoque_lancar.js"]
+    ],
+    "consulta_estoque" => [
+        "css" => ["../public/css/estoque.css"],
+        "js" => ["../public/js/estoque_consulta.js"]
+    ],
     "cadastra_os" => [
         "css" => ["../public/css/cadastraOS.css",
                   "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css",

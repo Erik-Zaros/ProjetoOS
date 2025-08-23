@@ -20,7 +20,7 @@ class RelatorioMenuController
         $resVerifica = pg_query($con, $sqlVerifica);
         $dados = pg_fetch_assoc($resVerifica);
         if (in_array(0, $dados)) {
-            header("Location: ../../view/menu.php?alerta=true");
+            header("Location: ../../view/menu?alerta=true");
             exit;
         }
 

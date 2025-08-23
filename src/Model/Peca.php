@@ -163,4 +163,33 @@ class Peca
             ? ['status' => 'success', 'message' => 'Peça excluido com sucesso']
             : ['status' => 'error', 'message' => 'Erro ao exlcuir peça.'];
     }
+
+    public static function autocompletePecas($termo, $posto)
+    {
+        $con   = Db::getConnection();
+        $termo = pg_escape_string($termo);
+        $posto = intval($posto);
+
+        $sql = "
+            SELECT peca, codigo, descricao
+              FROM tbl_peca
+             WHERE posto = {$posto}
+               AND (descricao ILIKE '%{$termo}%' OR codigo ILIKE '%{$termo}%')
+             ORDER BY descricao
+             LIMIT 20
+        ";
+
+        $res = pg_query($con, $sql);
+        $sugestoes = [];
+
+        while ($row = pg_fetch_assoc($res)) {
+            $sugestoes[] = [
+                'label' => $row['descricao'] . " (" . $row['codigo'] . ")",
+                'value' => $row['descricao'],
+                'peca'  => $row['peca'],
+                'codigo'=> $row['codigo']
+            ];
+        }
+        return $sugestoes;
+    }
 }
