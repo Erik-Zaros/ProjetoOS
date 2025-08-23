@@ -42,7 +42,7 @@ $rotas = [
     ],
     "estoque" => [
         "titulo" => "Estoque",
-        "icone" => "bi bi-box-seam-fill",
+        "icone" => "bi bi-box2-fill",
         "submenus" => [
             [
                 "titulo" => "Lança Movimentação",
