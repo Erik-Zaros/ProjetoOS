@@ -13,12 +13,12 @@ $(document).ready(function () {
                     data.forEach(function (produto) {
                         var ativo = produto.ativo == 't' ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>';
                         $('#produtosTable tbody').append(`
-                            <tr data-codigo="${produto.codigo}">
+                            <tr data-produto="${produto.produto}">
                                 <td>${produto.codigo}</td>
                                 <td>${produto.descricao}</td>
                                 <td>${ativo}</td>
                                 <td>
-                                    <button class='btn btn-warning btn-sm editar-produto' data-codigo='${produto.codigo}'>Editar</button>
+                                    <button class='btn btn-warning btn-sm editar-produto' data-produto='${produto.produto}'>Editar</button>
                                     <button class='btn btn-danger btn-sm excluir-produto' data-produto='${produto.produto}'>Excluir</button>
                                     <button class='btn btn-info btn-sm btn-log-auditor' data-id='${produto.produto}'data-tabela='tbl_produto'>Ver Log</button>
                                 </td>
@@ -34,11 +34,12 @@ $(document).ready(function () {
                 }
                 if (data.length > 0) {
                     $('#produtosTable').DataTable({
+                        responsive: true,
+                        scrollX: true,
+                        autoWidth: false,
                         language: {
                             url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-                        },
-                        order: [[0, "asc"]],
-                        stripeClasses: ['stripe1', 'stripe2'],
+                        }
                     });
                 }
             },
@@ -97,14 +98,15 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.editar-produto', function () {
-        var codigo = $(this).data('codigo');
+        var produto = $(this).data('produto');
 
         $.ajax({
             url: '../public/produto/buscar.php',
             method: 'GET',
-            data: { codigo: codigo },
+            data: { produto: produto },
             dataType: 'json',
             success: function (produto) {
+                $("html, body").animate({ scrollTop: 0 }, "slow");
                 $('#codigo').val(produto.codigo);
                 $('#descricao').val(produto.descricao);
                 $('#ativo').prop('checked', produto.ativo == 't');
@@ -171,21 +173,23 @@ $(document).ready(function () {
                     url: '../public/produto/excluir.php',
                     method: 'POST',
                     data: { produto: produto },
+                    dataType: 'json',
                     success: function (response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Excluído!',
-                            text: response.message,
-                        }).then(() => {
-                            carregarProdutos();
-                        });
-                    },
-                    error: function (xhr, status, error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Erro',
-                            text: response.message,
-                        });
+                        if (response.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Sucesso!',
+                                text: response.message,
+                            }).then(() => {
+                                carregarProdutos();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Atenção!',
+                                text: response.message,
+                            });
+                        }
                     }
                 });
             }

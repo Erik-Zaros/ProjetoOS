@@ -36,37 +36,29 @@ class RelatorioClienteController
                 ";
         $res = pg_query($con, $sql);
 
-        header("Content-Type: application/vnd.ms-excel; charset=utf-8");
-        header("Content-Disposition: attachment; filename=Relatorio_Cliente.xls");
-        header("Cache-Control: max-age=0");
+        header('Content-Type: text/csv; charset=UTF-8');
+        header("Content-Disposition: attachment; filename=relatorio_cliente.csv");
 
-        echo "<table border='1'>";
-        echo "<tr bgcolor='#2e2e48' style='color: #ffffff; font-weight: bold;'>
-                <th>Nome</th>
-                <th>CPF</th>
-                <th>Endereço</th>
-                <th>Bairro</th>
-                <th>Número</th>
-                <th>Cidade</th>
-                <th>Estado</th>
-                <th>Data Cadastro</th>
-              </tr>";
+        $output = fopen('php://output', 'w');
+
+        $cabecalho = ['Nome', 'CPF', 'Endereço', 'Bairro', 'Número', 'Cidade', 'Estado', 'Data Cadastro'];
+        fputcsv($output, $cabecalho, ';');
 
         while ($row = pg_fetch_assoc($res)) {
 
-            echo "<tr>";
-            echo "<td>{$row['nome']}</td>";
-            echo "<td>{$row['cpf']}</td>";
-            echo "<td>{$row['endereco']}</td>";
-            echo "<td>{$row['bairro']}</td>";
-            echo "<td>{$row['numero']}</td>";
-            echo "<td>{$row['cidade']}</td>";
-            echo "<td>{$row['estado']}</td>";
-            echo "<td>{$row['data_input']}</td>";
-            echo "</tr>";
+            fputcsv($output, [
+                $row['nome'],
+                $row['cpf'],
+                $row['endereco'],
+                $row['bairro'],
+                $row['numero'],
+                $row['cidade'],
+                $row['estado'],
+                $row['data_input']
+            ], ';');
         }
 
-        echo "</table>";
+        fclose($output);
         exit;
     }
 }

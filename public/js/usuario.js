@@ -16,7 +16,11 @@ function carregarUsuarios() {
                             <td>${usuario.login}</td>
                             <td>${usuario.nome}</td>
                             <td>
-                                ${usuario.ativo === 't' || usuario.ativo === true ? '<span class="badge bg-success">Sim</span>' : '<span class="badge bg-danger">Não</span>'}
+                                ${usuario.ativo === 't' || usuario.ativo === true ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-check-circle-fill text-danger"></i>'}
+                            </td>
+                            <td> ${usuario.tecnico === 't' || usuario.tecnico === true ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-check-circle-fill text-danger"></i>'}
+                            </td>
+                            <td> ${usuario.master === 't' || usuario.master === true ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-check-circle-fill text-danger"></i>'}
                             </td>
                             <td>
                                 <button class="btn btn-warning btn-sm editar" data-usuario="${usuario.usuario}">Editar</button>
@@ -33,11 +37,12 @@ function carregarUsuarios() {
                 `);
             }
             $('#usuariosTable').DataTable({
+                responsive: true,
+                scrollX: true,
+                autoWidth: false,
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-                },
-                order: [[0, "asc"]],
-                stripeClasses: ['stripe1', 'stripe2'],
+                }
             });
         },
         error: function () {
@@ -61,6 +66,7 @@ $(document).ready(function () {
             url: '../public/usuario/cadastrar.php',
             method: 'POST',
             data: $.param(formData),
+            dataType: 'json',
             success: function (response) {
 
                 if (response.status === 'error') {
@@ -94,6 +100,8 @@ $(document).ready(function () {
                 $('#nome').val(usuario.nome);
                 $('#senha').val('');
                 $('#ativo').prop('checked', usuario.ativo === 't' || usuario.ativo === true);
+                $('#tecnico').prop('checked', usuario.tecnico === 't' || usuario.tecnico === true);
+                $('#master').prop('checked', usuario.master === 't' || usuario.master === true);
 
                 $('#login').prop('readonly', true);
 
@@ -106,6 +114,7 @@ $(document).ready(function () {
                     $.ajax({
                         url: '../public/usuario/editar.php',
                         method: 'POST',
+                        dataType: 'json',
                         data: $.param(formData),
                         success: function (res) {
 
@@ -124,34 +133,6 @@ $(document).ready(function () {
                                     carregarUsuarios();
                                     $('#usuarioForm')[0].reset();
                                     $('#login').prop('readonly', false);
-
-                                    $('#usuarioForm').off('submit').on('submit', function (e) {
-                                        e.preventDefault();
-                                        const cadastroData = $(this).serializeArray();
-                                        $.ajax({
-                                            url: '../controller/usuario/cadastraUsuario.php',
-                                            method: 'POST',
-                                            data: $.param(cadastroData),
-                                            success: function (response) {;
-                                                if (res.status === 'error') {
-                                                    Swal.fire({
-                                                        icon: 'error',
-                                                        title: 'Erro!',
-                                                        text: res.message,
-                                                    });
-                                                } else {
-                                                    Swal.fire({
-                                                        icon: 'success',
-                                                        title: 'Sucesso!',
-                                                        text: res.message,
-                                                    }).then(() => {
-                                                        $('#usuarioForm')[0].reset();
-                                                        carregarUsuarios();
-                                                    });
-                                                }
-                                            }
-                                        });
-                                    });
                                 });
                             }
                         }

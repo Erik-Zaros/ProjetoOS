@@ -37,11 +37,12 @@ function carregarClientes() {
             }
             if (data.length > 0) {
                 $('#clientesTable').DataTable({
+                    responsive: true,
+                    scrollX: true,
+                    autoWidth: false,
                     language: {
                         url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-                    },
-                    order: [[0, "asc"]],
-                    stripeClasses: ['stripe1', 'stripe2'],
+                    }
                 });
             }
         },
@@ -137,6 +138,7 @@ $(document).ready(function () {
             method: 'GET',
             data: { cpf: cpf },
             success: function (data) {
+                $("html, body").animate({ scrollTop: 0 }, "slow");
                 var cliente = JSON.parse(data);
 
                 $('#cpf').val(cliente.cpf).prop('disabled', true);
@@ -205,4 +207,17 @@ $(document).ready(function () {
             }
         });
     });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const alerta = urlParams.get('alerta');
+
+    if (alerta === 'true') {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Atenção',
+            text: 'Nenhum cliente cadastrado!',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#007bff'
+        });
+    }
 });

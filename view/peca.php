@@ -43,7 +43,7 @@ ob_start();
         <i class="bi bi-card-list"></i> Produtos Cadastrados
     </div>
     <div class="card-body">
-        <table class="table table-bordered" id="pecasTable">
+        <table class="table table-bordered table-striped table-hover nowrap" id="pecasTable">
             <thead>
                 <tr>
                     <th>Código</th>

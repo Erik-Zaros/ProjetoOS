@@ -18,7 +18,7 @@ ob_start();
         <h3 id="kpiTotal">—</h3>
         <p>Total de Itens</p>
       </div>
-      <div class="icon"><i class="bi bi-box-seam"></i></div>
+      <div class="icon"><i class="bi bi-box-seam icone"></i></div>
       <span class="small-box-footer">&nbsp;</span>
     </div>
   </div>
@@ -28,7 +28,7 @@ ob_start();
         <h3 id="kpiComSaldo">—</h3>
         <p>Com Saldo</p>
       </div>
-      <div class="icon"><i class="bi bi-graph-up"></i></div>
+      <div class="icon"><i class="bi bi-graph-up icone"></i></div>
       <span class="small-box-footer">&nbsp;</span>
     </div>
   </div>
@@ -38,10 +38,11 @@ ob_start();
         <h3 id="kpiZerados">—</h3>
         <p>Zerados</p>
       </div>
-      <div class="icon"><i class="bi bi-slash-circle"></i></div>
+      <div class="icon"><i class="bi bi-slash-circle icone"></i></div>
       <span class="small-box-footer">&nbsp;</span>
     </div>
   </div>
+</div>
 
 <div class="card shadow-sm mb-4">
   <div class="card-header bg-primary text-white">
@@ -81,8 +82,8 @@ ob_start();
       </div>
 
       <div class="col-md-2 d-flex align-items-end gap-2">
-        <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-search me-1"></i>Pesquisar</button>
-        <button type="button" id="btnLimpar" class="btn btn-secondary btn-sm"><i class="bi bi-eraser me-1"></i>Limpar</button>
+        <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-search me-1 icone"></i>Pesquisar</button>
+        <button type="button" id="btnLimpar" class="btn btn-secondary btn-sm"><i class="bi bi-eraser me-1 icone"></i>Limpar</button>
       </div>
     </form>
   </div>
@@ -94,7 +95,7 @@ ob_start();
   </div>
   <div class="card-body">
     <div class="table-responsive">
-      <table class="table table-bordered align-middle" id="estoqueTable">
+      <table class="table table-bordered table-striped table-hover nowrap" id="estoqueTable">
         <thead>
           <tr>
             <th>Tipo</th>
@@ -117,13 +118,13 @@ ob_start();
 <div class="modal fade" id="movModal" tabindex="-1" aria-labelledby="movModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
+      <div class="modal-header text-white">
         <h5 class="modal-title" id="movModalLabel"><i class="bi bi-clock-history me-1"></i> Movimentações do Item</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
       </div>
       <div class="modal-body">
         <div class="table-responsive">
-          <table class="table table-sm table-striped" id="movModalTable">
+          <table class="table table-bordered table-striped table-hover nowrap" id="movModalTable">
             <thead>
               <tr>
                 <th>#</th>

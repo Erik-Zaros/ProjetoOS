@@ -11,6 +11,33 @@ $con = Db::getConnection();
 $posto = Autenticador::getPosto();
 
 require_once __DIR__ . '/../config/menus/rotas.php';
+
+$arquivo_menu_posto = __DIR__ . "/../config/menus/posto/{$posto}.php";
+
+if (file_exists($arquivo_menu_posto)) {
+    $regras_posto = include $arquivo_menu_posto;
+
+    if (!empty($regras_posto['remover'])) {
+        foreach ($regras_posto['remover'] as $menuRemover) {
+            unset($rotas[$menuRemover]);
+        }
+    }
+
+    if (!empty($regras_posto['adicionar'])) {
+        foreach ($regras_posto['adicionar'] as $key => $menuNovo) {
+            $rotas[$key] = $menuNovo;
+        }
+    }
+
+    if (!empty($regras_posto['alterar'])) {
+        foreach ($regras_posto['alterar'] as $key => $alteracoes) {
+            if (isset($rotas[$key])) {
+                $rotas[$key] = array_merge($rotas[$key], $alteracoes);
+            }
+        }
+    }
+}
+
 require_once __DIR__ . '/../config/assets/imports.php';
 $current_page = basename($_SERVER['PHP_SELF']);
 
@@ -21,7 +48,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= $title ?? 'Projeto OS'; ?></title>
+  <title><?= $title ?? 'ProjetoOS'; ?></title>
   <link rel="icon" type="image/x-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%232e2e48'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'%3EOS%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="../public/adminlte/plugins/fontawesome-free/css/all.min.css">
   <link rel="stylesheet" href="../public/adminlte/dist/css/adminlte.min.css">
@@ -49,19 +76,19 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <div class="container-fluid">
       <div class="row w-100 align-items-center">
-        <div class="col-2 d-flex align-items-center pl-3">
+        <div class="col-3 col-sm-2 d-flex align-items-center pl-3">
           <a class="nav-link" data-widget="pushmenu" href="#" role="button">
             <i class="fas fa-bars"></i>
           </a>
         </div>
 
-        <div class="col-8 text-center">
+        <div class="col-6 col-sm-8 text-center">
           <span class="navbar-text text-dark" style="font-size: 1.3rem;">
             <?= FuncoesService::buscaNomePosto($posto); ?>
           </span>
         </div>
 
-        <div class="col-2 text-right">
+        <div class="col-3 col-sm-2 text-right">
           <span class="navbar-text text-dark" style="font-size: 1.0rem;">
             <?= $pageTitle ?? '' ?>
           </span>
@@ -73,7 +100,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
     <a class="brand-link text-center">
-      <span class="brand-text font-weight-light">Projeto OS</span>
+      <span class="brand-text">ProjetoOS</span>
     </a>
 
     <div class="sidebar">
@@ -160,7 +187,12 @@ foreach ($imports as $key => $import) {
 }
 ?>
 
-<?php include __DIR__ . '/ModalLog.php'; ?>
+<script>
+  Shadowbox.init({
+    overlayOpacity: 0.85,
+    modal: true
+  });
+</script>
 
 </body>
 </html>

@@ -54,7 +54,8 @@ class Peca
                 'insert',
                 $antes,
                 $depois,
-                $usuario
+                $usuario,
+                $posto
             );
 
             return ['status' => 'success', 'message' => 'Peça cadastrada com sucesso!'];
@@ -126,7 +127,8 @@ class Peca
                 'update',
                 $antes,
                 $depois,
-                $usuario
+                $usuario,
+                $posto
             );
 
         return ['status' => 'success', 'message' => 'Peça atualizado com sucesso!'];
@@ -155,13 +157,18 @@ class Peca
     {
         $con = Db::getConnection();
         $posto = intval($posto);
+        $peca = intval($peca);
 
-        $sql = "DELETE FROM tbl_peca WHERE peca = $peca AND posto = $posto";
-        $res = pg_query($con, $sql);
+        $peca_tem_estoque = self::pecaTemEstoque($peca, $posto);
 
-        return $res
-            ? ['status' => 'success', 'message' => 'Peça excluido com sucesso']
-            : ['status' => 'error', 'message' => 'Erro ao exlcuir peça.'];
+        if ($peca_tem_estoque == false) {
+            $sql = "DELETE FROM tbl_peca WHERE peca = $peca AND posto = $posto";
+            $res = pg_query($con, $sql);
+
+            return $res ? ['status' => 'success', 'message' => 'Peça excluída com sucesso.'] : ['status' => 'error', 'message' => 'Erro ao excluir peça.'];
+        } else {
+            return ['status' => 'error', 'message' => 'Não é possível excluir. A peça ainda está vinculada ao estoque.'];
+        }
     }
 
     public static function autocompletePecas($termo, $posto)
@@ -170,14 +177,15 @@ class Peca
         $termo = pg_escape_string($termo);
         $posto = intval($posto);
 
-        $sql = "
-            SELECT peca, codigo, descricao
+        $sql = "SELECT peca,
+                       codigo,
+                       descricao
               FROM tbl_peca
-             WHERE posto = {$posto}
-               AND (descricao ILIKE '%{$termo}%' OR codigo ILIKE '%{$termo}%')
-             ORDER BY descricao
-             LIMIT 20
-        ";
+              WHERE posto = {$posto}
+              AND (descricao ILIKE '%{$termo}%' OR codigo ILIKE '%{$termo}%')
+              ORDER BY descricao
+              LIMIT 20
+            ";
 
         $res = pg_query($con, $sql);
         $sugestoes = [];
@@ -191,5 +199,26 @@ class Peca
             ];
         }
         return $sugestoes;
+    }
+
+    private static function pecaTemEstoque($peca, $posto)
+    {
+        $con = Db::getConnection();
+        $peca = intval($peca);
+        $posto = intval($posto);
+
+        $sql = "SELECT qtde
+                FROM tbl_estoque
+                WHERE peca = $peca
+                AND posto = $posto
+            ";
+        $res = pg_query($con, $sql);
+
+        if (pg_num_rows($res) > 0) {
+            $row = pg_fetch_assoc($res);
+            return $row['qtde'] > 0;
+        }
+
+        return false;
     }
 }

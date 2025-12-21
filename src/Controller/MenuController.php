@@ -40,7 +40,7 @@ class MenuController
         $res['peca_inativa'] = self::conta($con, $sqlPecaInativa, [$posto]);
 
         $sqlStatusOS = "
-            SELECT 
+            SELECT
                 COUNT(*) FILTER (WHERE finalizada IS TRUE) AS finalizadas,
                 COUNT(*) FILTER (WHERE (finalizada IS FALSE OR finalizada IS NULL) AND (cancelada IS FALSE OR cancelada IS NULL)) AS abertas,
                 COUNT(*) FILTER (WHERE cancelada IS TRUE AND (finalizada IS FALSE OR finalizada IS NULL)) AS canceladas

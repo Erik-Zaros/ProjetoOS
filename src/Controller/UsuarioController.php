@@ -15,7 +15,7 @@ class UsuarioController
     public static function editar($dados, $posto)
     {
         $usuario = new Usuario($dados, $posto);
-        return $usuario->editar();
+        return $usuario->atualizar();
     }
 
     public static function listar($posto)

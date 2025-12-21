@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Core\Db;
+use App\Auth\Autenticador;
 
 class FuncoesService
 {
@@ -21,5 +22,54 @@ class FuncoesService
         }
 
         return null;
+    }
+
+    public static function usuarioMaster($usuarioId)
+    {
+        $con   = Db::getConnection();
+        $posto = Autenticador::getPosto();
+
+        $sql = "SELECT master
+                FROM tbl_usuario
+                WHERE posto = $posto
+                AND usuario = $usuarioId
+            ";
+        $res = pg_query($con, $sql);
+
+        if (pg_num_rows($res) > 0) {
+            $master = pg_fetch_result($res, 0, 'master');
+
+            if ($master == 't') {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    public static function validaOsFinalizadaCancelada($os)
+    {
+        $con   = Db::getConnection();
+        $posto = Autenticador::getPosto();
+
+        $sql = "SELECT finalizada, cancelada FROM tbl_os WHERE os = $os AND posto = $posto";
+        $res = pg_query($con, $sql);
+
+        if (pg_num_rows($res)>0) {
+            $finalizada = pg_fetch_result($res, 0, 'finalizada');
+            $cancelada = pg_fetch_result($res, 0, 'cancelada');
+
+            if ($finalizada == 't') {
+                return true;
+            }
+
+            if ($cancelada == 't') {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

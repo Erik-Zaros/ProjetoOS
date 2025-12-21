@@ -7,6 +7,8 @@ use App\Model\LogAuditor;
 
 Autenticador::iniciar();
 
+$posto = Autenticador::getPosto();
+
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -24,5 +26,5 @@ if (!$tabela || !$idRegistro) {
     exit;
 }
 
-$logs = LogAuditor::buscarPorRegistro($tabela, $idRegistro);
+$logs = LogAuditor::buscarPorRegistro($tabela, $idRegistro, $posto);
 echo json_encode(['logs' => $logs]);

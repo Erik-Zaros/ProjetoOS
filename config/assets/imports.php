@@ -9,7 +9,8 @@ $imports = [
             "../public/css/style.css",
             "../public/css/form.css",
             "../public/css/button.css",
-            "../public/css/link.css"
+            "../public/css/link.css",
+            "../view/shadowbox/shadowbox.css"
         ],
         "js" => [
             "https://code.jquery.com/jquery-3.6.0.min.js",
@@ -18,7 +19,8 @@ $imports = [
             "https://cdn.jsdelivr.net/npm/sweetalert2@11",
             "https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js",
             "../public/js/main.js",
-            "../public/js/logAuditor.js"
+            "../public/js/logAuditor.js",
+            "../view/shadowbox/shadowbox.js"
         ]
     ],
     "usuario" => [
@@ -42,6 +44,14 @@ $imports = [
         "css" => ["../public/css/peca.css"],
         "js" => ["../public/js/peca.js"]
     ],
+    "servico_realizado" => [
+        "css" => ["../public/css/servico_realizado.css"],
+        "js" => ["../public/js/servico_realizado.js"]
+    ],
+    "lista_basica" => [
+        "css" => ["../public/css/lista_basica.css"],
+        "js" => ["../public/js/lista_basica.js"]
+    ],
     "cadastra_movimentacao" => [
         "css" => ["../public/css/estoque.css"],
         "js" => ["../public/js/estoque_lancar.js"]
@@ -54,16 +64,16 @@ $imports = [
         "css" => ["../public/css/cadastraOS.css",
                   "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css",
                   "https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css"],
-        "js" => ["../public/js/os.js",
+        "js" => ["../public/js/cadastra_os.js",
                  "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"]
     ],
     "consulta_os" => [
         "css" => ["../public/css/consultaOS.css"],
-        "js" => ["../public/js/os.js"]
+        "js" => ["../public/js/consulta_os.js"]
     ],
     "os_press" => [
         "css" => ["../public/css/osPress.css"],
-        "js" => ["../public/js/os.js"]
+        "js" => ["../public/js/consulta_os.js"]
     ]
 ];
 

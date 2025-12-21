@@ -6,7 +6,7 @@ use App\Core\Db;
 
 class RelatorioPecaController
 {
-    public static function gerarXLS($posto)
+    public static function gerarCSV($posto)
     {
         $con = Db::getConnection();
         $posto = intval($posto);
@@ -16,13 +16,16 @@ class RelatorioPecaController
 
         $dados = pg_fetch_assoc($resVerifica);
 
-        if ($dados['produto'] === 0) {
+        if ($dados['peca'] === 0) {
             header("Location: ../../view/peca.php?alerta=true");
         }
 
         $sql = " SELECT tbl_peca.codigo,
                         tbl_peca.descricao,
-                        tbl_peca.ativo,
+                        CASE WHEN tbl_peca.ativo IS TRUE
+                             THEN 'Ativo'
+                             ELSE 'Inativo'
+                        END AS ativo,
                         to_char(tbl_peca.data_input, 'DD/MM/YYYY') AS data_input
                     FROM tbl_peca
                     WHERE posto = $posto
@@ -30,30 +33,20 @@ class RelatorioPecaController
                 ";
         $res = pg_query($con, $sql);
 
-        header("Content-Type: application/vnd.ms-excel; charset=utf-8");
-        header("Content-Disposition: attachment; filename=Relatorio_Peca.xls");
-        header("Cache-Control: max-age=0");
+        header('Content-Type: text/csv; charset=UTF-8');
+        header('Content-Disposition: attachment; filename=relatorio_peca.csv');
 
-        echo "<table border='1'>";
-        echo "<tr bgcolor='#2e2e48' style='color: #ffffff; font-weight: bold;'>
-                <th>Código Peça</th>
-                <th>Descrição Peça</th>
-                <th>Status</th>
-                <th>Data Cadastro</th>
-              </tr>";
+        $output = fopen('php://output', 'w');
+
+        $cabecalho = ['Código Peça', 'Descrição Peça', 'Status Peça', 'Data Cadastro'];
+        fputcsv($output, $cabecalho, ';');
 
         while ($row = pg_fetch_assoc($res)) {
-            $ativo = $row['ativo'] === 't' ? 'Ativo' : 'Inativo';
 
-            echo "<tr>";
-            echo "<td>{$row['codigo']}</td>";
-            echo "<td>{$row['descricao']}</td>";
-            echo "<td>{$ativo}</td>";
-            echo "<td>{$row['data_input']}</td>";
-            echo "</tr>";
+            fputcsv($output, [$row['codigo'], $row['descricao'], $row['ativo'], $row['data_input']], ';');
         }
 
-        echo "</table>";
+        fclose($output);
         exit;
     }
 }

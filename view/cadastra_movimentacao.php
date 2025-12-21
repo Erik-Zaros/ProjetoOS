@@ -18,8 +18,8 @@ ob_start();
         <h3 id="sbSaldo">—</h3>
         <p>Saldo Atual do Item</p>
       </div>
-      <div class="icon"><i class="bi bi-graph-up-arrow"></i></div>
-      <a href="consulta_estoque" class="small-box-footer">Ver estoque <i class="bi bi-arrow-right"></i></a>
+      <div class="icon"><i class="bi bi-graph-up-arrow icone"></i></div>
+      <a href="consulta_estoque" class="small-box-footer icone">Ver estoque <i class="bi bi-arrow-right icone"></i></a>
     </div>
   </div>
   <div class="col-lg-4 col-12">
@@ -28,7 +28,7 @@ ob_start();
         <h3 id="sbUltEntrada">—</h3>
         <p>Última Entrada</p>
       </div>
-      <div class="icon"><i class="bi bi-box-arrow-in-down"></i></div>
+      <div class="icon"><i class="bi bi-box-arrow-in-down icone"></i></div>
       <span class="small-box-footer">&nbsp;</span>
     </div>
   </div>
@@ -38,7 +38,7 @@ ob_start();
         <h3 id="sbUltSaida">—</h3>
         <p>Última Saída</p>
       </div>
-      <div class="icon"><i class="bi bi-box-arrow-up"></i></div>
+      <div class="icon"><i class="bi bi-box-arrow-up icone"></i></div>
       <span class="small-box-footer">&nbsp;</span>
     </div>
   </div>
@@ -118,7 +118,7 @@ ob_start();
   </div>
   <div class="card-body">
     <div class="table-responsive">
-      <table class="table table-bordered align-middle mb-0" id="movTable">
+      <table class="table table-bordered table-striped table-hover nowrap" id="movTable">
         <thead>
           <tr>
             <th>#</th>

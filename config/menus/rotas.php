@@ -40,6 +40,26 @@ $rotas = [
             ]
         ]
     ],
+    "servico_realizado" => [
+        "titulo" => "Serviço Realizado",
+        "icone" => "bi bi-check-circle",
+        "submenus" => [
+            [
+                "titulo" => "Cadastrar Serviço Realizado",
+                "link" => "servico_realizado",
+            ]
+        ]
+    ],
+    "lista_basica" => [
+        "titulo" => "Lista Básica",
+        "icone" => "bi bi-card-list",
+        "submenus" => [
+            [
+                "titulo" => "Lista Básica",
+                "link" => "lista_basica",
+            ]
+        ]
+    ],
     "estoque" => [
         "titulo" => "Estoque",
         "icone" => "bi bi-box2-fill",

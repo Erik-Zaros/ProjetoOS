@@ -8,7 +8,7 @@ class OsController
 {
     public static function cadastrar($dados, $posto)
     {
-        $os = new OS($dados, $posto);
+        $os = new Os($dados, $posto);
         return $os->salvar();
     }
 

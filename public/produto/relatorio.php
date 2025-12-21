@@ -8,4 +8,4 @@ use App\Auth\Autenticador;
 Autenticador::iniciar();
 
 $posto = Autenticador::getPosto();
-RelatorioProdutoController::gerarXLS($posto);
+RelatorioProdutoController::gerarCSV($posto);

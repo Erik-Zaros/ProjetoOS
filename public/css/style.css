@@ -4,22 +4,22 @@ body {
 }
 
 .sidebar-dark-primary {
-  background-color: #2e2e48 !important;
+  background-color: #3c3c3c !important;
 }
 
 .sidebar-dark-primary .nav-sidebar .nav-link {
   color: #c2c7d0;
-  background-color: #2e2e48;
+  background-color: #3c3c3c;
   transition: background-color 0.3s;
 }
 
 .sidebar-dark-primary .nav-sidebar .nav-link:hover {
-  background-color: #3b3b5c !important;
+  background-color: #515151 !important;
   color: #ffffff !important;
 }
 
 .sidebar-dark-primary .nav-sidebar .nav-link.active {
-  background-color: #3b3b5c !important;
+  background-color: #515151 !important;
   color: #ffffff !important;
   font-weight: bold;
 }
@@ -46,9 +46,19 @@ body {
 }
 
 #sidebarSearch {
-  background-color: #2e2e48 !important;
+  background-color: #3c3c3c !important;
+  color: white;
 }
 
 #sidebarSearchIcon {
-  background-color: #2e2e48 !important;
+  background-color: #3c3c3c !important;
+  padding: 4px 6px;
+  font-size: 0.9rem;
+  width: 40px;
+  height: 38px;
+  line-height: 1;
+}
+
+.brand-link {
+  text-decoration: none;
 }

@@ -1,2 +1,3 @@
 /vendor/
 src/Core/Db.php
+.env

@@ -34,11 +34,12 @@ $(document).ready(function () {
                 }
                 if (data.length > 0) {
                     $('#pecasTable').DataTable({
+                        responsive: true,
+                        scrollX: true,
+                        autoWidth: false,
                         language: {
                             url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-                        },
-                        order: [[0, "asc"]],
-                        stripeClasses: ['stripe1', 'stripe2'],
+                        }
                     });
                 }
             },
@@ -105,6 +106,7 @@ $(document).ready(function () {
             data: { codigo: codigo },
             dataType: 'json',
             success: function (peca) {
+                $("html, body").animate({ scrollTop: 0 }, "slow");
                 $('#codigo').val(peca.codigo);
                 $('#descricao').val(peca.descricao);
                 $('#ativo').prop('checked', peca.ativo == 't');
@@ -171,21 +173,23 @@ $(document).ready(function () {
                     url: '../public/peca/excluir.php',
                     method: 'POST',
                     data: { peca: peca },
+                    dataType: 'json',
                     success: function (response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Excluído!',
-                            text: response.message,
-                        }).then(() => {
-                            carregarPecas();
-                        });
-                    },
-                    error: function (xhr, status, error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Erro',
-                            text: response.message,
-                        });
+                        if (response.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Sucesso!',
+                                text: response.message,
+                            }).then(() => {
+                                carregarPecas();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Atenção!',
+                                text: response.message,
+                            });
+                        }
                     }
                 });
             }

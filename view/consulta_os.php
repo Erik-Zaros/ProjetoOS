@@ -48,7 +48,7 @@ ob_start();
         <i class="bi bi-card-list"></i> Ordens de Serviço
     </div>
     <div class="card-body">
-        <table class="table table-bordered" id="osTable">
+        <table class="table table-bordered table-striped" id="osTable">
             <thead>
                 <tr>
                     <th>Número OS</th>
@@ -65,7 +65,7 @@ ob_start();
 </div>
 
 <div class="text-center mt-4 mb-3">
-    <a href="../public/os/relatorio.php" class="btn btn-success btn-sm">Download Excel</a>
+    <a href="../public/consulta_os/relatorio.php" class="btn btn-success btn-sm">Download Excel</a>
 </div>
 
 <?php
