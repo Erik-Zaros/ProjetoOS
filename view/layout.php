@@ -89,7 +89,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </div>
 
         <div class="col-3 col-sm-2 text-right">
-          <span class="navbar-text text-dark" style="font-size: 1.0rem;">
+          <span class="navbar-text text-dark" style="font-size: 0.8rem;">
             <?= $pageTitle ?? '' ?>
           </span>
         </div>
