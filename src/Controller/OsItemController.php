@@ -16,9 +16,9 @@ class OsItemController
         return OsItem::listarListaBasica($produto);
     }
 
-    public static function remover($os_item, $posto)
+    public static function remover($os_item, $os, $posto)
     {
-        return OsItem::remover($os_item, $posto);
+        return OsItem::remover($os_item, $os, $posto);
     }
 
     public static function buscarPecas($termo, $produto)

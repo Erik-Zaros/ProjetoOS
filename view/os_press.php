@@ -37,7 +37,7 @@ $pecas = $osInfo['pecas'] ?? [];
         <tbody>
           <tr class="table-light">
             <th>Nº da OS</th>
-            <td class="fw-bold text-primary"><?= htmlspecialchars($osInfo['os']) ?></td>
+            <td class="link"><?= htmlspecialchars($osInfo['os']) ?></td>
 
             <th>Data Abertura</th>
             <td><?= htmlspecialchars($osInfo['data_abertura']) ?></td>
@@ -94,7 +94,7 @@ $pecas = $osInfo['pecas'] ?? [];
             <td><?= htmlspecialchars($osInfo['numero_consumidor']) ?></td>
 
             <th>Cidade / UF</th>
-            <td><?= htmlspecialchars($osInfo['cidade_consumidor']) ?> - <?= htmlspecialchars($osInfo['estado_consumidor']) ?></td>
+            <td><?= htmlspecialchars($osInfo['cidade_consumidor']) ?> / <?= htmlspecialchars($osInfo['estado_consumidor']) ?></td>
           </tr>
         </tbody>
       </table>
@@ -126,9 +126,9 @@ $pecas = $osInfo['pecas'] ?? [];
   </div>
   <div class="card-body p-3">
 
-    <?php if (empty($pecas)): ?>
+    <?php if (empty($pecas)) { ?>
       <p class="text-muted">Nenhuma peça vinculada a esta OS.</p>
-    <?php else: ?>
+    <?php } else { ?>
 
       <div class="table-responsive">
         <table class="table table-bordered table-striped table-sm">
@@ -141,32 +141,30 @@ $pecas = $osInfo['pecas'] ?? [];
             </tr>
           </thead>
           <tbody>
-          <?php foreach ($pecas as $peca): ?>
+          <?php foreach ($pecas as $peca) {?>
             <tr>
               <td><?= htmlspecialchars($peca['codigo']) ?></td>
               <td><?= htmlspecialchars($peca['descricao']) ?></td>
               <td><?= htmlspecialchars($peca['quantidade']) ?></td>
               <td><?= htmlspecialchars($peca['descricao_servico_realizado']) ?></td>
             </tr>
-          <?php endforeach; ?>
+          <?php } ?>
           </tbody>
         </table>
       </div>
 
-    <?php endif; ?>
+    <?php } ?>
   </div>
 </div>
 
 <div class="text-end">
-  <a href="consulta_os" class="btn btn-secondary btn-sm">Voltar</a>
 <?php
-
 $osFinalizadaCancelada = FuncoesService::ValidaOsFinalizadaCancelada($os);
 
 if ($osFinalizadaCancelada == false) { ?>
-  <a href="cadastra_os?os=<?= $osInfo['os'] ?>" class="btn btn-primary btn-sm">Editar OS</a>
+  <a href="cadastra_os?os=<?= $osInfo['os'] ?>" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Editar OS</a>
 <?php } ?>
-
+  <a href="consulta_os" class="btn btn-secondary btn-sm">Voltar</a>
 </div>
 
 <?php

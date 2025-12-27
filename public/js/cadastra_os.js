@@ -157,8 +157,8 @@ $(document).ready(function () {
               <td>${item.quantidade}</td>
               <td>${item.descricao_servico_realizado}</td>
               <td>
-                <button type="button" class="btn btn-danger btn-sm removerPeca">
-                  <i class="bi bi-trash" style="color: white;"></i>
+                <button type="button" class="btn btn-danger btn-sm removerPeca" data-os_item="${item.os_item}">
+                  <i class="bi bi-trash3-fill"></i> Remover
                 </button>
               </td>
             </tr>
@@ -183,8 +183,7 @@ $(document).ready(function () {
   }
 
   function gravaEditaOs() {
-    const isEdicao = !!$("#os").val();
-    const url = isEdicao ? "../public/cadastra_os/editar.php" : "../public/cadastra_os/cadastrar.php";
+    const url = osParam ? "../public/cadastra_os/editar.php" : "../public/cadastra_os/cadastrar.php";
 
     $.ajax({
       url: url,
@@ -212,9 +211,7 @@ $(document).ready(function () {
             if (result.isConfirmed && numeroOs) {
               window.location.href = `../view/os_press?os=${numeroOs}`;
             } else {
-              $("#osForm")[0].reset();
-              carregarProdutos();
-              $("#tabelaPecas tbody").empty();
+              window.location.href = `../view/cadastra_os`;
             }
           });
         } else {
@@ -329,7 +326,7 @@ $(document).ready(function () {
         <td>${servicoDescricao}</td>
         <td>
           <button type="button" class="btn btn-danger btn-sm removerPeca">
-            <i class="bi bi-trash" style="color: white;"></i>
+            <i class="bi bi-trash3-fill"></i> Remover
           </button>
         </td>
       </tr>
@@ -342,7 +339,50 @@ $(document).ready(function () {
   });
 
   $(document).on("click", ".removerPeca", function () {
-    $(this).closest("tr").remove();
+
+      let botao = $(this);
+      let os_item = $(this).data('os_item');
+
+      if (os_item) {
+
+        Swal.fire({
+            title: `Deseja remover a peça?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../public/os_item/remover.php',
+                    method: 'POST',
+                    data: { os_item: os_item,
+                            os: osParam
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',  
+                                title: 'Sucesso!',
+                                text: response.message,
+                            }).then(() => {
+                                botao.closest("tr").remove()
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Atenção!',
+                                text: response.message,
+                            });
+                        }
+                    }
+                });
+            }
+        });
+      } else {
+        botao.closest("tr").remove()
+      }
   });
 
   $('#cep_consumidor').on('blur', function () {

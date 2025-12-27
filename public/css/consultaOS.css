@@ -9,20 +9,3 @@
     background-color: #ffffff;
     text-align: center;
 }
-
-/*.table th {
-    background-color: #3c3c3c;
-    color: #ffffff;
-}
-*/
-.table td {
-    vertical-align: middle;
-}
-
-.table .btn {
-    padding: 5px 10px;
-}
-
-i {
-    color: #fac927;
-}

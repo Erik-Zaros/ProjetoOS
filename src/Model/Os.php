@@ -42,7 +42,7 @@ class Os
                 return ['status' => 'alert', 'message' => $valida];
             }
 
-            $sqlCliente = "SELECT cliente, nome FROM tbl_cliente WHERE cpf = '{$cpf}' AND posto = {$posto}";
+            $sqlCliente = "SELECT cliente, nome, cpf FROM tbl_cliente WHERE (cpf = '{$cpf}' OR nome ILIKE '%$nome%') AND posto = {$posto}";
             $res = pg_query($con, $sqlCliente);
 
             if (pg_num_rows($res) > 0) {
@@ -52,6 +52,10 @@ class Os
                 if ($cliente['nome'] !== $nome) {
                     pg_query($con, "UPDATE tbl_cliente SET nome = '{$nome}' WHERE cliente = {$cliente_id}");
                 }
+
+				if ($cliente['cpf'] !== $cpf) {
+                    pg_query($con, "UPDATE tbl_cliente SET cpf = '{$cpf}' WHERE cliente = {$cliente_id}");
+				}
             } else {
                 $sqlInsertCliente = "INSERT INTO tbl_cliente (nome, cpf, cep, endereco, bairro, numero, cidade, estado, posto)
                                      VALUES ('{$nome}', '{$cpf}', '{$cep}', '{$endereco}', '{$bairro}', '{$numero}', '{$cidade}', '{$estado}', {$posto})

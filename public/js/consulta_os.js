@@ -14,14 +14,14 @@ $(document).ready(function () {
                 $('#osTable tbody').empty();
                 data.forEach(function (os) {
                     if (os.finalizada != true) {
-                        var canceladaButton = os.cancelada ? '' : '<button class="btn btn-danger btn-sm cancelar-os" data-os="' + os.os + '">Cancelar</button>';
+                        var canceladaButton = os.cancelada ? '' : '<button class="btn btn-danger btn-sm cancelar-os" data-os="' + os.os + '"><i class="bi bi-x-circle"></i> Cancelar</button>';
                     }
 
                     if (os.cancelada != true) {
-                        var finalizarButton = os.finalizada ? '' : '<button class="btn btn-success btn-sm finalizar-os" data-os="' + os.os + '">Finalizar</button>';
+                        var finalizarButton = os.finalizada ? '' : '<button class="btn btn-success btn-sm finalizar-os" data-os="' + os.os + '"><i class="bi bi-check-all"></i> Finalizar</button>';
                     }
 
-                    var alterarButton = '<a href=cadastra_os?os='+ os.os +' class="btn btn-warning btn-sm">Alterar</a>';
+                    var alterarButton = '<a href=cadastra_os?os='+ os.os +' class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i> Editar</a>';
                     var canceladaBadge = os.cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '';
                     var finalizadaBadge = os.finalizada ? '<span class="badge bg-success">Finalizada</span>' : '';
 

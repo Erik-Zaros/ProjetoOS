@@ -57,24 +57,24 @@ class OsItem
         return $pecas;
     }
 
-    public static function remover($os_item, $posto)
+    public static function remover($os_item, $os, $posto)
     {
         $con = Db::getConnection();
         $os_item = intval($os_item);
         $posto = intval($posto);
 
         if ($os_item <= 0) {
-            return ['success' => false, 'message' => 'ID de item inválido.'];
+            return ['status' => 'error', 'message' => 'ID de item inválido.'];
         }
 
-        $sql = "DELETE FROM tbl_os_item WHERE os_item = {$os_item} AND posto = {$posto}";
+        $sql = "DELETE FROM tbl_os_item WHERE os_item = {$os_item} AND os = {$os} AND posto = {$posto}";
         $res = pg_query($con, $sql);
 
         if ($res && pg_affected_rows($res) > 0) {
-            return ['success' => true, 'message' => 'Item removido com sucesso!'];
+            return ['status' => 'success', 'message' => 'Item removido com sucesso!'];
         }
 
-        return ['success' => false, 'message' => 'Item não encontrado ou sem permissão para remover.'];
+        return ['status' => 'error', 'message' => 'Item não encontrado ou sem permissão para remover.'];
     }
 
     public static function buscarPecas($termo, $produto)
