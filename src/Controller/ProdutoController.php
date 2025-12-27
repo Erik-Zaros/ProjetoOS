@@ -17,9 +17,9 @@ class ProdutoController
         return $produto->atualizar();
     }
 
-    public static function buscar($codigo, $posto)
+    public static function buscar($produto, $posto)
     {
-        return Produto::buscarPorCodigo($codigo, $posto);
+        return Produto::buscarPorProduto($produto, $posto);
     }
 
     public static function listar($posto)
