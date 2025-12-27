@@ -5,6 +5,7 @@ $(document).ready(function () {
     if (osParam) {
       carregarDadosOS(osParam);
     } else {
+	  carregaTecnico();
       carregarProdutos();
       carregarServicosRealizados();
     }
