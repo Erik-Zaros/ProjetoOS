@@ -100,12 +100,12 @@ class Produto
 
         if (pg_num_rows($resAntes) > 0) {
             $codigoAntes = pg_fetch_result($resAntes, 0, 'codigo');
-            $codigoAntes = pg_fetch_result($resAntes, 0, 'descricao');
+            $descricaoAntes = pg_fetch_result($resAntes, 0, 'descricao');
             $ativoAntes = pg_fetch_result($resAntes, 0, 'ativo');
 
             $antes = [
                 'codigo'    => $codigoAntes,
-                'descricao' => $codigoAntes,
+                'descricao' => $descricaoAntes,
                 'ativo'     => $ativoAntes
             ];
         }
