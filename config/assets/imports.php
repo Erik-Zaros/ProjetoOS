@@ -6,10 +6,11 @@ $imports = [
             "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css",
             "https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css",
             "https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css",
-            "../public/css/style.css",
+            "../public/css/layout.css",
             "../public/css/form.css",
             "../public/css/button.css",
             "../public/css/link.css",
+            "../public/css/icone.css",
             "../view/shadowbox/shadowbox.css"
         ],
         "js" => [

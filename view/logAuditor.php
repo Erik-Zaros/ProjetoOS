@@ -40,7 +40,7 @@ $id = $_GET['id'] ?? '';
 </head>
 <body>
   <div class="scroll-area">
-    <table class="table table-bordered table-striped table-hover nowrap">
+    <table class="table table-bordered table-striped table-hover">
       <thead class="table-dark">
         <tr>
           <th>Data</th>
@@ -72,6 +72,7 @@ $id = $_GET['id'] ?? '';
     }
 
     function traduzirValor(valor) {
+	    if (valor === null) return 'Vazio';
       if (typeof valor !== 'string') return valor;
       const val = valor.trim().toLowerCase();
       if (val === 't' || val === 'true') return 'Sim';

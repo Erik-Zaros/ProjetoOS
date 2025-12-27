@@ -18,9 +18,9 @@ $(document).ready(function () {
                                 <td>${peca.descricao}</td>
                                 <td>${ativo}</td>
                                 <td>
-                                    <button class='btn btn-warning btn-sm editar-peca' data-codigo='${peca.codigo}'>Editar</button>
-                                    <button class='btn btn-danger btn-sm excluir-peca' data-peca='${peca.peca}'>Excluir</button>
-                                    <button class='btn btn-info btn-sm btn-log-auditor' data-id='${peca.peca}'data-tabela='tbl_peca'>Ver Log</button>
+                                    <button class='btn btn-warning btn-sm editar-peca' data-codigo='${peca.codigo}'><i class="bi bi-pencil-square"></i> Editar</button>
+                                    <button class='btn btn-danger btn-sm excluir-peca' data-peca='${peca.peca}'><i class="bi bi-trash3-fill"></i> Excluir</button>
+                                    <button class='btn btn-info btn-sm btn-log-auditor' data-id='${peca.peca}'data-tabela='tbl_peca'><i class="bi bi-clock-history"></i> Ver Log</button>
                                 </td>
                             </tr>
                         `);

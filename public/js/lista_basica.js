@@ -48,7 +48,7 @@ $(document).ready(function () {
                         <td>${p.descricao}</td>
                         <td>${ativo}</td>
                         <td>
-                            <button class="btn btn-danger btn-sm removerPeca" data-id="${p.lista_basica}">Excluir</button>
+                            <button class="btn btn-danger btn-sm removerPeca" data-id="${p.lista_basica}"><i class="bi bi-trash3-fill"></i> Excluir</button>
                         </td>
                     </tr>`;
             });

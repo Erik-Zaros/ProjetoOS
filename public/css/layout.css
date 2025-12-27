@@ -62,3 +62,7 @@ body {
 .brand-link {
   text-decoration: none;
 }
+
+.nav-icon, #sidebarSearchIcon, .fa-bars {
+  color: #fac927;
+}

@@ -18,9 +18,9 @@ $(document).ready(function () {
                                 <td>${produto.descricao}</td>
                                 <td>${ativo}</td>
                                 <td>
-                                    <button class='btn btn-warning btn-sm editar-produto' data-produto='${produto.produto}'>Editar</button>
-                                    <button class='btn btn-danger btn-sm excluir-produto' data-produto='${produto.produto}'>Excluir</button>
-                                    <button class='btn btn-info btn-sm btn-log-auditor' data-id='${produto.produto}'data-tabela='tbl_produto'>Ver Log</button>
+                                    <button class='btn btn-warning btn-sm editar-produto' data-produto='${produto.produto}'><i class="bi bi-pencil-square"></i> Editar</button>
+                                    <button class='btn btn-danger btn-sm excluir-produto' data-produto='${produto.produto}'><i class="bi bi-trash3-fill"></i> Excluir</button>
+                                    <button class='btn btn-info btn-sm btn-log-auditor' data-id='${produto.produto}'data-tabela='tbl_produto'><i class="bi bi-clock-history"></i> Ver Log</button>
                                 </td>
                             </tr>
                         `);

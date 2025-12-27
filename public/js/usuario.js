@@ -16,15 +16,15 @@ function carregarUsuarios() {
                             <td>${usuario.login}</td>
                             <td>${usuario.nome}</td>
                             <td>
-                                ${usuario.ativo === 't' || usuario.ativo === true ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-check-circle-fill text-danger"></i>'}
+                                ${usuario.ativo === 't' || usuario.ativo === true ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>'}
                             </td>
-                            <td> ${usuario.tecnico === 't' || usuario.tecnico === true ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-check-circle-fill text-danger"></i>'}
+                            <td> ${usuario.tecnico === 't' || usuario.tecnico === true ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>'}
                             </td>
-                            <td> ${usuario.master === 't' || usuario.master === true ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-check-circle-fill text-danger"></i>'}
+                            <td> ${usuario.master === 't' || usuario.master === true ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>'}
                             </td>
                             <td>
-                                <button class="btn btn-warning btn-sm editar" data-usuario="${usuario.usuario}">Editar</button>
-                                <button class='btn btn-info btn-sm btn-log-auditor' data-id='${usuario.usuario}'data-tabela='tbl_usuario'>Ver Log</button>
+                                <button class="btn btn-warning btn-sm editar" data-usuario="${usuario.usuario}"><i class="bi bi-pencil-square"></i> Editar</button>
+                                <button class='btn btn-info btn-sm btn-log-auditor' data-id='${usuario.usuario}'data-tabela='tbl_usuario'><i class="bi bi-clock-history"></i> Ver Log</button>
                             </td>
                         </tr>
                     `);

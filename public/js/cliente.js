@@ -22,8 +22,8 @@ function carregarClientes() {
                             <td>${cliente.cidade || ''}</td>
                             <td>${cliente.estado || ''}</td>
                             <td>
-                                <button class="btn btn-warning btn-sm editar" data-cpf="${cliente.cpf}">Editar</button>
-                                <button class='btn btn-info btn-sm btn-log-auditor' data-id='${cliente.cliente}'data-tabela='tbl_cliente'>Ver Log</button>
+                                <button class="btn btn-warning btn-sm editar" data-cpf="${cliente.cpf}"><i class="bi bi-pencil-square"></i> Editar</button>
+                                <button class='btn btn-info btn-sm btn-log-auditor' data-id='${cliente.cliente}'data-tabela='tbl_cliente'><i class="bi bi-clock-history"></i> Ver Log</button>
                             </td>
                         </tr>
                     `);

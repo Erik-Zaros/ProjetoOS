@@ -19,9 +19,9 @@ $(document).ready(function () {
                                 <td>${ativo}</td>
                                 <td>${usa_estoque}</td>
                                 <td>
-                                    <button class='btn btn-warning btn-sm editar-servico_realizado' data-descricao='${servico_realizado.descricao}'>Editar</button>
-                                    <button class='btn btn-danger btn-sm excluir-servico_realizado' data-servico='${servico_realizado.servico_realizado}'>Excluir</button>
-                                    <button class='btn btn-info btn-sm btn-log-auditor' data-id='${servico_realizado.servico_realizado}'data-tabela='tbl_servico_realizado'>Ver Log</button>
+                                    <button class='btn btn-warning btn-sm editar-servico_realizado' data-descricao='${servico_realizado.descricao}'><i class="bi bi-pencil-square"></i> Editar</button>
+                                    <button class='btn btn-danger btn-sm excluir-servico_realizado' data-servico='${servico_realizado.servico_realizado}'><i class="bi bi-trash3-fill"></i> Excluir</button>
+                                    <button class='btn btn-info btn-sm btn-log-auditor' data-id='${servico_realizado.servico_realizado}'data-tabela='tbl_servico_realizado'><i class="bi bi-clock-history"></i> Ver Log</button>
                                 </td>
                             </tr>
                         `);
