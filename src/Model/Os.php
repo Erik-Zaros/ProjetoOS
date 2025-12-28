@@ -24,6 +24,7 @@ class Os
 
         try {
             $cpf = pg_escape_string($this->dados['cpf_consumidor']);
+	    $cpf = str_replace(['-', '.', '/', ' '], '', $cpf);
             $nome = pg_escape_string($this->dados['nome_consumidor']);
             $produto = intval($this->dados['produto']);
             $posto = intval($this->posto);
@@ -159,6 +160,7 @@ class Os
         try {
             $os = intval($this->dados['os']);
             $cpf = pg_escape_string($this->dados['cpf_consumidor']);
+	    $cpf = str_replace(['-', '.', '/', ' '], '', $cpf);
             $nome = pg_escape_string($this->dados['nome_consumidor']);
             $produto = intval($this->dados['produto']);
             $posto = intval($this->posto);
