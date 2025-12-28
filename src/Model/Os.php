@@ -188,7 +188,7 @@ class Os
                 return ['status' => 'alert', 'message' => $valida_campo];
             }
 
-            $sqlCliente = "SELECT cliente, nome FROM tbl_cliente WHERE cpf = '{$cpf}' AND posto = {$posto}";
+            $sqlCliente = "SELECT cliente, nome, cpf FROM tbl_cliente WHERE (cpf = '{$cpf}' OR nome ILIKE '%$nome%') AND posto = {$posto}";
             $res_cliente = pg_query($con, $sqlCliente);
 
             if (pg_num_rows($res_cliente) > 0) {
@@ -198,10 +198,17 @@ class Os
                 if ($cliente['nome'] !== $nome) {
                     pg_query($con, "UPDATE tbl_cliente SET nome = '{$nome}' WHERE cliente = {$cliente_id}");
                 }
+
+                if ($cliente['cpf'] !== $cpf) {
+                    pg_query($con, "UPDATE tbl_cliente SET cpf = '{$cpf}' WHERE cliente = {$cliente_id}");
+                }
             } else {
-                $sqlInsert = "INSERT INTO tbl_cliente (nome, cpf, posto) 
-                              VALUES ('{$nome}', '{$cpf}', {$posto}) RETURNING cliente";
-                $res_insert = pg_query($con, $sqlInsert);
+
+                $sqlInsertCliente = "INSERT INTO tbl_cliente (nome, cpf, cep, endereco, bairro, numero, cidade, estado, posto)
+                                     VALUES ('{$nome}', '{$cpf}', '{$cep}', '{$endereco}', '{$bairro}', '{$numero}', '{$cidade}', '{$estado}', {$posto})
+                                     RETURNING cliente";
+                $res_insert = pg_query($con, $sqlInsertCliente);
+                if (!$res_insert) throw new \Exception("Erro ao cadastrar cliente.");
                 $row_new = pg_fetch_assoc($res_insert);
                 $cliente_id = $row_new['cliente'];
             }
