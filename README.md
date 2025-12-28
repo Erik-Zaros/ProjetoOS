@@ -1,4 +1,4 @@
-# ServiceCore
+# ProjetoOS
 
 Sistema de gestão simplificada para abertura e acompanhamento de Ordens de Serviço, com funcionalidades para cadastro de clientes, produtos e peças.
 
