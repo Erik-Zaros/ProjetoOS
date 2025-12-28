@@ -50,7 +50,8 @@ CREATE TABLE tbl_os (
     numero_consumidor VARCHAR(10),
     cidade_consumidor VARCHAR(255),
     estado_consumidor VARCHAR(10),
-    nota_fiscal VARCHAR(50)
+    nota_fiscal VARCHAR(50),
+    tipo_atendimento INTEGER REFERENCES tbl_tipo_atendimento(tipo_atendimento)
 );
 
 CREATE TABLE tbl_posto (
@@ -130,6 +131,15 @@ CREATE TABLE tbl_servico_realizado (
     descricao VARCHAR(50) NOT NULL,
     ativo BOOLEAN DEFAULT FALSE,
     usa_estoque BOOLEAN DEFAULT FALSE,
+    data_input TIMESTAMP DEFAULT NOW(),
+    posto INTEGER REFERENCES tbl_posto(posto)
+);
+
+CREATE TABLE tbl_tipo_atendimento (
+    tipo_atendimento SERIAL PRIMARY KEY,
+    descricao VARCHAR(50) NOT NULL,
+    codigo VARCHAR(50) NOT NULL,
+    ativo BOOLEAN DEFAULT FALSE,
     data_input TIMESTAMP DEFAULT NOW(),
     posto INTEGER REFERENCES tbl_posto(posto)
 );

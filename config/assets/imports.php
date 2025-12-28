@@ -75,7 +75,11 @@ $imports = [
     "os_press" => [
         "css" => ["../public/css/osPress.css"],
         "js" => ["../public/js/consulta_os.js"]
-    ]
+    ],
+    "tipo_atendimento" => [
+        "css" => ["../public/css/tipo_atendimento.css"],
+        "js" => ["../public/js/tipo_atendimento.js"]
+    ],
 ];
 
 ?>

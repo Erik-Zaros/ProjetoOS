@@ -33,6 +33,10 @@ $rotas = [
             [
                 "titulo" => "Lista Básica",
                 "link" => "lista_basica",
+            ],
+            [
+                "titulo" => "Tipo de  Atendimento",
+                "link" => "tipo_atendimento",
             ]
         ]
     ],

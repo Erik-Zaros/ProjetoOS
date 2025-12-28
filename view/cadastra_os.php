@@ -20,13 +20,17 @@ ob_start();
   </div>
   <div class="card-body">
     <div class="row mb-3">
-      <div class="col-md-4">
+      <div class="col-md-2">
         <label for="data_abertura" class="form-label">Data de Abertura</label>
         <input type="date" class="form-control" id="data_abertura" name="data_abertura" required>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <label for="nota_fiscal" class="form-label">Nota Fiscal</label>
         <input type="text" class="form-control" id="nota_fiscal" name="nota_fiscal">
+      </div>
+      <div class="col-md-3">
+        <label for="tipo_atendimento" class="form-label">Tipo de Atendimento</label>
+        <select class="form-select" name="tipo_atendimento" id="tipo_atendimento"></select>
       </div>
       <div class="col-md-4">
         <label for="tecnico" class="form-label">Técnico</label>

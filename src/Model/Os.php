@@ -36,9 +36,10 @@ class Os
             $cidade = pg_escape_string($this->dados['cidade_consumidor'] ?? '');
             $estado = pg_escape_string($this->dados['estado_consumidor'] ?? '');
             $nota_fiscal = pg_escape_string($this->dados['nota_fiscal'] ?? '');
+            $tipo_atendimento = intval($this->dados['tipo_atendimento'] ?? '');
             $tecnico = intval($this->dados['tecnico'] ?? null);
 
-            $valida = $this->validaCamposOs($cpf, $nome, $produto, $data_abertura, $cep, $endereco, $bairro, $numero, $cidade, $estado, $nota_fiscal);
+            $valida = $this->validaCamposOs($cpf, $nome, $produto, $data_abertura, $cep, $endereco, $bairro, $numero, $cidade, $estado, $nota_fiscal, $tipo_atendimento);
             if ($valida != null) {
                 return ['status' => 'alert', 'message' => $valida];
             }
@@ -71,11 +72,11 @@ class Os
                 INSERT INTO tbl_os (
                     data_abertura, nome_consumidor, cpf_consumidor, produto, cliente, posto,
                     cep_consumidor, endereco_consumidor, bairro_consumidor, numero_consumidor,
-                    cidade_consumidor, estado_consumidor, nota_fiscal, tecnico
+                    cidade_consumidor, estado_consumidor, nota_fiscal, tecnico, tipo_atendimento
                 )
                 VALUES (
                     '{$data_abertura}', '{$nome}', '{$cpf}', {$produto}, {$cliente_id}, {$posto},
-                    '{$cep}', '{$endereco}', '{$bairro}', '{$numero}', '{$cidade}', '{$estado}', '{$nota_fiscal}', {$tecnico}
+                    '{$cep}', '{$endereco}', '{$bairro}', '{$numero}', '{$cidade}', '{$estado}', '{$nota_fiscal}', {$tecnico}, {$tipo_atendimento}
                 )
                 RETURNING os
             ";
@@ -172,6 +173,7 @@ class Os
             $cidade = pg_escape_string($this->dados['cidade_consumidor'] ?? '');
             $estado = pg_escape_string($this->dados['estado_consumidor'] ?? '');
             $nota_fiscal = pg_escape_string($this->dados['nota_fiscal'] ?? '');
+            $tipo_atendimento = intval($this->dados['tipo_atendimento'] ?? '');
             $tecnico = intval($this->dados['tecnico'] ?? null);
 
             $sqlCheck = "SELECT finalizada, cancelada FROM tbl_os WHERE os = {$os}";
@@ -183,7 +185,7 @@ class Os
             if ($row['finalizada'] === 't') throw new \Exception("OS já finalizada. Não é possível editar.");
             if ($row['cancelada'] === 't') throw new \Exception("OS já cancelada. Não é possível editar.");
 
-            $valida_campo = $this->validaCamposOs($cpf, $nome, $produto, $data_abertura, $cep, $endereco, $bairro, $numero, $cidade, $estado, $nota_fiscal);
+            $valida_campo = $this->validaCamposOs($cpf, $nome, $produto, $data_abertura, $cep, $endereco, $bairro, $numero, $cidade, $estado, $nota_fiscal, $tipo_atendimento);
             if ($valida_campo != null) {
                 return ['status' => 'alert', 'message' => $valida_campo];
             }
@@ -227,7 +229,8 @@ class Os
                     cidade_consumidor = '{$cidade}',
                     estado_consumidor = '{$estado}',
                     nota_fiscal = '{$nota_fiscal}',
-                    tecnico = {$tecnico}
+                    tecnico = {$tecnico},
+                    tipo_atendimento = {$tipo_atendimento}
                 WHERE os = {$os}
             ";
             $res_update = pg_query($con, $sqlUpdateOS);
@@ -428,7 +431,7 @@ class Os
                        os.produto, p.descricao AS produto_descricao,
                        os.cep_consumidor, os.endereco_consumidor, os.bairro_consumidor,
                        os.numero_consumidor, os.cidade_consumidor, os.estado_consumidor,
-                       os.nota_fiscal, os.finalizada, os.cancelada, os.tecnico
+                       os.nota_fiscal, os.finalizada, os.cancelada, os.tecnico, os.tipo_atendimento
                 FROM tbl_os os
                 INNER JOIN tbl_produto p ON os.produto = p.produto
                 LEFT JOIN tbl_usuario u ON os.tecnico = u.usuario
@@ -514,9 +517,13 @@ class Os
                 os.nota_fiscal,
                 CONCAT(p.codigo, ' - ', p.descricao) AS produto_codigo_descricao,
                 os.finalizada,
-                os.cancelada
+                os.cancelada,
+                u.nome as tecnico,
+                t.descricao as tipo_atendimento
             FROM tbl_os os
             INNER JOIN tbl_produto p ON os.produto = p.produto
+            INNER JOIN tbl_tipo_atendimento t ON t.tipo_atendimento = os.tipo_atendimento
+            LEFT JOIN tbl_usuario u ON u.usuario = os.tecnico
             WHERE os.os = {$os} AND os.posto = {$posto}
         ";
 
@@ -549,7 +556,7 @@ class Os
         return $dados;
     }
 
-    private static function validaCamposOs($cpf, $nome, $produto, $data_abertura, $cep, $endereco, $bairro, $numero, $cidade, $estado, $nota_fiscal)
+    private static function validaCamposOs($cpf, $nome, $produto, $data_abertura, $cep, $endereco, $bairro, $numero, $cidade, $estado, $nota_fiscal, $tipo_atendimento)
     {
 
         $obrigatorios = [
@@ -563,7 +570,8 @@ class Os
             'Número' => $numero,
             'Cidade' => $cidade,
             'Estado' => $estado,
-            'Nota fiscal' => $nota_fiscal
+            'Nota fiscal' => $nota_fiscal,
+            'Tipo de Atendimento' => $tipo_atendimento
         ];
 
         foreach ($obrigatorios as $campo => $valor) {

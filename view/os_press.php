@@ -53,6 +53,13 @@ $pecas = $osInfo['pecas'] ?? [];
               <?php endif; ?>
             </td>
           </tr>
+          <tr class="table-light">
+            <th>Tipo de Atendimento</th>
+            <td><?= htmlspecialchars($osInfo['tipo_atendimento']) ?></td>
+
+            <th>Técnico</th>
+            <td><?= htmlspecialchars($osInfo['tecnico']) ?></td>
+          </tr>
         </tbody>
       </table>
     </div>

@@ -5,7 +5,8 @@ $(document).ready(function () {
     if (osParam) {
       carregarDadosOS(osParam);
     } else {
-	  carregaTecnico();
+      carregaTipoAtendimento();
+	    carregaTecnico();
       carregarProdutos();
       carregarServicosRealizados();
     }
@@ -38,11 +39,36 @@ $(document).ready(function () {
         $("#estado_consumidor").val(data.estado_consumidor);
         $("#nota_fiscal").val(data.nota_fiscal);
         $("#tecnico").val(data.tecnico);
+        $("#tipo_atendimento").val(data.tipo_atendimento);
 
+        carregaTipoAtendimento(data.tipo_atendimento);
         carregaTecnico(data.tecnico);
         carregarServicosRealizados();
         carregarProdutos(data.produto);
         carregarPecas(os);
+      }
+    });
+  }
+
+  function carregaTipoAtendimento(tipoAtendimentoSelecionado = null) {
+    $.ajax({
+      url: "../public/tipo_atendimento/listar.php",
+      method: "GET",
+      dataType: "json",
+      cache: false,
+      success: function (tecnicos) {
+        $("#tipo_atendimento").empty();
+        $("#tipo_atendimento").append('<option value="">Selecione o Tipo de atendimento</option>');
+
+        tecnicos.forEach(function (tipo_atendimento) {
+          if (tipo_atendimento.ativo === "t") {
+            let selected = tipoAtendimentoSelecionado && tipo_atendimento.tipo_atendimento == tipoAtendimentoSelecionado ? "selected" : "";
+
+            $("#tipo_atendimento").append(
+              `<option value="${tipo_atendimento.tipo_atendimento}" ${selected}>${tipo_atendimento.descricao}</option>`
+            );
+          }
+        });
       }
     });
   }
@@ -58,7 +84,7 @@ $(document).ready(function () {
         $("#tecnico").append('<option value="">Selecione o Técnico</option>');
 
         tecnicos.forEach(function (usuario) {
-          if (usuario.tecnico === "t") {
+          if (usuario.tecnico === "t" && usuario.ativo === "t") {
             let selected =
               tecnicoSelecionado && usuario.usuario == tecnicoSelecionado
                 ? "selected"
