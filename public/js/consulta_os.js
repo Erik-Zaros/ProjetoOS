@@ -22,8 +22,8 @@ $(document).ready(function () {
                     }
 
                     var alterarButton = '<a href=cadastra_os?os='+ os.os +' class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i> Editar</a>';
-                    var canceladaBadge = os.cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '';
-                    var finalizadaBadge = os.finalizada ? '<span class="badge bg-success">Finalizada</span>' : '';
+                    var canceladaBadge = os.cancelada ? '<span class="badge bg-danger fs-6 px-3 py-2">Cancelada</span>' : '';
+                    var finalizadaBadge = os.finalizada ? '<span class="badge bg-success fs-6 px-3 py-2">Finalizada</span>' : '';
 
                     $('#osTable tbody').append(`
                         <tr>
@@ -76,8 +76,8 @@ $(document).ready(function () {
                     }
 
                     var alterarButton = '<a href=cadastra_os?os='+ os.os +' class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i> Editar</a>';
-                    var canceladaBadge = os.cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '';
-                    var finalizadaBadge = os.finalizada ? '<span class="badge bg-success">Finalizada</span>' : '';
+                    var canceladaBadge = os.cancelada ? '<span class="badge bg-danger fs-6 px-3 py-2">Cancelada</span>' : '';
+                    var finalizadaBadge = os.finalizada ? '<span class="badge bg-success fs-6 px-3 py-2">Finalizada</span>' : '';
 
                     $('#osTable tbody').append(`
                             <tr>
