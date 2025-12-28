@@ -1,3 +1,7 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 :root {
   --hero-grad-a: #2e2e48;
   --hero-grad-b: #16213e;

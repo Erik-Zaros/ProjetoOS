@@ -82,8 +82,8 @@
 
   <section id="recursos" class="py-5">
     <div class="container">
-      <h2 class="text-center fw-bold mb-4">Recursos que aceleram seu atendimento</h2>
-      <p class="text-center text-body-secondary mb-5">Tudo o que você precisa para abrir, acompanhar e finalizar OS com qualidade.</p>
+      <h2 class="text-center text-white fw-bold mb-4">Recursos que aceleram seu atendimento</h2>
+      <p class="text-center text-white mb-5">Tudo o que você precisa para abrir, acompanhar e finalizar OS com qualidade.</p>
       <div class="row g-4">
         <div class="col-md-6 col-lg-4">
           <div class="feature-card shadow-sm h-100">
@@ -184,7 +184,7 @@
 
   <section id="faq" class="py-5">
     <div class="container">
-      <h2 class="text-center fw-bold mb-4">Perguntas frequentes</h2>
+      <h2 class="text-center text-white w-bold mb-4">Perguntas frequentes</h2>
       <div class="accordion" id="faqAcc">
         <div class="accordion-item">
           <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#f1">Posso cancelar quando quiser?</button></h2>
@@ -216,7 +216,7 @@
           <p class="text-body-secondary mb-0">Entre em contato e te ajudamos a configurar seu posto autorizado.</p>
         </div>
         <div class="col-lg-4 text-lg-end">
-          <a href="mailto:suporte@projetoos.local" class="btn btn-dark"><i class="bi bi-envelope me-1"></i>suporte@projetoos.local</a>
+          <a href="erikzaros942@gmail.com" class="btn btn-dark"><i class="bi bi-envelope me-1"></i>erikzaros942@gmail.com</a>
         </div>
       </div>
     </div>
