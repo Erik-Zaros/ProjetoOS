@@ -35,6 +35,21 @@ ob_start();
                     <input type="date" class="form-control" id="dataFim" name="dataFim">
                 </div>
             </div>
+
+            <div class="row mt-3">
+                <div class="col-md-1">
+                    <label class="form-label" for="os_finalizada">OS Finalizada</label>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="os_finalizada" name="os_finalizada">
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label" for="os_cancelada">OS Cancelada</label>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="os_cancelada" name="os_cancelada">
+                    </div>
+                </div>
+            </div>
             <div class="mt-3">
                 <button type="submit" class="btn btn-success btn-sm">Filtrar</button>
                 <button type="button" class="btn btn-secondary btn-sm" id="limparFiltros">Limpar</button>
@@ -65,7 +80,7 @@ ob_start();
 </div>
 
 <div class="text-center mt-4 mb-3">
-    <a href="../public/consulta_os/relatorio.php" class="btn btn-success btn-sm">Download Excel</a>
+    <a href="../public/consulta_os/relatorio.php" class="btn btn-success btn-sm"><i class="bi bi-file-earmark-spreadsheet-fill"></i> Download CSV</a>
 </div>
 
 <?php

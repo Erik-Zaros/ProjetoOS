@@ -354,34 +354,42 @@ class Os
         $con = Db::getConnection();
 
         $sql = "SELECT
-                    os.os,
-                    os.nome_consumidor AS cliente,
-                    os.cpf_consumidor AS cpf,
-                    CONCAT(p.codigo, ' - ', p.descricao) AS produto,
-                    os.data_abertura,
-                    os.finalizada,
-                    os.cancelada
-                FROM tbl_os os
-                INNER JOIN tbl_produto p ON os.produto = p.produto
-                WHERE os.posto = $posto";
+                    tbl_os.os,
+                    tbl_os.nome_consumidor AS cliente,
+                    tbl_os.cpf_consumidor AS cpf,
+                    CONCAT(tbl_produto.codigo, ' - ', tbl_produto.descricao) AS produto,
+                    tbl_os.data_abertura,
+                    tbl_os.finalizada,
+                    tbl_os.cancelada
+                FROM tbl_os
+                INNER JOIN tbl_produto ON tbl_os.produto = tbl_produto.produto
+                WHERE tbl_os.posto = $posto";
 
         if (!empty($filtros['os'])) {
             $os = (int) $filtros['os'];
-            $sql .= " AND os.os = $os";
+            $sql .= " AND tbl_os.os = $os";
         }
 
         if (!empty($filtros['nomeCliente'])) {
             $nome = pg_escape_string($con, $filtros['nomeCliente']);
-            $sql .= " AND os.nome_consumidor ILIKE '%$nome%'";
+            $sql .= " AND tbl_os.nome_consumidor ILIKE '%$nome%'";
         }
 
         if (!empty($filtros['dataInicio']) && !empty($filtros['dataFim'])) {
             $dataInicio = pg_escape_string($con, $filtros['dataInicio']);
             $dataFim    = pg_escape_string($con, $filtros['dataFim']);
-            $sql .= " AND os.data_abertura BETWEEN '$dataInicio' AND '$dataFim'";
+            $sql .= " AND tbl_os.data_abertura BETWEEN '$dataInicio' AND '$dataFim'";
         }
 
-        $sql .= " ORDER BY os.os ASC";
+		if (!empty($filtros['os_finalizada']) && $filtros['os_finalizada'] == 'on') {
+			$sql .= " AND tbl_os.finalizada IS TRUE ";
+		}
+
+		if (!empty($filtros['os_cancelada']) && $filtros['os_cancelada'] == 'on') {
+			$sql .= " AND tbl_os.cancelada IS TRUE ";
+		}
+
+        $sql .= " ORDER BY tbl_os.os ASC";
 
         $result = pg_query($con, $sql);
         $ordens = [];

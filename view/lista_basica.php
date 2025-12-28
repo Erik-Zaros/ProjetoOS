@@ -46,7 +46,7 @@ ob_start();
 </div>
 
 <div class="text-center mt-3" id="btnExcelContainer" style="display:none;">
-  <a id="btnExcel" class="btn btn-success btn-sm" target="_blank">Download Excel</a>
+  <a id="btnExcel" class="btn btn-success btn-sm" target="_blank"><i class="bi bi-file-earmark-spreadsheet-fill"></i> Download CSV</a>
 </div>
 
 <?php

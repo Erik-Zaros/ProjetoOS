@@ -29,9 +29,13 @@ ob_start();
                         maxlength="120">
                 </div>
             </div>
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="ativo" name="ativo">
-                <label for="ativo" class="form-check-label">Ativo</label>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label" for="ativo">Ativo</label>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="ativo" name="ativo">
+                    </div>
+                </div>
             </div>
             <button type="submit" class="btn btn-success btn-sm mt-3">Gravar</button>
         </form>
@@ -58,7 +62,7 @@ ob_start();
 </div>
 
 <div class="text-center mt-4 mb-3">
-    <a href="../public/produto/relatorio.php" class="btn btn-success btn-sm">Download Excel</a>
+    <a href="../public/produto/relatorio.php" class="btn btn-success btn-sm"><i class="bi bi-file-earmark-spreadsheet-fill"></i> Download CSV</a>
 </div>
 
 <?php

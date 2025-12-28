@@ -67,7 +67,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
   }
   ?>
 
-  <?= $customCss ?? '' ?>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -117,7 +116,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       </div>
 
       <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" id="menuSidebar">
+        <ul class="nav nav-pills nav-sidebar flex-column nav-legacy" data-widget="treeview" role="menu" data-accordion="false" id="menuSidebar">
           <?php foreach ($rotas as $chave => $menu): ?>
             <?php if (!isset($menu['submenus'])): ?>
               <li class="nav-item">

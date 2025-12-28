@@ -13,17 +13,6 @@ body {
   transition: background-color 0.3s;
 }
 
-.sidebar-dark-primary .nav-sidebar .nav-link:hover {
-  background-color: #515151 !important;
-  color: #ffffff !important;
-}
-
-.sidebar-dark-primary .nav-sidebar .nav-link.active {
-  background-color: #515151 !important;
-  color: #ffffff !important;
-  font-weight: bold;
-}
-
 .sidebar-dark-primary .nav-sidebar .nav-link i.right {
   color: #fac927 !important;
 }

@@ -10,50 +10,26 @@ $rotas = [
         "icone" => "bi bi-pie-chart-fill",
         "link" => "menu",
     ],
-    "clientes" => [
-        "titulo" => "Clientes",
-        "icone" => "bi bi-people-fill",
+    "cadastros" => [
+        "titulo" => "Cadastros",
+        "icone" => "bi bi-folder-fill",
         "submenus" => [
             [
-                "titulo" => "Cadastrar Cliente",
+                "titulo" => "Clientes",
                 "link" => "cliente",
-            ]
-        ]
-    ],
-    "produtos" => [
-        "titulo" => "Produtos",
-        "icone" => "bi bi-box-fill",
-        "submenus" => [
+            ],
             [
-                "titulo" => "Cadastrar Produto",
+                "titulo" => "Produtos",
                 "link" => "produto",
-            ]
-        ]
-    ],
-    "pecas" => [
-        "titulo" => "Peças",
-        "icone" => "bi bi-wrench",
-        "submenus" => [
+            ],
             [
-                "titulo" => "Cadastrar Peças",
+                "titulo" => "Peças",
                 "link" => "peca",
-            ]
-        ]
-    ],
-    "servico_realizado" => [
-        "titulo" => "Serviço Realizado",
-        "icone" => "bi bi-check-circle",
-        "submenus" => [
+            ],
             [
-                "titulo" => "Cadastrar Serviço Realizado",
+                "titulo" => "Serviço Realizado",
                 "link" => "servico_realizado",
-            ]
-        ]
-    ],
-    "lista_basica" => [
-        "titulo" => "Lista Básica",
-        "icone" => "bi bi-card-list",
-        "submenus" => [
+            ],
             [
                 "titulo" => "Lista Básica",
                 "link" => "lista_basica",

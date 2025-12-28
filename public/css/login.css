@@ -9,10 +9,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: radial-gradient(circle at 20% 20%, #0c1220, #0a0f1a, #060b13);
+  background: linear-gradient(180deg, #1e3a8a 0%, #132b3f 50%,#0a0f1a 100%);
   font-family: "Segoe UI", sans-serif;
   overflow: hidden;
-  position: relative;
 }
 
 body::before {
@@ -41,9 +40,9 @@ body::before {
 
 .particle {
   position: absolute;
-  font-size: 20px;
+  font-size: 24px;
   opacity: 0.35;
-  color: rgba(138,180,255,0.35);
+  color: white;
   animation: particleFloat 8s infinite ease-in-out;
 }
 
