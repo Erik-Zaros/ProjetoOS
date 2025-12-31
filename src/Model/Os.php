@@ -522,7 +522,7 @@ class Os
                 t.descricao as tipo_atendimento
             FROM tbl_os os
             INNER JOIN tbl_produto p ON os.produto = p.produto
-            INNER JOIN tbl_tipo_atendimento t ON t.tipo_atendimento = os.tipo_atendimento
+            LEFT JOIN tbl_tipo_atendimento t ON t.tipo_atendimento = os.tipo_atendimento
             LEFT JOIN tbl_usuario u ON u.usuario = os.tecnico
             WHERE os.os = {$os} AND os.posto = {$posto}
         ";

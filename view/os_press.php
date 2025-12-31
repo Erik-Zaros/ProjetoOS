@@ -173,6 +173,7 @@ if ($osFinalizadaCancelada == false) { ?>
 <?php } ?>
   <a href="consulta_os" class="btn btn-secondary btn-sm">Voltar</a>
 </div>
+<br>
 
 <?php
 $content = ob_get_clean();
