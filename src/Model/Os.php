@@ -37,14 +37,14 @@ class Os
             $estado = pg_escape_string($this->dados['estado_consumidor'] ?? '');
             $nota_fiscal = pg_escape_string($this->dados['nota_fiscal'] ?? '');
             $tipo_atendimento = intval($this->dados['tipo_atendimento'] ?? '');
-            $tecnico = intval($this->dados['tecnico'] ?? null);
+            $tecnico = !empty($this->dados['tecnico']) ? $this->dados['tecnico'] : 'NULL';
 
             $valida = $this->validaCamposOs($cpf, $nome, $produto, $data_abertura, $cep, $endereco, $bairro, $numero, $cidade, $estado, $nota_fiscal, $tipo_atendimento);
             if ($valida != null) {
                 return ['status' => 'alert', 'message' => $valida];
             }
 
-            $sqlCliente = "SELECT cliente, nome, cpf FROM tbl_cliente WHERE (cpf = '{$cpf}' OR nome ILIKE '%$nome%') AND posto = {$posto}";
+            $sqlCliente = "SELECT cliente, nome, cpf FROM tbl_cliente WHERE (cpf = '{$cpf}' OR nome = '{$nome}') AND posto = {$posto}";
             $res = pg_query($con, $sqlCliente);
 
             if (pg_num_rows($res) > 0) {
@@ -174,7 +174,7 @@ class Os
             $estado = pg_escape_string($this->dados['estado_consumidor'] ?? '');
             $nota_fiscal = pg_escape_string($this->dados['nota_fiscal'] ?? '');
             $tipo_atendimento = intval($this->dados['tipo_atendimento'] ?? '');
-            $tecnico = intval($this->dados['tecnico'] ?? null);
+            $tecnico = !empty($this->dados['tecnico']) ? $this->dados['tecnico'] : 'NULL';
 
             $sqlCheck = "SELECT finalizada, cancelada FROM tbl_os WHERE os = {$os}";
             $res_check = pg_query($con, $sqlCheck);
@@ -190,7 +190,7 @@ class Os
                 return ['status' => 'alert', 'message' => $valida_campo];
             }
 
-            $sqlCliente = "SELECT cliente, nome, cpf FROM tbl_cliente WHERE (cpf = '{$cpf}' OR nome ILIKE '%$nome%') AND posto = {$posto}";
+            $sqlCliente = "SELECT cliente, nome, cpf FROM tbl_cliente WHERE (cpf = '{$cpf}' OR nome = '{$nome}') AND posto = {$posto}";
             $res_cliente = pg_query($con, $sqlCliente);
 
             if (pg_num_rows($res_cliente) > 0) {
