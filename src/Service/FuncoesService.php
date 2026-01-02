@@ -72,4 +72,24 @@ class FuncoesService
             return false;
         }
     }
+
+    public static function mascaraCPF($cpf) {
+        return preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $cpf);
+    }
+
+    public static function mascaraCNPJ($cnpj) {
+        return preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $cnpj);
+    }
+
+    public static function mascaraCpfCnpj($valor) {
+        if (strlen($valor) === 11) {
+            return FuncoesService::mascaraCPF($valor);
+        }
+
+        if (strlen($valor) === 14) {
+            return FuncoesService::mascaraCNPJ($valor);
+        }
+
+        return $valor;
+    }
 }

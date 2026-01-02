@@ -24,156 +24,158 @@ if (isset($osInfo['error'])) {
 }
 
 $pecas = $osInfo['pecas'] ?? [];
+ob_start();
 ?>
 
 <div class="card shadow-sm mb-4">
   <div class="card-header bg-primary text-white">
-    <h5 class="mb-0"><i class="bi bi-clipboard-data"></i> Dados da OS</h5>
+    <i class="bi bi-clipboard-data"></i> Dados da OS
   </div>
-  <div class="card-body p-3">
-
-    <div class="table-responsive">
-      <table class="table table-bordered table-sm align-middle">
-        <tbody>
-          <tr class="table-light">
-            <th>Nº da OS</th>
-            <td class="link"><?= htmlspecialchars($osInfo['os']) ?></td>
-
-            <th>Data Abertura</th>
-            <td><?= htmlspecialchars($osInfo['data_abertura']) ?></td>
-
-            <th>Status</th>
-            <td>
-              <?php if ($osInfo['finalizada'] === 't'): ?>
-                <span class="badge bg-success w-100">Finalizada</span>
-              <?php elseif ($osInfo['cancelada'] === 't'): ?>
-                <span class="badge bg-danger w-100">Cancelada</span>
-              <?php else: ?>
-                <span class="badge bg-warning text-dark w-100">Em Aberto</span>
-              <?php endif; ?>
-            </td>
-          </tr>
-          <tr class="table-light">
-            <th>Tipo de Atendimento</th>
-            <td><?= htmlspecialchars($osInfo['tipo_atendimento']) ?></td>
-
-            <th>Técnico</th>
-            <td><?= htmlspecialchars($osInfo['tecnico']) ?></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-  </div>
-</div>
-
-<div class="card shadow-sm mb-4">
-  <div class="card-header bg-secondary text-white">
-    <h5 class="mb-0"><i class="bi bi-person"></i> Informações do Consumidor</h5>
-  </div>
-
-  <div class="card-body p-3">
-    <div class="table-responsive">
-      <table class="table table-bordered table-sm">
-        <tbody>
-          <tr>
-            <th>Nome</th>
-            <td><?= htmlspecialchars($osInfo['nome_consumidor']) ?></td>
-
-            <th>CPF</th>
-            <td><?= htmlspecialchars($osInfo['cpf_consumidor']) ?></td>
-
-            <th>Nota Fiscal</th>
-            <td><?= htmlspecialchars($osInfo['nota_fiscal']) ?></td>
-          </tr>
-          <tr>
-            <th>CEP</th>
-            <td><?= htmlspecialchars($osInfo['cep_consumidor']) ?></td>
-
-            <th>Endereço</th>
-            <td colspan="3"><?= htmlspecialchars($osInfo['endereco_consumidor']) ?></td>
-          </tr>
-          <tr>
-            <th>Bairro</th>
-            <td><?= htmlspecialchars($osInfo['bairro_consumidor']) ?></td>
-
-            <th>Número</th>
-            <td><?= htmlspecialchars($osInfo['numero_consumidor']) ?></td>
-
-            <th>Cidade / UF</th>
-            <td><?= htmlspecialchars($osInfo['cidade_consumidor']) ?> / <?= htmlspecialchars($osInfo['estado_consumidor']) ?></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<div class="card shadow-sm mb-4">
-  <div class="card-header bg-info text-white">
-    <h5 class="mb-0"><i class="bi bi-box-seam"></i> Informações do Produto</h5>
-  </div>
-  <div class="card-body p-3">
-    <div class="table-responsive">
-      <table class="table table-bordered table-sm">
-        <tbody>
-          <tr>
-            <th>Produto</th>
-            <td><?= htmlspecialchars($osInfo['produto_codigo_descricao']) ?></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<div class="card shadow-sm mb-4">
-  <div class="card-header bg-success text-white">
-    <h5 class="mb-0"><i class="bi bi-tools"></i> Peças Utilizadas</h5>
-  </div>
-  <div class="card-body p-3">
-
-    <?php if (empty($pecas)) { ?>
-      <p class="text-muted">Nenhuma peça vinculada a esta OS.</p>
-    <?php } else { ?>
-
-      <div class="table-responsive">
-        <table class="table table-bordered table-striped table-sm">
-          <thead class="table-light">
-            <tr>
-              <th>Código</th>
-              <th>Descrição</th>
-              <th>Qtd</th>
-              <th>Serviço Realizado</th>
-            </tr>
-          </thead>
-          <tbody>
-          <?php foreach ($pecas as $peca) {?>
-            <tr>
-              <td><?= htmlspecialchars($peca['codigo']) ?></td>
-              <td><?= htmlspecialchars($peca['descricao']) ?></td>
-              <td><?= htmlspecialchars($peca['quantidade']) ?></td>
-              <td><?= htmlspecialchars($peca['descricao_servico_realizado']) ?></td>
-            </tr>
-          <?php } ?>
-          </tbody>
-        </table>
+  <div class="card-body">
+    <div class="row info-row">
+      <div class="col-md-3 info-col">
+        <div class="info-label">Nº da OS</div>
+        <div class="info-value large"><?= htmlspecialchars($osInfo['os']) ?></div>
       </div>
+      <div class="col-md-3 info-col">
+        <div class="info-label">Data Abertura</div>
+        <div class="info-value"><?= htmlspecialchars($osInfo['data_abertura']) ?></div>
+      </div>
+      <div class="col-md-3 info-col">
+        <div class="info-label">Status</div>
+        <div class="info-value">
+          <?php if ($osInfo['finalizada'] === 't') { ?>
+            <span class="badge bg-success fs-6 px-3 py-2">Finalizada</span>
+          <?php } else if ($osInfo['cancelada'] === 't') { ?>
+            <span class="badge bg-danger fs-6 px-3 py-2">Cancelada</span>
+          <?php } else { ?>
+            <span class="badge bg-warning fs-6 px-3 py-2">Em Aberto</span>
+          <?php } ?>
+        </div>
+      </div>
+    </div>
+    <div class="row info-row">
+      <div class="col-md-6 info-col">
+        <div class="info-label">Tipo de Atendimento</div>
+        <div class="info-value"><?= htmlspecialchars($osInfo['tipo_atendimento']) ?></div>
+      </div>
+      <div class="col-md-6 info-col">
+        <div class="info-label">Técnico</div>
+        <div class="info-value"><?= htmlspecialchars($osInfo['tecnico']) ?></div>
+      </div>
+    </div>
+  </div>
+</div>
 
+<div class="card shadow-sm mb-4">
+  <div class="card-header bg-primary text-white">
+    <i class="bi bi-person"></i> Informações do Consumidor
+  </div>
+  <div class="card-body">
+    <div class="row info-row">
+      <div class="col-md-4 info-col">
+        <div class="info-label">Nome</div>
+        <div class="info-value"><?= htmlspecialchars($osInfo['nome_consumidor']) ?></div>
+      </div>
+      <div class="col-md-4 info-col">
+        <div class="info-label">CPF</div>
+        <div class="info-value"><?= FuncoesService::mascaraCpfCnpj($osInfo['cpf_consumidor']) ?></div>
+      </div>
+      <div class="col-md-4 info-col">
+        <div class="info-label">Nota Fiscal</div>
+        <div class="info-value"><?= htmlspecialchars($osInfo['nota_fiscal']) ?></div>
+      </div>
+    </div>
+    <div class="row info-row">
+      <div class="col-md-2 info-col">
+        <div class="info-label">CEP</div>
+        <div class="info-value"><?= htmlspecialchars($osInfo['cep_consumidor']) ?></div>
+      </div>
+      <div class="col-md-6 info-col">
+        <div class="info-label">Endereço</div>
+        <div class="info-value"><?= htmlspecialchars($osInfo['endereco_consumidor']) ?></div>
+      </div>
+      <div class="col-md-4 info-col">
+        <div class="info-label">Bairro</div>
+        <div class="info-value"><?= htmlspecialchars($osInfo['bairro_consumidor']) ?></div>
+      </div>
+    </div>
+    <div class="row info-row">
+      <div class="col-md-2 info-col">
+        <div class="info-label">Número</div>
+        <div class="info-value"><?= htmlspecialchars($osInfo['numero_consumidor']) ?></div>
+      </div>
+      <div class="col-md-4 info-col">
+        <div class="info-label">Cidade</div>
+        <div class="info-value"><?= htmlspecialchars($osInfo['cidade_consumidor']) ?></div>
+      </div>
+      <div class="col-md-2 info-col">
+        <div class="info-label">UF</div>
+        <div class="info-value"><?= htmlspecialchars($osInfo['estado_consumidor']) ?></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-header bg-primary text-white">
+    <i class="bi bi-box-seam"></i> Informações do Produto
+  </div>
+  <div class="card-body">
+    <div class="row info-row">
+      <div class="col-md-12 info-col">
+        <div class="info-label">Produto</div>
+        <div class="info-value"><?= htmlspecialchars($osInfo['produto_codigo_descricao']) ?></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-header bg-primary text-white">
+    <i class="bi bi-tools"></i> Peças Utilizadas
+  </div>
+  <div class="card-body">
+    <?php if (empty($pecas)) { ?>
+      <p class="text-muted text-center py-3">Nenhuma peça vinculada a esta OS.</p>
+    <?php } else { ?>
+      <table class="table table-bordered table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Descrição</th>
+            <th>Quantidade</th>
+            <th>Serviço Realizado</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($pecas as $peca) {?>
+          <tr>
+            <td><?= htmlspecialchars($peca['codigo']) ?></td>
+            <td><?= htmlspecialchars($peca['descricao']) ?></td>
+            <td><?= htmlspecialchars($peca['quantidade']) ?></td>
+            <td><?= htmlspecialchars($peca['descricao_servico_realizado']) ?></td>
+          </tr>
+        <?php } ?>
+        </tbody>
+      </table>
     <?php } ?>
   </div>
 </div>
 
-<div class="text-end">
-<?php
-$osFinalizadaCancelada = FuncoesService::ValidaOsFinalizadaCancelada($os);
-
-if ($osFinalizadaCancelada == false) { ?>
-  <a href="cadastra_os?os=<?= $osInfo['os'] ?>" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Editar OS</a>
-<?php } ?>
-  <a href="consulta_os" class="btn btn-secondary btn-sm">Voltar</a>
+<div class="text-end mb-3">
+  <?php
+  $osFinalizadaCancelada = FuncoesService::ValidaOsFinalizadaCancelada($os);
+  
+  if ($osFinalizadaCancelada == false) { ?>
+    <a href="cadastra_os?os=<?= $osInfo['os'] ?>" class="btn btn-warning btn-sm">
+      <i class="bi bi-pencil-square"></i> Editar OS
+    </a>
+  <?php } ?>
+  <a href="consulta_os" class="btn btn-secondary btn-sm">
+    <i class="bi bi-arrow-left"></i> Voltar
+  </a>
 </div>
-<br>
 
 <?php
 $content = ob_get_clean();
