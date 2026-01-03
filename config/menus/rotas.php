@@ -1,9 +1,9 @@
 <?php
 $rotas = [
-    "usuarios" => [
+    "usuario" => [
         "titulo" => "Usuários Admin",
         "icone" => "bi bi-person-circle",
-        "link" => "usuarios"
+        "link" => "usuario"
     ],
     "dashboard" => [
         "titulo" => "Dashboard Geral",
