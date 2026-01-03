@@ -37,13 +37,13 @@ ob_start();
             </div>
 
             <div class="row mt-3">
-                <div class="col-md-1">
+                <div class="col-md-2">
                     <label class="form-label" for="os_finalizada">OS Finalizada</label>
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="os_finalizada" name="os_finalizada">
                     </div>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-2">
                     <label class="form-label" for="os_cancelada">OS Cancelada</label>
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="os_cancelada" name="os_cancelada">

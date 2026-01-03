@@ -80,6 +80,10 @@ $imports = [
         "css" => ["../public/css/tipo_atendimento.css"],
         "js" => ["../public/js/tipo_atendimento.js"]
     ],
+    "relatorio_cliente" => [
+        "css" => ["../public/css/relatorio_cliente.css"],
+        "js" => ["../public/js/relatorio_cliente.js"]
+    ]
 ];
 
 ?>

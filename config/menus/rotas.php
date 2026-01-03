@@ -10,6 +10,16 @@ $rotas = [
         "icone" => "bi bi-pie-chart-fill",
         "link" => "menu",
     ],
+    "relatorios" => [
+        "titulo" => "Relatórios",
+        "icone" => "bi bi-clipboard-data",
+        "submenus" => [
+            [
+                "titulo" => "Clientes",
+                "link" => "relatorio_cliente",
+            ]
+        ]
+    ],
     "cadastros" => [
         "titulo" => "Cadastros",
         "icone" => "bi bi-folder-fill",

@@ -1,0 +1,11 @@
+.card-header {
+    font-weight: bold;
+    background-color: #3c3c3c !important;
+    color: #ffffff;
+    border-radius: 0.25rem 0.25rem 0 0;
+}
+
+.table {
+    background-color: #ffffff;
+    text-align: center;
+}

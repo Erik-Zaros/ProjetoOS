@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Model\Cliente;
+use App\Model\Relatorio\ClienteRelatorio;
 
 class ClienteController
 {
@@ -32,5 +33,11 @@ class ClienteController
     public static function autocomplete($termo, $posto)
     {
         return Cliente::autocompleteClientes($termo, $posto);
+    }
+
+    public static function relatorio(array $filtros, $posto)
+    {
+        $relatorio = new ClienteRelatorio($filtros, $posto);
+        return $relatorio->pesquisar($filtros);
     }
 }

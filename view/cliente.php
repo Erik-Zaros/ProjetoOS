@@ -20,7 +20,7 @@ ob_start();
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="cpf" class="form-label">CPF</label>
-                    <input type="text" class="form-control" id="cpf" name="cpf" required maxlength="11">
+                    <input type="text" class="form-control" id="cpf" name="cpf" required>
                 </div>
                 <div class="col-md-6">
                     <label for="nome" class="form-label">Nome</label>

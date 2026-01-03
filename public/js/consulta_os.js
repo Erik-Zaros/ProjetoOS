@@ -183,4 +183,11 @@ $(document).ready(function () {
             }
         });
     });
+
+    $("#dataInicio, #dataFim").datepicker({
+        dateFormat: "yy-mm-dd",
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true
+    });
 });

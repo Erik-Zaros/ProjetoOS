@@ -23,6 +23,7 @@ class Cliente
         $usuario = Autenticador::getUsuario();
 
         $cpf      = pg_escape_string($this->dados['cpf']);
+        $cpf      = str_replace(['-', '.', '/', ' '], '', $cpf);
         $nome     = pg_escape_string($this->dados['nome']);
         $cep      = pg_escape_string(str_replace('-', '', $this->dados['cep']));
         $endereco = pg_escape_string($this->dados['endereco']);
