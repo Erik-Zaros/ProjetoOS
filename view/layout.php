@@ -39,7 +39,7 @@ if (file_exists($arquivo_menu_posto)) {
 }
 
 require_once __DIR__ . '/../config/assets/imports.php';
-$current_page = basename($_SERVER['PHP_SELF']);
+$current_page = basename($_SERVER['PHP_SELF'], '.php');
 
 ?>
 
@@ -59,7 +59,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
   <?php
   foreach ($imports as $key => $import) {
-    if (strpos($current_page, $key) !== false && isset($import["css"])) {
+    if ($current_page === $key && isset($import["css"])) {
       foreach ($import["css"] as $css) {
         echo '<link rel="stylesheet" href="' . $css . '">' . PHP_EOL;
       }
@@ -178,7 +178,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 <?php
 foreach ($imports as $key => $import) {
-  if (strpos($current_page, $key) !== false && isset($import["js"])) {
+  if ($current_page === $key && isset($import["js"])) {
     foreach ($import["js"] as $js) {
       echo '<script src="' . $js . '"></script>' . PHP_EOL;
     }

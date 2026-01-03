@@ -20,11 +20,11 @@ ob_start();
             <div class="row">
                 <div class="col-md-2">
                     <label for="dataInicio" class="form-label">Data Início</label>
-                    <input type="date" class="form-control" id="dataInicio" name="dataInicio">
+                    <input type="text" class="form-control" id="dataInicio" name="dataInicio">
                 </div>
                 <div class="col-md-2">
                     <label for="dataFim" class="form-label">Data Fim</label>
-                    <input type="date" class="form-control" id="dataFim" name="dataFim">
+                    <input type="text" class="form-control" id="dataFim" name="dataFim">
                 </div>
                 <div class="col-md-3">
                     <label for="cpf" class="form-label">CPF/CNPJ</label>

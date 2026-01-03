@@ -27,15 +27,15 @@ $(document).ready(function () {
 	            data.forEach(function (cliente) {
 	                $('#clienteTable tbody').append(`
 	                    <tr>
-	                        <td>${cliente.nome}</td>
-	                        <td>${cliente.cpf}</td>
-	                        <td>${cliente.cep}</td>
-	                        <td>${cliente.endereco}</td>
-	                        <td>${cliente.bairro}</td>
-	                        <td>${cliente.cidade}</td>
-	                        <td>${cliente.estado}</td>
-	                        <td>${cliente.data_cadastro}</td>
-	                        <td>${cliente.oss}</td>
+	                        <td>${cliente.nome || ''}</td>
+	                        <td>${cliente.cpf || ''}</td>
+	                        <td>${cliente.cep || ''}</td>
+	                        <td>${cliente.endereco || ''}</td>
+	                        <td>${cliente.bairro || ''}</td>
+	                        <td>${cliente.cidade || ''}</td>
+	                        <td>${cliente.estado || ''}</td>
+	                        <td>${cliente.data_cadastro || ''}</td>
+	                        <td>${cliente.oss || ''}</td>
 	                    </tr>
 	                `);
 	            });
@@ -80,7 +80,7 @@ $(document).ready(function () {
     });
 
     $("#dataInicio, #dataFim").datepicker({
-        dateFormat: "yy-mm-dd",
+        dateFormat: "dd/mm/yy",
         changeMonth: true,
         changeYear: true,
         showButtonPanel: true
