@@ -1,11 +1,16 @@
 # ProjetoOS
 
-Sistema de gestão simplificada para abertura e acompanhamento de Ordens de Serviço, com funcionalidades para cadastro de clientes, produtos e peças.
+Sistema de gestão para abertura e acompanhamento de Ordens de Serviço.
+
+## Home Page
+- Arquivo: index.php
+- Home page inicial para logar no sistema.
+<img width="1920" height="875" alt="image" src="https://github.com/user-attachments/assets/ebad1d40-30b3-4729-9cac-01d2a10c0e7a" />
 
  ## Login
  - Arquivo: login.php
-- Tela inicial de acesso ao sistema. Usuários (Postos Autorizados) utilizam suas credenciais para autenticação.
- <img width="1833" height="961" alt="image" src="https://github.com/user-attachments/assets/a7f040e5-493d-4df9-ac88-8d02dee2c353" />
+ - Tela inicial de acesso ao sistema. Usuários (Postos Autorizados) utilizam suas credenciais para autenticação.
+<img width="1920" height="888" alt="image" src="https://github.com/user-attachments/assets/d93eba13-b2ac-421a-8493-c535e5f6c4a7" />
 
  ## Menu
  - Arquivo: view/menu.php
@@ -13,9 +18,9 @@ Sistema de gestão simplificada para abertura e acompanhamento de Ordens de Serv
  - Status das Ordens de Serviço
  - Situação dos Produtos cadastrados
  - Situação das Peças
- - Também é possível gerar relatórios CSV contendo os registros do sistema.
+ - Mostra a quantidade de todos os registros
  
-<img width="1834" height="962" alt="image" src="https://github.com/user-attachments/assets/bd12ae1a-0a48-4c00-beb7-93a74a310e9e" />
+<img width="1919" height="893" alt="image" src="https://github.com/user-attachments/assets/f3baf5a0-573f-4e3a-ae7d-2959a6452379" />
 
  ## Usuários Admin
  - Arquivo: view/usuarios.php
