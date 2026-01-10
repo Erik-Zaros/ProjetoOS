@@ -29,6 +29,9 @@ ob_start();
     <div class="card-body">
       <input type="text" id="buscarPeca" class="form-control mb-2" placeholder="Adicionar peça por código ou descrição...">
       <ul id="listaPecas" class="list-group" style="display:none; max-height:200px; overflow:auto;"></ul>
+		<div id="produtoTitulo" class="alert alert-primary mb-3" style="display:none;">
+			<strong>Produto Selecionado:</strong> <span id="nomeProduto"></span>
+		</div>
 
       <table class="table table-bordered table-striped table-hover nowrap" id="tabelaPecas">
         <thead>

@@ -23,6 +23,9 @@ $(document).ready(function () {
         $('#listaProdutos').hide();
         $('#areaPecas').fadeIn();
 
+		$('#nomeProduto').text(produtoNome);
+		$('#produtoTitulo').fadeIn();
+
         $('#btnExcelContainer').fadeIn();
         $('#btnExcel').attr('href', `../public/lista_basica/relatorio.php?produto=${produtoId}`);
 
