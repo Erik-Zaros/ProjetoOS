@@ -30,6 +30,8 @@ ob_start();
                     <label for="nome" class="form-label">Nome</label>
                     <input type="text" class="form-control" id="nome" name="nome" required maxlength="50">
                 </div>
+            </div>
+			<div class="row mb-3">
                 <div class="col-md-2">
                     <label for="ativo" class="form-label d-block">Ativo</label>
                     <div class="form-check form-switch mt-2">
@@ -51,8 +53,8 @@ ob_start();
                         <label class="form-check-label" for="master">Usuário Master</label>
                     </div>
                 </div>
-            </div>
-            <button type="submit" class="btn btn-success btn-sm">Gravar</button>
+			</div>
+			<button type="submit" class="btn btn-success btn-sm">Gravar</button>
         </form>
     </div>
 </div>
