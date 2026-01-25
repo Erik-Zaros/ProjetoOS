@@ -8,21 +8,26 @@ $con = Db::getConnection();
 
 date_default_timezone_set('America/Sao_Paulo');
 
-$posto = $argv[1];
+$posto = $argv[1] ?? null;
 $os = $argv[2] ?? null;
 
-function buscaOs($posto, $os = null) {
+function buscaOs($posto=null, $os = null) {
 
 	global $con;
 
 	$cond = "";
+	if ($posto == null) {
+		$cond = " WHERE posto NOT IN (0) ";
+	} else {
+		$cond = " WHERE posto = {$posto} ";
+	}
+
 	if ($os != null) {
-		$cond = " AND tbl_os.os = $os ";
+		$cond .= " AND tbl_os.os = $os ";
 	}
 
 	$sql = "SELECT os, to_char(data_abertura, 'DD/MM/YYYY') as data_abertura
 			FROM tbl_os
-			WHERE posto = {$posto}
 			{$cond}
 		";
 	$res = pg_query($con, $sql);
