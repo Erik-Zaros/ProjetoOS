@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Controller\Relatorio;
+namespace App\Service\Export;
 
 use App\Core\Db;
 
-class RelatorioOsController
+class OsCsvExportService
 {
-    public static function gerarCSV($posto)
+    public function gerar($posto)
     {
         $con = Db::getConnection();
         $posto = intval($posto);
@@ -19,10 +19,8 @@ class RelatorioOsController
         ";
         $resVerifica = pg_query($con, $sqlVerifica);
 
-        $dados = pg_fetch_assoc($resVerifica);
-
-        if (in_array(0, $dados)) {
-            header("Location: ../../view/consulta_os.php?alerta=true");
+        if (pg_num_rows($resVerifica) === 0) {
+            header("Location: ../../view/consulta_os.php?alerta=true");exit;
         }
 
         $sql = "

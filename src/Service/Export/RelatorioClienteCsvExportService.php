@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Controller\Relatorio;
+namespace App\Service\Export;
 
 use App\Core\Db;
 
-class ClienteRelatorioController
+class RelatorioClienteCsvExportService
 {
-    public static function gerarCSV(array $filtros, $posto)
+    public function gerar(array $filtros, $posto)
     {
         $con = Db::getConnection();
         $posto = intval($posto);

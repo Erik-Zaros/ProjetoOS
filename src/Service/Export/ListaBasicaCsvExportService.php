@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Controller\Relatorio;
+namespace App\Service\Export;
 
 use App\Core\Db;
 
-class RelatorioListaBasicaController
+class ListaBasicaCsvExportService
 {
-    public static function gerarCSV($produtoId, $posto)
+    public function gerar($produtoId, $posto)
     {
         $con = Db::getConnection();
         $produtoId = intval($produtoId);
@@ -19,7 +19,7 @@ class RelatorioListaBasicaController
         ";
         $resProduto = pg_query($con, $sqlProduto);
         $produto = pg_fetch_assoc($resProduto);
-
+        
         if (!$produto) {
             echo "Produto não encontrado.";
             exit;

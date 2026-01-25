@@ -1,23 +1,22 @@
 <?php
 
-namespace App\Controller\Relatorio;
+namespace App\Service\Export;
 
 use App\Core\Db;
 
-class RelatorioProdutoController
+class ProdutoCsvExportService
 {
-    public static function gerarCSV($posto)
+    public function gerar($posto)
     {
         $con = Db::getConnection();
         $posto = intval($posto);
 
-        $sqlVerifica = "SELECT COUNT(1) AS produto FROM tbl_produto WHERE posto = $posto";
+        $sqlVerifica = "SELECT COUNT(1) AS produto FROM tbl_produto WHERE posto = {$posto}";
         $resVerifica = pg_query($con, $sqlVerifica);
 
-        $dados = pg_fetch_assoc($resVerifica);
+        if (pg_num_rows($resVerifica) === 0) {
+            header("Location: ../../view/produto.php?alerta=true");exit;
 
-        if ($dados['produto'] === 0) {
-            header("Location: ../../view/produto.php?alerta=true");
         }
 
         $sql = " SELECT tbl_produto.codigo,

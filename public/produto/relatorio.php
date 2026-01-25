@@ -2,10 +2,11 @@
 
 require '../../vendor/autoload.php';
 
-use App\Controller\Relatorio\RelatorioProdutoController;
+use App\Service\Export\ProdutoCsvExportService;
 use App\Auth\Autenticador;
 
 Autenticador::iniciar();
 
 $posto = Autenticador::getPosto();
-RelatorioProdutoController::gerarCSV($posto);
+$service = new ProdutoCsvExportService();
+$service->gerar($posto);

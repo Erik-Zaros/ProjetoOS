@@ -2,7 +2,7 @@
 
 require '../../vendor/autoload.php';
 
-use App\Controller\Relatorio\ClienteRelatorioController;
+use App\Service\Export\RelatorioClienteCsvExportService;
 use App\Auth\Autenticador;
 
 Autenticador::iniciar();
@@ -10,4 +10,5 @@ Autenticador::iniciar();
 $posto   = Autenticador::getPosto();
 $filtros = $_POST;
 
-ClienteRelatorioController::gerarCSV($filtros, $posto);
+$service = new RelatorioClienteCsvExportService();
+$service->gerar($filtros, $posto);

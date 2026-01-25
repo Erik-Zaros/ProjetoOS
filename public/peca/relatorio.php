@@ -2,10 +2,11 @@
 
 require '../../vendor/autoload.php';
 
-use App\Controller\Relatorio\RelatorioPecaController;
+use App\Service\Export\PecaCsvExportService;
 use App\Auth\Autenticador;
 
 Autenticador::iniciar();
 
 $posto = Autenticador::getPosto();
-RelatorioPecaController::gerarCSV($posto);
+$service = new PecaCsvExportService();
+$service->gerar($posto);

@@ -1,7 +1,7 @@
 <?php
 require '../../vendor/autoload.php';
 
-use App\Controller\Relatorio\RelatorioListaBasicaController;
+use App\Service\Export\ListaBasicaCsvExportService;
 use App\Auth\Autenticador;
 
 Autenticador::iniciar();
@@ -14,4 +14,5 @@ if (!$produtoId) {
     exit;
 }
 
-RelatorioListaBasicaController::gerarCSV($produtoId, $posto);
+$service = new ListaBasicaCsvExportService();
+$service->gerar($produtoId, $posto);

@@ -1,23 +1,21 @@
 <?php
 
-namespace App\Controller\Relatorio;
+namespace App\Service\Export;
 
 use App\Core\Db;
 
-class RelatorioServicoRealizadoController
+class ServicoRealizadoCsvExportService
 {
-    public static function gerarCSV($posto)
+    public function gerar($posto)
     {
         $con = Db::getConnection();
         $posto = intval($posto);
 
-        $sqlVerifica = "SELECT COUNT(1) AS servico_realizado FROM tbl_servico_realizado WHERE posto = $posto";
+        $sqlVerifica = "SELECT COUNT(1) AS servico_realizado FROM tbl_servico_realizado WHERE posto = {$posto}";
         $resVerifica = pg_query($con, $sqlVerifica);
 
-        $dados = pg_fetch_assoc($resVerifica);
-
-        if ($dados['servico_realizado'] === 0) {
-            header("Location: ../../view/servico_realizado?alerta=true");
+        if (pg_num_rows($resVerifica) === 0) {
+            header("Location: ../../view/servico_realizado?alerta=true");exit;
         }
 
         $sql = " SELECT tbl_servico_realizado.descricao,
@@ -38,11 +36,10 @@ class RelatorioServicoRealizadoController
 
 
         header('Content-Type: text/csv; charset=UTF-8');
-        header('Content-Disposition: attachment; filename=relatorio_servico_realizado.csv');
+        header('Content-Disposition: attachment; filename=servico_realizado.csv');
 
         $output = fopen('php://output', 'w');
 
-        
         $cabecalho = ['Descrição', 'Status', 'Usa Estoque', 'Data Cadastro'];
         fputcsv($output, $cabecalho, ';');
 

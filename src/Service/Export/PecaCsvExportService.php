@@ -1,23 +1,21 @@
 <?php
 
-namespace App\Controller\Relatorio;
+namespace App\Service\Export;
 
 use App\Core\Db;
 
-class RelatorioPecaController
+class PecaCsvExportService
 {
-    public static function gerarCSV($posto)
+    public function gerar($posto)
     {
         $con = Db::getConnection();
         $posto = intval($posto);
 
-        $sqlVerifica = "SELECT COUNT(1) AS peca FROM tbl_peca WHERE posto = $posto";
+        $sqlVerifica = "SELECT COUNT(1) AS peca FROM tbl_peca WHERE posto = {$posto}";
         $resVerifica = pg_query($con, $sqlVerifica);
 
-        $dados = pg_fetch_assoc($resVerifica);
-
-        if ($dados['peca'] === 0) {
-            header("Location: ../../view/peca.php?alerta=true");
+        if (pg_num_rows($resVerifica) === 0) {
+            header("Location: ../../view/peca.php?alerta=true");exit;
         }
 
         $sql = " SELECT tbl_peca.codigo,
