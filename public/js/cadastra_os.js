@@ -412,6 +412,9 @@ $(document).ready(function () {
   });
 
   $('#cep_consumidor').on('blur', function () {
+      if ($(this).val().length === 0) {
+        return;
+      }
       const cep = $('#cep_consumidor').val().replace('-', '');
       if (cep.length === 8) {
           $.ajax({
