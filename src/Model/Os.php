@@ -30,6 +30,7 @@ class Os
             $posto = intval($this->posto);
             $data_abertura = pg_escape_string($this->dados['data_abertura']);
             $cep = pg_escape_string($this->dados['cep_consumidor'] ?? '');
+			$cep = preg_replace("/[^0-9]/", "", $cep);
             $endereco = pg_escape_string($this->dados['endereco_consumidor'] ?? '');
             $bairro = pg_escape_string($this->dados['bairro_consumidor'] ?? '');
             $numero = pg_escape_string($this->dados['numero_consumidor'] ?? '');
@@ -167,6 +168,7 @@ class Os
             $posto = intval($this->posto);
             $data_abertura = pg_escape_string($this->dados['data_abertura']);
             $cep = pg_escape_string($this->dados['cep_consumidor'] ?? '');
+			$cep = preg_replace("/[^0-9]/", "", $cep);
             $endereco = pg_escape_string($this->dados['endereco_consumidor'] ?? '');
             $bairro = pg_escape_string($this->dados['bairro_consumidor'] ?? '');
             $numero = pg_escape_string($this->dados['numero_consumidor'] ?? '');
