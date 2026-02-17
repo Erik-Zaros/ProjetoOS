@@ -10,7 +10,7 @@ class FuncoesService
     public static function buscaNomePosto($postoId)
     {
         $con = Db::getConnection();
-        $sql = "SELECT UPPER(nome) AS nome_posto
+        $sql = "SELECT trim(upper(fn_retira_especiais(nome))) AS nome_posto
                 FROM tbl_posto
                 WHERE posto = $postoId
             ";

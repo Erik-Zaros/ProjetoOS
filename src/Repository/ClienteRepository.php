@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Model\Relatorio;
+namespace App\Repository;
 
 use App\Core\Db;
-use App\Auth\Autenticador;
 
-class ClienteRelatorio
+class ClienteRepository
 {
     private $dados;
     private $posto;
@@ -16,7 +15,63 @@ class ClienteRelatorio
         $this->posto = $posto;
     }
 
-    public function pesquisar(array $filtros)
+    public static function listarTodos($posto)
+    {
+        $con = Db::getConnection();
+        $posto = intval($posto);
+
+        $sql = "SELECT cliente, cpf, nome, cep, endereco, bairro, numero, cidade, estado
+                FROM tbl_cliente WHERE posto = {$posto} ORDER BY cpf ASC";
+        $res = pg_query($con, $sql);
+        $clientes = [];
+
+        while ($row = pg_fetch_assoc($res)) {
+            $clientes[] = $row;
+        }
+
+        return $clientes;
+    }
+
+    public static function autocompleteClientes($termo, $posto)
+    {
+        $con = Db::getConnection();
+        $termo = pg_escape_string($termo);
+        $posto = intval($posto);
+
+        $sql = "SELECT nome,
+                       cpf,
+                       cep,
+                       endereco,
+                       bairro,
+                       numero,
+                       cidade,
+                       estado
+                FROM tbl_cliente
+                WHERE cep IS NOT NULL
+                AND nome ILIKE '%{$termo}%'
+                AND posto = {$posto}
+                ORDER BY nome LIMIT 20
+             ";
+        $res = pg_query($con, $sql);
+
+        $sugestoes = [];
+        while ($row = pg_fetch_assoc($res)) {
+            $sugestoes[] = [
+                'label' => $row['nome'] . " (" . $row['cpf'] . ")",
+                'value' => $row['nome'],
+                'cpf'   => $row['cpf'],
+                'cep'   => $row['cep'],
+                'endereco'  => $row['endereco'],
+                'bairro'    => $row['bairro'],
+                'numero'    => $row['numero'],
+                'cidade'    => $row['cidade'],
+                'estado'    => $row['estado'],
+            ];
+        }
+        return $sugestoes;
+    }
+
+    public function relatorio(array $filtros)
     {
         $con = Db::getConnection();
         $posto = intval($this->posto);

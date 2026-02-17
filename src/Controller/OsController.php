@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Model\Os;
+use App\Repository\OsRepository;
 
 class OsController
 {
@@ -26,27 +27,27 @@ class OsController
 
     public static function listar($posto)
     {
-        return Os::listarTodos($posto);
+        return OsRepository::listarTodos($posto);
     }
 
     public static function filtrar(array $filtros, $posto)
     {
-        return Os::filtrarOrdens($filtros, $posto);
+        return OsRepository::filtrarOrdens($filtros, $posto);
     }
 
     public static function finalizar($os, $posto)
     {
-        return Os::finalizar($os, $posto);
+        return OsRepository::finalizar($os, $posto);
     }
 
     public static function cancelar($os, $posto)
     {
-        return Os::cancelar($os, $posto);
+        return OsRepository::cancelar($os, $posto);
     }
 
     public static function buscarPorNumero($os, $posto)
     {
-        $resultado = Os::buscarPorNumero($os, $posto);
+        $resultado = OsRepository::buscarPorNumero($os, $posto);
         return $resultado ?: ['error' => 'Ordem de Serviço não encontrada.'];
     }
 }

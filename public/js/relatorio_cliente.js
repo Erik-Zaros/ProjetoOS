@@ -11,8 +11,6 @@ $(document).ready(function () {
 	        dataType: 'json',
 	        success: function (data) {
 
-	        	$("#btnCSV").show();
-
 	            if (data.status === 'alert') {
 	                Swal.fire({
 	                    icon: 'warning',
@@ -21,6 +19,8 @@ $(document).ready(function () {
 	                });
 	                return;
 	            }
+
+	            $("#btnCSV").show();
 
 	            $('#clienteTable tbody').empty();
 

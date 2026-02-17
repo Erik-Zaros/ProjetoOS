@@ -88,7 +88,7 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
         </div>
 
         <div class="col-3 col-sm-2 text-right">
-          <span class="navbar-text text-dark" style="font-size: 0.8rem;">
+          <span class="navbar-text text-dark" style="font-size: 0.9rem;">
             <?= $pageTitle ?? '' ?>
           </span>
         </div>
@@ -117,15 +117,15 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
 
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column nav-legacy" data-widget="treeview" role="menu" data-accordion="false" id="menuSidebar">
-          <?php foreach ($rotas as $chave => $menu): ?>
-            <?php if (!isset($menu['submenus'])): ?>
+          <?php foreach ($rotas as $chave => $menu) { ?>
+            <?php if (!isset($menu['submenus'])) { ?>
               <li class="nav-item">
                 <a href="<?= $menu['link'] ?>" class="nav-link <?= ($current_page == $menu['link']) ? 'active' : '' ?>">
                   <i class="nav-icon <?= $menu['icone'] ?>"></i>
                   <p><?= $menu['titulo'] ?></p>
                 </a>
               </li>
-            <?php else: ?>
+            <?php } else { ?>
               <li class="nav-item has-treeview <?= in_array($current_page, array_column($menu['submenus'], 'link')) ? 'menu-open' : '' ?>">
                 <a href="#" class="nav-link <?= in_array($current_page, array_column($menu['submenus'], 'link')) ? 'active' : '' ?>">
                   <i class="nav-icon <?= $menu['icone'] ?>"></i>
@@ -135,18 +135,18 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
-                  <?php foreach ($menu['submenus'] as $submenu): ?>
+                  <?php foreach ($menu['submenus'] as $submenu) { ?>
                     <li class="nav-item">
                       <a href="<?= $submenu['link'] ?>" class="nav-link <?= ($current_page == $submenu['link']) ? 'active' : '' ?>">
                         <i class="far fa-circle nav-icon"></i>
                         <p><?= $submenu['titulo'] ?></p>
                       </a>
                     </li>
-                  <?php endforeach; ?>
+                  <?php } ?>
                 </ul>
               </li>
-            <?php endif; ?>
-          <?php endforeach; ?>
+            <?php } ?>
+          <?php } ?>
 
           <li class="nav-item">
             <a href="../logout.php" class="nav-link text-danger">
@@ -172,9 +172,9 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
 <script src="../public/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../public/adminlte/dist/js/adminlte.min.js"></script>
 
-<?php foreach ($imports["global"]["js"] as $js): ?>
+<?php foreach ($imports["global"]["js"] as $js) { ?>
   <script src="<?= $js ?>"></script>
-<?php endforeach; ?>
+<?php } ?>
 
 <?php
 foreach ($imports as $key => $import) {

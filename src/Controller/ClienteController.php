@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Model\Cliente;
-use App\Model\Relatorio\ClienteRelatorio;
+use App\Repository\ClienteRepository;
 
 class ClienteController
 {
@@ -27,17 +27,17 @@ class ClienteController
 
     public static function listar($posto)
     {
-        return Cliente::listarTodos($posto);
+        return ClienteRepository::listarTodos($posto);
     }
 
     public static function autocomplete($termo, $posto)
     {
-        return Cliente::autocompleteClientes($termo, $posto);
+        return ClienteRepository::autocompleteClientes($termo, $posto);
     }
 
     public static function relatorio(array $filtros, $posto)
     {
-        $relatorio = new ClienteRelatorio($filtros, $posto);
-        return $relatorio->pesquisar($filtros);
+        $relatorio = new ClienteRepository($filtros, $posto);
+        return $relatorio->relatorio($filtros);
     }
 }
