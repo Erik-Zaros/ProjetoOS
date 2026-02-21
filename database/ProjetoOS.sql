@@ -143,3 +143,53 @@ CREATE TABLE tbl_tipo_atendimento (
     data_input TIMESTAMP DEFAULT NOW(),
     posto INTEGER REFERENCES tbl_posto(posto)
 );
+
+CREATE TABLE tbl_contexto_anexo (
+    contexto_anexo SERIAL PRIMARY KEY,
+    descricao VARCHAR(100) NOT NULL,
+    codigo VARCHAR(50) NOT NULL UNIQUE,
+    ativo BOOLEAN DEFAULT TRUE,
+    data_input TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE tbl_tipo_anexo (
+    tipo_anexo SERIAL PRIMARY KEY,
+    descricao VARCHAR(100) NOT NULL,
+    codigo VARCHAR(50) NOT NULL,
+    ativo BOOLEAN DEFAULT TRUE,
+    contexto_anexo INTEGER NOT NULL REFERENCES tbl_contexto_anexo(contexto_anexo),
+    data_input TIMESTAMP DEFAULT NOW(),
+    UNIQUE (codigo, contexto_anexo)
+);
+
+CREATE TABLE tbl_tdocs (
+    tdocs UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tipo_anexo INTEGER NOT NULL REFERENCES tbl_tipo_anexo(tipo_anexo),
+    contexto_anexo INTEGER NOT NULL REFERENCES tbl_contexto_anexo(contexto_anexo),
+    referencia_id TEXT,
+    hash_temp VARCHAR(64),
+    nome_original VARCHAR(255) NOT NULL,
+    nome_arquivo VARCHAR(255) NOT NULL,
+    extensao VARCHAR(20)  NOT NULL,
+    mime_type VARCHAR(100) NOT NULL,
+    tamanho BIGINT NOT NULL,
+    caminho TEXT NOT NULL,
+    posto INTEGER NOT NULL REFERENCES tbl_posto(posto),
+    usuario INTEGER REFERENCES tbl_usuario(usuario),
+    ativo BOOLEAN DEFAULT TRUE,
+    data_input TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX idx_tdocs_referencia ON tbl_tdocs(contexto_anexo, referencia_id);
+CREATE INDEX idx_tdocs_hash_temp  ON tbl_tdocs(hash_temp) WHERE hash_temp IS NOT NULL;
+
+INSERT INTO tbl_contexto_anexo (descricao, codigo) VALUES
+  ('Ordem de Serviço', 'os'),
+  ('Cliente', 'cliente'),
+  ('Produto', 'produto'),
+  ('Peça', 'peca');
+
+INSERT INTO tbl_tipo_anexo (descricao, codigo, contexto_anexo) VALUES
+('Nota Fiscal', 'nota_fiscal', (SELECT contexto_anexo FROM tbl_contexto_anexo WHERE codigo = 'os')),
+('Foto do Produto', 'foto_produto', (SELECT contexto_anexo FROM tbl_contexto_anexo WHERE codigo = 'os')),
+('Laudo Técnico', 'laudo', (SELECT contexto_anexo FROM tbl_contexto_anexo WHERE codigo = 'os'));
