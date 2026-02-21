@@ -2,6 +2,13 @@ $(document).ready(function () {
   const urlParams = new URLSearchParams(window.location.search);
   const osParam = urlParams.get("os");
 
+    const CONTEXTO_OS = 1;
+    TdocsWidget.init({
+      container:      '#secaoAnexos',
+      contextoAnexo:  CONTEXTO_OS,
+      referenciaId:   osParam || null,
+    });
+
     if (osParam) {
       carregarDadosOS(osParam);
     } else {
@@ -226,6 +233,12 @@ $(document).ready(function () {
           });
         } else if (response.status === "success") {
           const numeroOs = response.os;
+
+          const hashes = TdocsWidget.getHashesTemp();
+          if (hashes.length > 0) {
+            TdocsWidget.vincular(numeroOs, hashes);
+          }
+
           Swal.fire({
             icon: "success",
             title: "Sucesso!",
@@ -324,7 +337,7 @@ $(document).ready(function () {
     const servicoDescricao = $("#servico_realizado option:selected").text();
 
     if (!pecaSelecionada) {
-      Swal.fire("Selecione uma peça válida!", "", "warning");
+      Swal.fire("Selecione uma peça para lançar!", "", "warning");
       return;
     }
 

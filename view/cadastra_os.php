@@ -141,6 +141,8 @@ ob_start();
   </div>
 </div>
 
+<div id="secaoAnexos"></div>
+
 <div class="text-center mt-3">
   <button type="submit" class="btn btn-secondary btn-sm">Gravar</button>
 </div>

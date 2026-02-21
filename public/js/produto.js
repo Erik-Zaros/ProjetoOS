@@ -48,7 +48,7 @@ $(document).ready(function () {
                     icon: 'error',
                     title: 'Erro!',
                     text: 'Erro ao carregar os produtos.',
-                }); 
+                });
             }
         });
     }
