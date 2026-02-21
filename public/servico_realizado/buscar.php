@@ -8,5 +8,5 @@ use App\Auth\Autenticador;
 Autenticador::iniciar();
 $posto = Autenticador::getPosto();
 
-$descricao = $_GET['descricao'] ?? '';
-echo json_encode(ServicoRealizadoController::buscar($descricao, $posto));
+$servico_realizado = $_GET['servico'];
+echo json_encode(ServicoRealizadoController::buscar($servico_realizado, $posto));

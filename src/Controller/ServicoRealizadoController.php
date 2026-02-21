@@ -17,9 +17,9 @@ class ServicoRealizadoController
         return $servico_realizado->atualizar();
     }
 
-    public static function buscar($descricao, $posto)
+    public static function buscar($servico_realizado, $posto)
     {
-        return ServicoRealizado::buscarPorDescricao($descricao, $posto);
+        return ServicoRealizado::buscarPorServico($servico_realizado, $posto);
     }
 
     public static function listar($posto)
