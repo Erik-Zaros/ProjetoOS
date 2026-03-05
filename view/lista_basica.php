@@ -51,6 +51,7 @@ ob_start();
 <div class="text-center mt-3" id="btnExcelContainer" style="display:none;">
   <a id="btnExcel" class="btn btn-success btn-sm" target="_blank"><i class="bi bi-file-earmark-spreadsheet-fill"></i> Download CSV</a>
 </div>
+<br>
 
 <?php
 $content = ob_get_clean();
