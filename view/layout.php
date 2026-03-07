@@ -16,6 +16,9 @@ if (file_exists(__DIR__ ."/../config/menus/posto/{$posto}/rotas.php")) {
 }
 
 require_once __DIR__ . '/../config/assets/imports.php';
+if (file_exists(__DIR__ ."/../config/assets/posto/{$posto}/imports.php")) {
+  include __DIR__ . "/../config/assets/posto/{$posto}/imports.php";
+}
 $current_page = basename($_SERVER['PHP_SELF'], '.php');
 
 ?>

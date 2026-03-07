@@ -19,4 +19,3 @@ BEGIN
     RETURN v_resultado;
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
-PAULO
