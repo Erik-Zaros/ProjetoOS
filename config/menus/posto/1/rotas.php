@@ -6,14 +6,8 @@ use App\Service\FuncoesService;
 $usuario = Autenticador::getUsuario();
 $master = FuncoesService::usuarioMaster($usuario);
 
-$regras = [
-    'remover'  => [],
-    'adicionar'=> [],
-    'alterar'  => [],
-];
-
-if ($master == false) {
-    $regras['remover'][] = 'usuarios';
+if ($master === false) {
+    unset($rotas['usuario']);
 }
 
-return $regras;
+return $rotas;

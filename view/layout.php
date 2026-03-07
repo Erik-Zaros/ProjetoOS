@@ -11,31 +11,8 @@ $con = Db::getConnection();
 $posto = Autenticador::getPosto();
 
 require_once __DIR__ . '/../config/menus/rotas.php';
-
-$arquivo_menu_posto = __DIR__ . "/../config/menus/posto/{$posto}.php";
-
-if (file_exists($arquivo_menu_posto)) {
-    $regras_posto = include $arquivo_menu_posto;
-
-    if (!empty($regras_posto['remover'])) {
-        foreach ($regras_posto['remover'] as $menuRemover) {
-            unset($rotas[$menuRemover]);
-        }
-    }
-
-    if (!empty($regras_posto['adicionar'])) {
-        foreach ($regras_posto['adicionar'] as $key => $menuNovo) {
-            $rotas[$key] = $menuNovo;
-        }
-    }
-
-    if (!empty($regras_posto['alterar'])) {
-        foreach ($regras_posto['alterar'] as $key => $alteracoes) {
-            if (isset($rotas[$key])) {
-                $rotas[$key] = array_merge($rotas[$key], $alteracoes);
-            }
-        }
-    }
+if (file_exists(__DIR__ ."/../config/menus/posto/{$posto}/rotas.php")) {
+  include __DIR__ . "/../config/menus/posto/{$posto}/rotas.php";
 }
 
 require_once __DIR__ . '/../config/assets/imports.php';
