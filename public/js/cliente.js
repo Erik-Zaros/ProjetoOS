@@ -65,14 +65,15 @@ $(document).ready(function () {
             $.ajax({
                 url: '../public/cep/buscar.php',
                 method: 'POST',
+                dataType: 'json',
                 data: { cep: cep },
                 success: function (data) {
-                    const endereco = JSON.parse(data);
-                    if (!endereco.erro) {
-                        $('#logradouro').val(endereco.logradouro || '');
-                        $('#bairro').val(endereco.bairro || '');
-                        $('#cidade').val(endereco.localidade || '');
-                        $('#estado').val(endereco.uf || '');
+
+                    if (!data.erro) {
+                        $('#logradouro').val(data.logradouro || '');
+                        $('#bairro').val(data.bairro || '');
+                        $('#cidade').val(data.localidade || '');
+                        $('#estado').val(data.uf || '');
                     } else {
                         Swal.fire({
                             icon: 'error',
@@ -107,21 +108,21 @@ $(document).ready(function () {
         $.ajax({
             url: '../public/cliente/cadastrar.php',
             method: 'POST',
+            dataType: 'json',
             data: $.param(formData),
             success: function (response) {
-                let res = JSON.parse(response);
 
-                if (res.status === 'error') {
+                if (response.status === 'error') {
                     Swal.fire({
                         icon: 'error',
                         title: 'Erro!',
-                        text: res.message,
+                        text: response.message,
                     });
                 } else {
                     Swal.fire({
                         icon: 'success',
                         title: 'Sucesso!',
-                        text: res.message,
+                        text: response.message,
                     }).then(() => {
                         $('#clienteForm')[0].reset();
                         carregarClientes();
@@ -136,19 +137,19 @@ $(document).ready(function () {
         $.ajax({
             url: '../public/cliente/buscar.php',
             method: 'GET',
+            dataType: 'json',
             data: { cpf: cpf },
             success: function (data) {
                 $("html, body").animate({ scrollTop: 0 }, "slow");
-                var cliente = JSON.parse(data);
 
-                $('#cpf').val(cliente.cpf).prop('disabled', true);
-                $('#nome').val(cliente.nome || '');
-                $('#cep').val(cliente.cep ? cliente.cep.replace(/(\d{5})(\d{3})/, '$1-$2') : '');
-                $('#logradouro').val(cliente.endereco || '');
-                $('#bairro').val(cliente.bairro || '');
-                $('#numero').val(cliente.numero || '');
-                $('#cidade').val(cliente.cidade || '');
-                $('#estado').val(cliente.estado || '');
+                $('#cpf').val(data.cpf).prop('disabled', true);
+                $('#nome').val(data.nome || '');
+                $('#cep').val(data.cep ? data.cep.replace(/(\d{5})(\d{3})/, '$1-$2') : '');
+                $('#logradouro').val(data.endereco || '');
+                $('#bairro').val(data.bairro || '');
+                $('#numero').val(data.numero || '');
+                $('#cidade').val(data.cidade || '');
+                $('#estado').val(data.estado || '');
 
                 $('#clienteForm').off('submit').on('submit', function (e) {
                     e.preventDefault();
@@ -156,9 +157,10 @@ $(document).ready(function () {
                     $.ajax({
                         url: '../public/cliente/editar.php',
                         method: 'POST',
+                        dataType: 'json',
                         data: {
-                            cliente: cliente.cliente,
-                            cpf: cliente.cpf,
+                            data: data.cliente,
+                            cpf: data.cpf,
                             nome: $('#nome').val(),
                             cep: cepSemHifen,
                             endereco: $('#logradouro').val(),
@@ -168,19 +170,18 @@ $(document).ready(function () {
                             estado: $('#estado').val()
                         },
                         success: function (response) {
-                            let res = JSON.parse(response);
 
-                            if (res.status === 'error') {
+                            if (response.status === 'error') {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Erro!',
-                                    text: res.message,
+                                    text: response.message,
                                 });
-                            } else {
+                            } else if (response.status === "success") {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Sucesso!',
-                                    text: res.message,
+                                    text: response.message,
                                 }).then(() => {
                                     carregarClientes();
                                     $('#clienteForm')[0].reset();

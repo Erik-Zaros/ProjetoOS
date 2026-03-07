@@ -21,7 +21,7 @@ class ClienteRepository
         $posto = intval($posto);
 
         $sql = "SELECT cliente, cpf, nome, cep, endereco, bairro, numero, cidade, estado
-                FROM tbl_cliente WHERE posto = {$posto} ORDER BY cpf ASC";
+                FROM tbl_cliente WHERE posto = {$posto} ORDER BY cpf ASC LIMIT 500";
         $res = pg_query($con, $sql);
         $clientes = [];
 
