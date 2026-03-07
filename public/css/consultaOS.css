@@ -9,3 +9,8 @@
     background-color: #ffffff;
     text-align: center;
 }
+
+.table th {
+    background-color: #3c3c3c;
+    color: #ffffff;
+}

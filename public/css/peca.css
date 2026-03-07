@@ -10,9 +10,7 @@
     text-align: center;
 }
 
-#pecasTable tr.stripe1 td, #pecasTable tr.stripe1 th {
-    background-color: #f2f2f2;
-}
-#pecasTable tr.stripe2 td, #pecasTable tr.stripe2 th {
-    background-color: #fff;
+.table th {
+    background-color: #3c3c3c;
+    color: #ffffff;
 }

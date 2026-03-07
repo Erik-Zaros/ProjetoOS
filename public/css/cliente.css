@@ -10,9 +10,7 @@
     text-align: center;
 }
 
-#clientesTable tr.stripe1 td, #clientesTable tr.stripe1 th {
-    background-color: #f2f2f2;
-}
-#clientesTable tr.stripe2 td, #clientesTable tr.stripe2 th {
-    background-color: #fff;
+.table th {
+    background-color: #3c3c3c;
+    color: #ffffff;
 }

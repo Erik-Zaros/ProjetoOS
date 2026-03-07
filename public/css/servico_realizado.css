@@ -10,9 +10,7 @@
     text-align: center;
 }
 
-#servicoRealizadoTable tr.stripe1 td, #servicoRealizadoTable tr.stripe1 th {
-    background-color: #f2f2f2;
-}
-#servicoRealizadoTable tr.stripe2 td, #servicoRealizadoTable tr.stripe2 th {
-    background-color: #fff;
+.table th {
+    background-color: #3c3c3c;
+    color: #ffffff;
 }
