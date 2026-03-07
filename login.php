@@ -47,7 +47,7 @@
     </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
   <script src="public/js/login.js"></script>
 </body>
 </html>
