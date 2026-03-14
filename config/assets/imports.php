@@ -31,7 +31,7 @@ $imports = [
     "menu" => [
         "css" => ["../public/css/menu.css"],
         "js" => ["../public/js/menu.js",
-                 "https://code.highcharts.com/9.1.2/highcharts.js"],
+                 "https://cdn.jsdelivr.net/npm/highcharts@9.1.2/highcharts.js"],
     ],
     "cliente" => [
         "css" => ["../public/css/cliente.css"],
