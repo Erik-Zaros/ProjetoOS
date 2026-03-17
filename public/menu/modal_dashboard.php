@@ -4,6 +4,7 @@ require '../../vendor/autoload.php';
 
 use App\Auth\Autenticador;
 use App\Core\Db;
+use App\Service\FuncoesService;
 
 Autenticador::iniciar();
 
@@ -18,7 +19,7 @@ switch ($tipo) {
 
     case 'os':
         $sql = "
-            SELECT o.os, o.data_abertura,
+            SELECT o.os, to_char(o.data_abertura, 'DD/MM/YYYY') as data_abertura,
                    o.nome_consumidor, o.cpf_consumidor,
                    p.descricao AS produto,
                    u.nome AS tecnico,
@@ -31,10 +32,17 @@ switch ($tipo) {
             LEFT JOIN tbl_produto p ON p.produto = o.produto
             LEFT JOIN tbl_usuario u ON u.usuario = o.tecnico
             WHERE o.posto = $1
-            ORDER BY o.data_abertura DESC
+            ORDER BY o.os ASC
         ";
         $res = pg_query_params($con, $sql, [$posto]);
-        while ($r = pg_fetch_assoc($res)) $rows[] = $r;
+
+		$rows = [];
+
+		while ($r = pg_fetch_assoc($res)) {
+			$r['cpf_consumidor'] = FuncoesService::mascaraCpfCnpj($r['cpf_consumidor']);
+			$rows[] = $r;
+		}
+
         echo json_encode([
             'titulo'  => 'Ordens de Serviço',
             'colunas' => ['OS', 'Data Abertura', 'Consumidor', 'CPF', 'Produto', 'Técnico', 'Status'],
@@ -45,7 +53,7 @@ switch ($tipo) {
 
     case 'os_abertas':
         $sql = "
-            SELECT o.os, o.data_abertura,
+            SELECT o.os, to_char(o.data_abertura, 'DD/MM/YYYY') as data_abertura,
                    o.nome_consumidor, o.cpf_consumidor,
                    p.descricao AS produto,
                    u.nome AS tecnico
@@ -55,10 +63,17 @@ switch ($tipo) {
             WHERE o.posto = $1
               AND (o.finalizada IS FALSE OR o.finalizada IS NULL)
               AND (o.cancelada  IS FALSE OR o.cancelada  IS NULL)
-            ORDER BY o.data_abertura DESC
+            ORDER BY o.os ASC
         ";
         $res = pg_query_params($con, $sql, [$posto]);
-        while ($r = pg_fetch_assoc($res)) $rows[] = $r;
+
+		$rows = [];
+
+		while ($r = pg_fetch_assoc($res)) {
+			$r['cpf_consumidor'] = FuncoesService::mascaraCpfCnpj($r['cpf_consumidor']);
+			$rows[] = $r;
+		}
+
         echo json_encode([
             'titulo'  => 'OS Abertas',
             'colunas' => ['OS', 'Data Abertura', 'Consumidor', 'CPF', 'Produto', 'Técnico'],
@@ -75,7 +90,14 @@ switch ($tipo) {
             ORDER BY nome ASC
         ";
         $res = pg_query_params($con, $sql, [$posto]);
-        while ($r = pg_fetch_assoc($res)) $rows[] = $r;
+
+		$rows = [];
+
+		while ($r = pg_fetch_assoc($res)) {
+			$r['cpf'] = FuncoesService::mascaraCpfCnpj($r['cpf']);
+			$rows[] = $r;
+		}
+
         echo json_encode([
             'titulo'  => 'Clientes Cadastrados',
             'colunas' => ['Nome', 'CPF', 'Cidade', 'Estado', 'Bairro', 'Endereço', 'Número'],
@@ -147,7 +169,7 @@ switch ($tipo) {
             default       => "(o.finalizada IS FALSE OR o.finalizada IS NULL) AND (o.cancelada IS FALSE OR o.cancelada IS NULL)"
         };
         $sql = "
-            SELECT o.os, o.data_abertura,
+            SELECT o.os, to_char(o.data_abertura, 'DD/MM/YYYY') as data_abertura,
                    o.nome_consumidor, o.cpf_consumidor,
                    p.descricao AS produto,
                    u.nome AS tecnico
@@ -158,6 +180,13 @@ switch ($tipo) {
             ORDER BY o.data_abertura DESC
         ";
         $res = pg_query_params($con, $sql, [$posto]);
+
+		$rows = [];
+
+		while ($r = pg_fetch_assoc($res)) {
+			$r['cpf_consumidor'] = FuncoesService::mascaraCpfCnpj($r['cpf_consumidor']);
+			$rows[] = $r;
+		}
         while ($r = pg_fetch_assoc($res)) $rows[] = $r;
         echo json_encode([
             'titulo'  => 'OS — ' . ($filtro ?? 'Abertas'),
@@ -169,7 +198,7 @@ switch ($tipo) {
 
     case 'os_tecnico':
         $sql = "
-            SELECT o.os, o.data_abertura,
+            SELECT o.os, to_char(o.data_abertura, 'DD/MM/YYYY') as data_abertura,
                    o.nome_consumidor, o.cpf_consumidor,
                    p.descricao AS produto,
                    CASE
@@ -185,7 +214,14 @@ switch ($tipo) {
             ORDER BY o.data_abertura DESC
         ";
         $res = pg_query_params($con, $sql, [$posto, $filtro]);
-        while ($r = pg_fetch_assoc($res)) $rows[] = $r;
+
+		$rows = [];
+
+		while ($r = pg_fetch_assoc($res)) {
+			$r['cpf_consumidor'] = FuncoesService::mascaraCpfCnpj($r['cpf_consumidor']);
+			$rows[] = $r;
+		}
+
         echo json_encode([
             'titulo'  => 'OS — Técnico: ' . $filtro,
             'colunas' => ['OS', 'Data Abertura', 'Consumidor', 'CPF', 'Produto', 'Status'],
@@ -196,7 +232,7 @@ switch ($tipo) {
 
     case 'pecas_usadas':
         $sql = "
-            SELECT o.os, o.data_abertura, o.nome_consumidor,
+            SELECT o.os, to_char(o.data_abertura, 'DD/MM/YYYY') as data_abertura, o.nome_consumidor,
                    oi.quantidade,
                    u.nome AS tecnico,
                    CASE

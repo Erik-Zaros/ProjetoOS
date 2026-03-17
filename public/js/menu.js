@@ -84,6 +84,9 @@ function abrirModal(tipo, filtro) {
                             var cor = mapa[val] || 'secondary';
                             val = '<span class="badge bg-' + cor + '">' + val + '</span>';
                         }
+						if (campo === 'os') {
+							val = '<a class="link" target="_blank" href="os_press?os='+val+'">'+val+'</a>';
+						}
                         tbody += '<td>' + val + '</td>';
                     });
                     tbody += '</tr>';
