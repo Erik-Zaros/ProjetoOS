@@ -3,19 +3,14 @@
     max-width: 85vw;
     height: 90vh;
   }
-
-  .modal-header {
-    background-color: #2e2e48 !important;
-  }
-
 </style>
 
 <div class="modal fade" id="logAuditorModal" tabindex="-1" aria-labelledby="modalLogLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable modal-custom-size">
     <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
+      <div class="modal-header">
         <h5 class="modal-title" id="modalLogLabel">Histórico de Alterações</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
       </div>
       <div class="modal-body">
         <table class="table table-bordered table-striped table-hover">

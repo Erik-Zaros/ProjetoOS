@@ -2,13 +2,19 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Auth\Autenticador;
 use App\Core\Db;
+use App\Auth\Autenticador;
 use App\Service\FuncoesService;
 Autenticador::iniciar();
 
-$con = Db::getConnection();
+$usuario = Autenticador::getUsuario();
 $posto = Autenticador::getPosto();
+
+$layoutContext = FuncoesService::buscaInfoUsuario($usuario);
+$usuarioNome = $layoutContext['usuarioNome'];
+$usuarioLogin = $layoutContext['usuarioLogin'];
+$usuarioTipo = $layoutContext['usuarioTipo'];
+$postoNome = FuncoesService::buscaNomePosto($posto);
 
 require_once __DIR__ . '/../config/menus/rotas.php';
 if (file_exists(__DIR__ ."/../config/menus/posto/{$posto}/rotas.php")) {
@@ -63,14 +69,21 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
 
         <div class="col-6 col-sm-8 text-center">
           <span class="navbar-text text-dark" style="font-size: 1.3rem;">
-            <?= FuncoesService::buscaNomePosto($posto); ?>
+            <?= htmlspecialchars($postoNome); ?>
           </span>
         </div>
 
         <div class="col-3 col-sm-2 text-right">
-          <span class="navbar-text text-dark" style="font-size: 0.9rem;">
-            <?= $pageTitle ?? '' ?>
-          </span>
+          <button
+            type="button"
+            class="btn btn-link nav-user-button p-0 text-decoration-none"
+            data-bs-toggle="modal"
+            data-bs-target="#modalUsuario"
+            aria-label="Abrir dados do usuário"
+          >
+            <i class="fas fa-user-circle me-1"></i>
+            <span class="d-none d-sm-inline"><?= htmlspecialchars($usuarioNome) ?></span>
+          </button>
         </div>
       </div>
     </div>
@@ -146,6 +159,8 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
   </div>
 
 </div>
+
+<?php include __DIR__ . '/modal_perfil.php'; ?>
 
 <!-- Carrega novo layout antes -->
 <script src="../public/adminlte/plugins/jquery/jquery.min.js"></script>

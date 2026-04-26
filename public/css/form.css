@@ -1,7 +1,7 @@
 .form-control,
 .form-select {
     border: 1px solid #ced4da;
-    border-radius: 3px;
+    border-radius: 0.375rem;
     padding: 8px 12px;
     font-size: 14px;
     transition: all 0.2s ease;

@@ -49,6 +49,37 @@ class FuncoesService
         return false;
     }
 
+	public static function buscaInfoUsuario($usuarioId)
+	{
+        $con = Db::getConnection();
+        $posto = Autenticador::getPosto();
+
+		$sql = "SELECT nome, 
+					   login, 
+					   master 
+				FROM tbl_usuario 
+				WHERE usuario = {$usuarioId} 
+				AND posto = $posto 
+				LIMIT 1
+			";
+		$res = pg_query($con, $sql);
+
+		if (pg_num_rows($res) > 0) {
+            $rowUsuario = pg_fetch_assoc($res);
+            $usuarioNome = $rowUsuario['nome'] ?? $usuarioNome;
+            $usuarioLogin = $rowUsuario['login'] ?? $usuarioLogin;
+            $usuarioTipo = ($rowUsuario['master'] ?? 'f') === 't' ? 'Administrador' : 'Usuario';
+		}
+
+        return [
+            'posto' => $posto,
+            'usuarioId' => $usuarioId,
+            'usuarioNome' => $usuarioNome,
+            'usuarioLogin' => $usuarioLogin,
+            'usuarioTipo' => $usuarioTipo,
+        ];
+	}
+
     public static function validaOsFinalizadaCancelada($os)
     {
         $con   = Db::getConnection();

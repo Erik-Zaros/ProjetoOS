@@ -118,9 +118,9 @@ ob_start();
 <div class="modal fade" id="movModal" tabindex="-1" aria-labelledby="movModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header text-white">
+      <div class="modal-header">
         <h5 class="modal-title" id="movModalLabel"><i class="bi bi-clock-history me-1"></i> Movimentações do Item</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
       </div>
       <div class="modal-body">
         <div class="table-responsive">

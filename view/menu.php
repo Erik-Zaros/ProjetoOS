@@ -53,12 +53,6 @@ ob_start();
     padding: 4px 8px 8px;
 }
 
-#modalDashboard .modal-header {
-    background: #2e3a4e;
-    color: #e8edf3;
-    border-radius: 10px 10px 0 0;
-    padding: 14px 20px;
-}
 #modalDashboard .modal-title {
     font-size: 13px;
     font-weight: 700;
@@ -66,9 +60,7 @@ ob_start();
     letter-spacing: 0.07em;
     font-family: 'Nunito', 'Segoe UI', sans-serif;
 }
-#modalDashboard .btn-close { filter: invert(1); }
 #modalDashboard .modal-body { padding: 16px; }
-#modalDashboard .modal-content { border-radius: 10px; border: none; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
 #modalDashboard table thead th {
     background: #f5f7fa;
     font-size: 11.5px;
