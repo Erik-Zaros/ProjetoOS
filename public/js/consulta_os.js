@@ -81,7 +81,7 @@ $(document).ready(function () {
 
                     $('#osTable tbody').append(`
                             <tr>
-                                <td><a href="cadastra_os?os=${os.os}">${os.os}</a></td>
+								<td><a href="os_press?os=${os.os}" class="link">${os.os}</a></td>
                                 <td>${os.cliente}</td>
                                 <td>${os.cpf}</td>
                                 <td>${os.produto}</td>
