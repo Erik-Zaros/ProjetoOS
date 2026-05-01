@@ -14,8 +14,6 @@ BEGIN
 
     v_resultado := regexp_replace(v_resultado, '[^a-zA-Z0-9 ]', '', 'g');
 
-    v_resultado := lower(v_resultado);
-
     RETURN v_resultado;
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
