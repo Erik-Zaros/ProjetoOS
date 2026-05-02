@@ -38,14 +38,14 @@ class OsCsvExportService
                     WHEN prod.ativo IS TRUE THEN 'Ativo'
                     ELSE 'Inativo'
                 END AS status_produto,
-                cli.nome AS nome_consumidor,
-                cli.cpf AS cpf_consumidor,
-                cli.cep AS cep_consumidor,
-                cli.endereco AS endereco_consumidor,
-                cli.bairro AS bairro_consumidor,
-                cli.numero AS numero_consumidor,
-                cli.cidade AS cidade_consumidor,
-                cli.estado AS estado_consumidor
+                COALESCE(cli.nome, os.nome_consumidor) AS nome_consumidor,
+                COALESCE(cli.cpf, os.cpf_consumidor) AS cpf_consumidor,
+                COALESCE(cli.cep, os.cep_consumidor) AS cep_consumidor,
+                COALESCE(cli.endereco, os.endereco_consumidor) AS endereco_consumidor,
+                COALESCE(cli.bairro, os.bairro_consumidor) AS bairro_consumidor,
+                COALESCE(cli.numero, os.numero_consumidor) AS numero_consumidor,
+                COALESCE(cli.cidade, cidade_consumidor) AS cidade_consumidor,
+                COALESCE(cli.estado, estado_consumidor) AS estado_consumidor
             FROM tbl_os os
             LEFT JOIN tbl_produto prod ON os.produto = prod.produto
             LEFT JOIN tbl_cliente cli ON os.cliente = cli.cliente

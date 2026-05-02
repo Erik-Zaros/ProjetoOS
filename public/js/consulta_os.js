@@ -1,7 +1,4 @@
 $(document).ready(function () {
-
-    carregarOs();
-
     function carregarOs() {
         if ($.fn.DataTable.isDataTable('#osTable')) {
             $('#osTable').DataTable().destroy();
@@ -65,6 +62,9 @@ $(document).ready(function () {
             data: formData,
             dataType: 'json',
             success: function (data) {
+				if ($.fn.DataTable.isDataTable('#osTable')) {
+					$('#osTable').DataTable().destroy();
+				}
                 $('#osTable tbody').empty();
                 data.forEach(function (os) {
                     if (os.finalizada != true) {
@@ -96,6 +96,16 @@ $(document).ready(function () {
                             </tr>
                         `);
                 });
+                if (data.length > 0) {
+                    $('#osTable').DataTable({
+                        responsive: true,
+                        scrollX: true,
+                        autoWidth: false,
+                        language: {
+                            url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+                        }
+                    });
+                }
             },
             error: function (xhr, status, error) {
                 Swal.fire({
