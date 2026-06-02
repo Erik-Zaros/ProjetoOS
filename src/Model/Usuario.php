@@ -69,36 +69,6 @@ class Usuario
         return ['status' => 'error', 'message' => 'Erro ao cadastrar usuário.'];
     }
 
-    public static function listar($posto)
-    {
-        $con = Db::getConnection();
-        $posto = intval($posto);
-
-        $sql = "SELECT usuario, login, nome, ativo, tecnico, master FROM tbl_usuario
-                WHERE posto = {$posto} ORDER BY usuario ASC";
-        $res = pg_query($con, $sql);
-        $usuarios = [];
-
-        while ($row = pg_fetch_assoc($res)) {
-            $usuarios[] = $row;
-        }
-
-        return $usuarios;
-    }
-
-    public static function buscar($usuarioId, $posto)
-    {
-        $con = Db::getConnection();
-        $usuarioId = intval($usuarioId);
-        $posto = intval($posto);
-
-        $sql = "SELECT usuario, login, nome, ativo, tecnico, master FROM tbl_usuario
-                WHERE usuario = {$usuarioId} AND posto = {$posto}";
-
-        $res = pg_query($con, $sql);
-        return pg_fetch_assoc($res) ?: null;
-    }
-
     public function atualizar()
     {
         $con = Db::getConnection();

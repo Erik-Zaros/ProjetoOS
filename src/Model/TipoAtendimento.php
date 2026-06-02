@@ -68,17 +68,6 @@ class TipoAtendimento
         return ['status' => 'error', 'message' => 'Erro ao cadastrar Tipo de Atendimento'];
     }
 
-    public static function buscaPorTipoAtendimento($tipo_atendimento, $posto)
-    {
-        $con = Db::getConnection();
-        $posto = intval($posto);
-
-        $sql = "SELECT tipo_atendimento, codigo, descricao, ativo FROM tbl_tipo_atendimento WHERE tipo_atendimento = {$tipo_atendimento} AND posto = {$posto}";
-        $res = pg_query($con, $sql);
-
-        return pg_num_rows($res) > 0 ? pg_fetch_assoc($res) : ['success' => false, 'error' => 'Tipo de Atendimento não encontrado.'];
-    }
-
     public function atualizar()
     {
         $con = Db::getConnection();
@@ -137,22 +126,6 @@ class TipoAtendimento
         }
 
         return ['status' => 'error', 'message' => 'Erro ao atualizar Tipo de Atendimento.'];
-    }
-
-    public static function listarTodos($posto)
-    {
-        $con = Db::getConnection();
-        $posto = intval($posto);
-
-        $sql = "SELECT tipo_atendimento, codigo, descricao, ativo FROM tbl_tipo_atendimento WHERE posto = {$posto} ORDER BY descricao ASC";
-        $res = pg_query($con, $sql);
-
-        $lista = [];
-        while ($row = pg_fetch_assoc($res)) {
-            $lista[] = $row;
-        }
-
-        return $lista;
     }
 
     private static function validaCamposTipoAtendimento($codigo, $descricao)

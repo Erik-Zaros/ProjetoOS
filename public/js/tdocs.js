@@ -69,11 +69,10 @@ const TdocsWidget = (function () {
         </div>
       </div>
 
-      <!-- Modal visualização de imagem (Shadowbox) -->
       <div class="modal fade" id="tdocsImagemModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" style="max-width:85vw;">
+        <div class="modal-dialog modal-xl modal-dialog">
           <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header text-dark">
               <h5 class="modal-title" id="tdocsImagemModalLabel">Visualizar Anexo</h5>
               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>

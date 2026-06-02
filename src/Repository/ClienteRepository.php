@@ -6,22 +6,30 @@ use App\Core\Db;
 
 class ClienteRepository
 {
-    private $dados;
     private $posto;
 
-    public function __construct(array $dados, $posto)
+    public function __construct($posto)
     {
-        $this->dados = $dados;
         $this->posto = $posto;
     }
 
-    public static function listarTodos($posto)
+    public function buscarPorCpf($cpf): ?array
     {
         $con = Db::getConnection();
-        $posto = intval($posto);
+        $cpf = pg_escape_string($cpf);
 
         $sql = "SELECT cliente, cpf, nome, cep, endereco, bairro, numero, cidade, estado
-                FROM tbl_cliente WHERE posto = {$posto} ORDER BY cpf ASC LIMIT 500";
+                FROM tbl_cliente WHERE cpf = '{$cpf}' AND posto = {$this->posto}";
+        $res = pg_query($con, $sql);
+        return pg_num_rows($res) > 0 ? pg_fetch_assoc($res) : null;
+    }
+
+    public function listarTodos()
+    {
+        $con = Db::getConnection();
+
+        $sql = "SELECT cliente, cpf, nome, cep, endereco, bairro, numero, cidade, estado
+                FROM tbl_cliente WHERE posto = {$this->posto} ORDER BY cpf ASC LIMIT 500";
         $res = pg_query($con, $sql);
         $clientes = [];
 
@@ -32,11 +40,10 @@ class ClienteRepository
         return $clientes;
     }
 
-    public static function autocompleteClientes($termo, $posto)
+    public function autocompleteClientes($termo)
     {
         $con = Db::getConnection();
         $termo = pg_escape_string($termo);
-        $posto = intval($posto);
 
         $sql = "SELECT nome,
                        cpf,
@@ -49,7 +56,7 @@ class ClienteRepository
                 FROM tbl_cliente
                 WHERE cep IS NOT NULL
                 AND nome ILIKE '%{$termo}%'
-                AND posto = {$posto}
+                AND posto = {$this->posto}
                 ORDER BY nome LIMIT 20
              ";
         $res = pg_query($con, $sql);

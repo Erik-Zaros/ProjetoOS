@@ -8,4 +8,4 @@ use App\Auth\Autenticador;
 Autenticador::iniciar();
 $posto = Autenticador::getPosto();
 
-echo json_encode(ServicoRealizadoController::listar($posto));
+echo json_encode(ServicoRealizadoController::listarAtivos($posto));

@@ -1,7 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Model\Peca;
+use App\Repository\PecaRepository;
 
 class PecaController
 {
@@ -19,12 +23,13 @@ class PecaController
 
     public static function buscar($codigo, $posto)
     {
-        return Peca::buscarPorCodigo($codigo, $posto);
+        $resultado = PecaRepository::buscarPorCodigo($codigo, $posto);
+        return $resultado ?: ['success' => false, 'error' => 'Peça não encontrado.'];
     }
 
     public static function listar($posto)
     {
-        return Peca::listarTodos($posto);
+        return PecaRepository::listarTodos($posto);
     }
 
     public static function apagar($dados, $posto)
@@ -34,6 +39,6 @@ class PecaController
 
     public static function autocomplete($termo, $posto)
     {
-        return Peca::autocompletePecas($termo, $posto);
+        return PecaRepository::autocomplete($termo, $posto);
     }
 }

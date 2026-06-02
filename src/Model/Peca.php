@@ -5,6 +5,7 @@ namespace App\Model;
 use App\Core\Db;
 use App\Auth\Autenticador;
 use App\Model\LogAuditor;
+use App\Repository\PecaRepository;
 
 class Peca
 {
@@ -61,20 +62,6 @@ class Peca
             return ['status' => 'success', 'message' => 'Peça cadastrada com sucesso!'];
         }
         return ['status' => 'error', 'message' => 'Erro ao cadastrar peça!'];
-    }
-
-    public static function buscarPorCodigo($codigo, $posto)
-    {
-        $con = Db::getConnection();
-        $codigo = pg_escape_string($codigo);
-        $posto = intval($posto);
-
-        $sql = "SELECT peca, codigo, descricao, ativo FROM tbl_peca WHERE codigo = '{$codigo}' AND posto = {$posto}";
-        $res = pg_query($con, $sql);
-
-        return pg_num_rows($res) > 0
-            ? pg_fetch_assoc($res)
-            : ['success' => false, 'error' => 'Peça não encontrado.'];
     }
 
     public function atualizar()
@@ -137,88 +124,21 @@ class Peca
         return ['status' => 'error', 'message' => 'Erro ao atualizar peça.'];
     }
 
-    public static function listarTodos($posto)
-    {
-        $con = Db::getConnection();
-        $posto = intval($posto);
-
-        $sql = "SELECT peca, codigo, descricao, ativo FROM tbl_peca WHERE posto = {$posto} ORDER BY codigo ASC";
-        $res = pg_query($con, $sql);
-
-        $lista = [];
-        while ($row = pg_fetch_assoc($res)) {
-            $lista[] = $row;
-        }
-
-        return $lista;
-    }
-
     public static function excluir($peca, $posto)
     {
         $con = Db::getConnection();
-        $posto = intval($posto);
-        $peca = intval($peca);
+        $posto = (int) $posto;
+        $peca = (int) $peca;
 
-        $peca_tem_estoque = self::pecaTemEstoque($peca, $posto);
-
-        if ($peca_tem_estoque == false) {
-            $sql = "DELETE FROM tbl_peca WHERE peca = $peca AND posto = $posto";
-            $res = pg_query($con, $sql);
-
-            return $res ? ['status' => 'success', 'message' => 'Peça excluída com sucesso.'] : ['status' => 'error', 'message' => 'Erro ao excluir peça.'];
-        } else {
+        if (PecaRepository::pecaTemEstoque($peca, $posto)) {
             return ['status' => 'error', 'message' => 'Não é possível excluir. A peça ainda está vinculada ao estoque.'];
         }
-    }
 
-    public static function autocompletePecas($termo, $posto)
-    {
-        $con   = Db::getConnection();
-        $termo = pg_escape_string($termo);
-        $posto = intval($posto);
-
-        $sql = "SELECT peca,
-                       codigo,
-                       descricao
-              FROM tbl_peca
-              WHERE posto = {$posto}
-              AND (descricao ILIKE '%{$termo}%' OR codigo ILIKE '%{$termo}%')
-              ORDER BY descricao
-              LIMIT 20
-            ";
-
-        $res = pg_query($con, $sql);
-        $sugestoes = [];
-
-        while ($row = pg_fetch_assoc($res)) {
-            $sugestoes[] = [
-                'label' => $row['descricao'] . " (" . $row['codigo'] . ")",
-                'value' => $row['descricao'],
-                'peca'  => $row['peca'],
-                'codigo'=> $row['codigo']
-            ];
-        }
-        return $sugestoes;
-    }
-
-    private static function pecaTemEstoque($peca, $posto)
-    {
-        $con = Db::getConnection();
-        $peca = intval($peca);
-        $posto = intval($posto);
-
-        $sql = "SELECT qtde
-                FROM tbl_estoque
-                WHERE peca = $peca
-                AND posto = $posto
-            ";
+        $sql = "DELETE FROM tbl_peca WHERE peca = {$peca} AND posto = {$posto}";
         $res = pg_query($con, $sql);
 
-        if (pg_num_rows($res) > 0) {
-            $row = pg_fetch_assoc($res);
-            return $row['qtde'] > 0;
-        }
-
-        return false;
+        return $res
+            ? ['status' => 'success', 'message' => 'Peça excluída com sucesso.']
+            : ['status' => 'error', 'message' => 'Erro ao excluir peça.'];
     }
 }

@@ -1,29 +1,34 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Model\TipoAtendimento;
+use App\Repository\TipoAtendimentoRepository;
 
 class TipoAtendimentoController
 {
     public static function cadastrar($dados, $posto)
     {
-        $tipo_atendimento = new TipoAtendimento($dados, $posto);
-        return $tipo_atendimento->salvar();
+        $tipo = new TipoAtendimento($dados, $posto);
+        return $tipo->salvar();
     }
 
     public static function editar($dados, $posto)
     {
-        $tipo_atendimento = new TipoAtendimento($dados, $posto);
-        return $tipo_atendimento->atualizar();
+        $tipo = new TipoAtendimento($dados, $posto);
+        return $tipo->atualizar();
     }
 
-    public static function buscar($tipo_atendimento, $posto)
+    public static function buscar($tipoAtendimento, $posto)
     {
-        return TipoAtendimento::buscaPorTipoAtendimento($tipo_atendimento, $posto);
+        $resultado = TipoAtendimentoRepository::buscarPorId($tipoAtendimento, $posto);
+        return $resultado ?: ['success' => false, 'error' => 'Tipo de Atendimento não encontrado.'];
     }
 
     public static function listar($posto)
     {
-        return TipoAtendimento::listarTodos($posto);
+        return TipoAtendimentoRepository::listarTodos($posto);
     }
 }

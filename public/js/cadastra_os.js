@@ -155,11 +155,9 @@ $(document).ready(function () {
         $("#servico_realizado").empty();
         $("#servico_realizado").append('<option value="">Selecione o Serviço Realizado</option>');
         servicos.forEach(function (servico_realizado) {
-          if (servico_realizado.ativo === "t" || servico_realizado.ativo === true) {
-            $("#servico_realizado").append(
-              `<option value="${servico_realizado.servico_realizado}">${servico_realizado.descricao}</option>`
-            );
-          }
+          $("#servico_realizado").append(
+            `<option value="${servico_realizado.servico_realizado}">${servico_realizado.descricao}</option>`
+          );
         });
       },
       error: function () {

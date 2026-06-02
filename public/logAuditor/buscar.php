@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use App\Auth\Autenticador;
-use App\Model\LogAuditor;
+use App\Controller\LogAuditorController;
 
 Autenticador::iniciar();
 
@@ -26,5 +26,5 @@ if (!$tabela || !$idRegistro) {
     exit;
 }
 
-$logs = LogAuditor::buscarPorRegistro($tabela, $idRegistro, $posto);
+$logs = LogAuditorController::buscarPorRegistro($tabela, $idRegistro, $posto);
 echo json_encode(['logs' => $logs]);

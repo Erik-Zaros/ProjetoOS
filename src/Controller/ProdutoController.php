@@ -1,7 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Model\Produto;
+use App\Repository\ProdutoRepository;
 
 class ProdutoController
 {
@@ -19,12 +23,13 @@ class ProdutoController
 
     public static function buscar($produto, $posto)
     {
-        return Produto::buscarPorProduto($produto, $posto);
+        $resultado = ProdutoRepository::buscarPorId($produto, $posto);
+        return $resultado ?: ['success' => false, 'error' => 'Produto não encontrado.'];
     }
 
     public static function listar($posto)
     {
-        return Produto::listarTodos($posto);
+        return ProdutoRepository::listarTodos($posto);
     }
 
     public static function apagar($dados, $posto)
@@ -34,6 +39,6 @@ class ProdutoController
 
     public static function autocomplete($termo, $posto)
     {
-        return Produto::autocompleteProdutos($termo, $posto);
+        return ProdutoRepository::autocomplete($termo, $posto);
     }
 }

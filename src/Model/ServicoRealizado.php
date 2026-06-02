@@ -5,6 +5,7 @@ namespace App\Model;
 use App\Core\Db;
 use App\Auth\Autenticador;
 use App\Model\LogAuditor;
+use App\Repository\ServicoRealizadoRepository;
 
 class ServicoRealizado
 {
@@ -61,24 +62,6 @@ class ServicoRealizado
             return ['status' => 'success', 'message' => 'Serviço Realizado cadastrado com sucesso!'];
         }
         return ['status' => 'error', 'message' => 'Erro ao cadastrar Serviço Realizado!'];
-    }
-
-    public static function buscarPorServico($servico_realizado, $posto)
-    {
-        $con = Db::getConnection();
-		$servico_realizado = trim($servico_realizado);
-        $posto = intval($posto);
-
-        $sql = "SELECT servico_realizado, descricao, ativo, usa_estoque FROM tbl_servico_realizado WHERE servico_realizado = {$servico_realizado} AND posto = {$posto}";
-        $res = pg_query($con, $sql);
-
-		if (pg_num_rows($res) > 0) {
-			return pg_fetch_assoc($res);
-		} else {
-			return ['success' => false, 'error' => 'Serviço Realizado não encontrado.'];
-		}
-
-		return ['success' => false, 'error' => 'Falha ao buscar Serviço Realizado.'];
     }
 
     public function atualizar()
@@ -141,55 +124,21 @@ class ServicoRealizado
         return ['status' => 'error', 'message' => 'Erro ao atualizar Serviço Realizado.'];
     }
 
-    public static function listarTodos($posto)
-    {
-        $con = Db::getConnection();
-        $posto = intval($posto);
-
-        $sql = "SELECT servico_realizado, descricao, ativo, usa_estoque FROM tbl_servico_realizado WHERE posto = {$posto} ORDER BY descricao ASC";
-        $res = pg_query($con, $sql);
-
-        $lista = [];
-        while ($row = pg_fetch_assoc($res)) {
-            $lista[] = $row;
-        }
-
-        return $lista;
-    }
-
     public static function excluir($servico_realizado, $posto)
     {
         $con = Db::getConnection();
-        $posto = intval($posto);
+        $posto = (int) $posto;
+        $servico_realizado = (int) $servico_realizado;
 
-        $valida_servico_realizado = self::validaServicoRealizado($servico_realizado, $posto);
-
-        if ($valida_servico_realizado == false) {
-            $sql = "DELETE FROM tbl_servico_realizado WHERE servico_realizado = $servico_realizado AND posto = $posto";
-            $res = pg_query($con, $sql);
-
-        return $res ? ['status' => 'success', 'message' => 'Serviço Realizado excluído com sucesso.'] : ['status' => 'error', 'message' => 'Erro ao excluir serviço Realizado.'];
-        } else {
+        if (ServicoRealizadoRepository::temVinculoComOs($servico_realizado, $posto)) {
             return ['status' => 'error', 'message' => 'Não é possível excluir. O Serviço Realizado já tem vinculo com ordens de serviço.'];
         }
-    }
 
-    private static function validaServicoRealizado($servico_realizado, $posto)
-    {
-        $con = Db::getConnection();
-        $posto = intval($posto);
-
-        $sql = "SELECT os
-                FROM tbl_os_item
-                WHERE servico_realizado = $servico_realizado
-                AND posto = $posto
-            ";
+        $sql = "DELETE FROM tbl_servico_realizado WHERE servico_realizado = {$servico_realizado} AND posto = {$posto}";
         $res = pg_query($con, $sql);
 
-        if (pg_num_rows($res) > 0) {
-            return true;
-        }
-
-        return false;
+        return $res
+            ? ['status' => 'success', 'message' => 'Serviço Realizado excluído com sucesso.']
+            : ['status' => 'error', 'message' => 'Erro ao excluir serviço Realizado.'];
     }
 }

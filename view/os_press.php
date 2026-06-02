@@ -16,7 +16,7 @@ if (!$os) {
     die("OS não informada.");
 }
 
-$osInfo = OsController::buscarPorNumero($os, $posto);
+$osInfo = OsController::osPress($os, $posto);
 
 if (isset($osInfo['error'])) {
     echo "<div class='alert alert-danger'>{$osInfo['error']}</div>";

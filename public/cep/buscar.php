@@ -2,9 +2,8 @@
 
 require '../../vendor/autoload.php';
 
-use App\Service\CepService;
+use App\Controller\CepController;
 
 if (isset($_POST['cep'])) {
-    $cep = $_POST['cep'];
-    echo CepService::buscar($cep);
+    echo CepController::buscar($_POST['cep']);
 }

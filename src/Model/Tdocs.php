@@ -21,7 +21,11 @@ class Tdocs
         $mime        = $arquivo['type'] ?: 'application/octet-stream';
         $nome_uuid   = self::gerarUuid() . '.' . $ext;
         $hash_temp   = bin2hex(random_bytes(16));
-        $subdir      = 'temp/' . date('Y/m/');
+        $codigo_ctx  = self::buscarCodigoContexto($contexto_anexo);
+        if ($codigo_ctx == "") {
+            return ['status' => 'error', 'message' => 'Erro ao buscar código do contexto'];
+        }
+        $subdir      = 'temp/' . $codigo_ctx . '/' . date('Y/m/');
         $caminho_rel = $subdir . $nome_uuid;
         $caminho_abs = self::DIR_UPLOADS . $caminho_rel;
 
@@ -78,7 +82,11 @@ class Tdocs
         $ext         = strtolower(pathinfo($arquivo['name'], PATHINFO_EXTENSION));
         $mime        = $arquivo['type'] ?: 'application/octet-stream';
         $nome_uuid   = self::gerarUuid() . '.' . $ext;
-        $subdir      = $contexto_anexo . '/' . $referencia_id . '/' . date('Y/m/');
+        $codigo_ctx  = self::buscarCodigoContexto($contexto_anexo);
+        if ($codigo_ctx == "") {
+            return ['status' => 'error', 'message' => 'Erro ao buscar código do contexto'];
+        }
+        $subdir      = $codigo_ctx . '/' . date('Y/m/') . $referencia_id . '/';
         $caminho_rel = $subdir . $nome_uuid;
         $caminho_abs = self::DIR_UPLOADS . $caminho_rel;
 
@@ -266,6 +274,24 @@ class Tdocs
         }
 
         return $novo_caminho;
+    }
+
+    private static function buscarCodigoContexto(int $contexto_anexo): string
+    {
+        $con = Db::getConnection();
+        $sql = "SELECT codigo 
+                FROM tbl_contexto_anexo
+                WHERE contexto_anexo = {$contexto_anexo} 
+                AND ativo IS TRUE
+                LIMIT 1";
+        $res = pg_query($con, $sql);
+
+        if (pg_num_rows($res) > 0) {
+            $row = pg_fetch_assoc($res);
+            return preg_replace('/[^a-zA-Z0-9_\-]/', '_', $row['codigo']);
+        }
+
+        return "";
     }
 
     private static function gerarUuid(): string

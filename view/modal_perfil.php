@@ -1,5 +1,5 @@
 <div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="modalUsuarioLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalUsuarioLabel">
@@ -26,8 +26,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <a href="../logout.php" class="btn btn-outline-secondary">Sair</a>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
+        <a href="../logout.php" class="btn btn-danger"><i class="nav-icon fas fa-sign-out-alt"></i> Deslogar</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar Modal</button>
       </div>
     </div>
   </div>

@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Model\Usuario;
+use App\Repository\UsuarioRepository;
 
 class UsuarioController
 {
@@ -20,11 +23,11 @@ class UsuarioController
 
     public static function listar($posto)
     {
-        return Usuario::listar($posto);
+        return UsuarioRepository::listarTodos($posto);
     }
 
     public static function buscar($usuarioId, $posto)
     {
-        return Usuario::buscar($usuarioId, $posto);
+        return UsuarioRepository::buscarPorId($usuarioId, $posto);
     }
 }

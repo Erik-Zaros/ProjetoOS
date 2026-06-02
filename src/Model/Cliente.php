@@ -133,19 +133,6 @@ class Cliente
         return ['status' => 'error', 'message' => 'Erro ao cadastrar cliente!'];
     }
 
-    public static function buscarPorCpf($cpf, $posto)
-    {
-        $con = Db::getConnection();
-        $cpf = pg_escape_string($cpf);
-        $posto = intval($posto);
-
-        $sql = "SELECT cliente, cpf, nome, cep, endereco, bairro, numero, cidade, estado
-                FROM tbl_cliente WHERE cpf = '{$cpf}' AND posto = {$posto}";
-
-        $res = pg_query($con, $sql);
-        return pg_num_rows($res) > 0 ? pg_fetch_assoc($res) : null;
-    }
-
     public function atualizar()
     {
         $con = Db::getConnection();

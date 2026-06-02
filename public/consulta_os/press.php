@@ -10,5 +10,5 @@ $posto = Autenticador::getPosto();
 
 $os = $_GET['os'];
 
-$result = OsController::buscarPorNumero($os, $posto);
+$result = OsController::osPress($os, $posto);
 echo json_encode($result);

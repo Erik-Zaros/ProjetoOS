@@ -19,8 +19,7 @@ $imports = [
             "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
             "https://cdn.jsdelivr.net/npm/sweetalert2@11",
             "https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js",
-            "../public/js/main.js",
-            "../public/js/logAuditor.js",
+            "../public/js/log_auditor.js",
             "../view/shadowbox/shadowbox.js"
         ]
     ],

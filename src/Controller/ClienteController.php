@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Model\Cliente;
@@ -21,23 +23,25 @@ class ClienteController
 
     public static function buscar($cpf, $posto)
     {
-        $resultado = Cliente::buscarPorCpf($cpf, $posto);
-        return $resultado ?: 'Cliente não encontrado';
+        $resultado = new ClienteRepository($posto);
+        return $resultado->buscarPorCpf($cpf);
     }
 
     public static function listar($posto)
     {
-        return ClienteRepository::listarTodos($posto);
+        $resultado = new ClienteRepository($posto);
+        return $resultado->listarTodos();
     }
 
     public static function autocomplete($termo, $posto)
     {
-        return ClienteRepository::autocompleteClientes($termo, $posto);
+        $resultado = new ClienteRepository($posto);
+        return $resultado->autocompleteClientes($termo);
     }
 
     public static function relatorio(array $filtros, $posto)
     {
-        $relatorio = new ClienteRepository($filtros, $posto);
-        return $relatorio->relatorio($filtros);
+        $resultado = new ClienteRepository($posto);
+        return $resultado->relatorio($filtros);
     }
 }

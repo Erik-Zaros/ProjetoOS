@@ -161,6 +161,7 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
 </div>
 
 <?php include __DIR__ . '/modal_perfil.php'; ?>
+<?php include __DIR__ . '/modal_log.php'; ?>
 
 <!-- Carrega novo layout antes -->
 <script src="../public/adminlte/plugins/jquery/jquery.min.js"></script>
@@ -180,13 +181,6 @@ foreach ($imports as $key => $import) {
   }
 }
 ?>
-
-<script>
-  Shadowbox.init({
-    overlayOpacity: 0.85,
-    modal: true
-  });
-</script>
 
 </body>
 </html>

@@ -363,25 +363,6 @@ class Os
         return false;
     }
 
-    public static function buscar($os)
-    {
-        $con = Db::getConnection();
-        $os = intval($os);
-        $sql = "SELECT os.os, os.data_abertura, os.nome_consumidor, os.cpf_consumidor,
-                       os.produto, p.descricao AS produto_descricao,
-                       os.cep_consumidor, os.endereco_consumidor, os.bairro_consumidor,
-                       os.numero_consumidor, os.cidade_consumidor, os.estado_consumidor,
-                       os.nota_fiscal, os.finalizada, os.cancelada, os.tecnico, os.tipo_atendimento
-                FROM tbl_os os
-                INNER JOIN tbl_produto p ON os.produto = p.produto
-                LEFT JOIN tbl_usuario u ON os.tecnico = u.usuario
-                WHERE os.os = {$os}
-            ";
-
-        $res = pg_query($con, $sql);
-        return pg_num_rows($res) > 0 ? pg_fetch_assoc($res) : null;
-    }
-
     private static function validaCamposOs($cpf, $nome, $produto, $data_abertura, $cep, $endereco, $bairro, $numero, $cidade, $estado, $nota_fiscal, $tipo_atendimento)
     {
 

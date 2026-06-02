@@ -7,16 +7,14 @@ use App\Auth\Autenticador;
 
 class OsRepository
 {
-    private $dados;
     private $posto;
 
-    public function __construct(array $dados, $posto)
+    public function __construct($posto)
     {
-        $this->dados = $dados;
         $this->posto = $posto;
     }
 
-    public static function filtrarOrdens(array $filtros, $posto)
+    public function filtrarOrdens(array $filtros)
     {
         $con = Db::getConnection();
 
@@ -30,7 +28,7 @@ class OsRepository
                     tbl_os.cancelada
                 FROM tbl_os
                 INNER JOIN tbl_produto ON tbl_os.produto = tbl_produto.produto
-                WHERE tbl_os.posto = $posto";
+                WHERE tbl_os.posto = {$this->posto}";
 
         if (!empty($filtros['os'])) {
             $os = (int) $filtros['os'];
@@ -78,12 +76,12 @@ class OsRepository
         return $ordens;
     }
 
-    public static function finalizar($os, $posto)
+    public function finalizar($os)
     {
         $con = Db::getConnection();
         $os = intval($os);
         $posto = intval($posto);
-        $sql = "UPDATE tbl_os SET finalizada = true WHERE os = {$os} AND posto = {$posto}";
+        $sql = "UPDATE tbl_os SET finalizada = true WHERE os = {$os} AND posto = {$this->posto}";
         $res = pg_query($con, $sql);
 
         return $res
@@ -91,7 +89,7 @@ class OsRepository
             : ['status' => 'error', 'message' => 'Erro ao finalizar OS.'];
     }
 
-    public static function cancelar($os, $posto)
+    public function cancelar($os, $posto)
     {
         $con = Db::getConnection();
         $sql = "UPDATE tbl_os SET cancelada = true WHERE os = $os AND posto = $posto";
@@ -102,10 +100,9 @@ class OsRepository
             : ['status' => 'error', 'message' => 'Erro ao cancelar OS.'];
     }
 
-    public static function listarTodos($posto)
+    public function listarTodos()
     {
         $con = Db::getConnection();
-        $posto = intval($posto);
 
         $sql = "SELECT os,
                        nome_consumidor AS cliente,
@@ -117,7 +114,7 @@ class OsRepository
                         FROM tbl_produto
                         WHERE produto = tbl_os.produto) AS produto
                 FROM tbl_os
-                WHERE posto = {$posto}
+                WHERE posto = {$this->posto}
                 ORDER BY os ASC";
 
         $res = pg_query($con, $sql);
@@ -132,11 +129,10 @@ class OsRepository
         return $lista;
     }
 
-    public static function buscarPorNumero($os, $posto)
+    public function os_press($os)
     {
         $con = Db::getConnection();
         $os = intval($os);
-        $posto = intval($posto);
 
         $sql = "
             SELECT
@@ -160,7 +156,7 @@ class OsRepository
             INNER JOIN tbl_produto p ON os.produto = p.produto
             LEFT JOIN tbl_tipo_atendimento t ON t.tipo_atendimento = os.tipo_atendimento
             LEFT JOIN tbl_usuario u ON u.usuario = os.tecnico
-            WHERE os.os = {$os} AND os.posto = {$posto}
+            WHERE os.os = {$os} AND os.posto = {$this->posto}
         ";
 
         $res = pg_query($con, $sql);
@@ -190,5 +186,25 @@ class OsRepository
         $dados['pecas'] = $itens;
 
         return $dados;
+    }
+
+    public function buscarPorId($os): ?array
+    {
+        $con = Db::getConnection();
+        $os = (int) $os;
+
+        $sql = "SELECT os.os, os.data_abertura, os.nome_consumidor, os.cpf_consumidor,
+                       os.produto, p.descricao AS produto_descricao,
+                       os.cep_consumidor, os.endereco_consumidor, os.bairro_consumidor,
+                       os.numero_consumidor, os.cidade_consumidor, os.estado_consumidor,
+                       os.nota_fiscal, os.finalizada, os.cancelada, os.tecnico, os.tipo_atendimento
+                FROM tbl_os os
+                INNER JOIN tbl_produto p ON os.produto = p.produto
+                LEFT JOIN tbl_usuario u ON os.tecnico = u.usuario
+                WHERE os.os = {$os}
+                AND os.posto = {$this->posto}
+            ";
+        $res = pg_query($con, $sql);
+        return pg_num_rows($res) > 0 ? pg_fetch_assoc($res) : null;
     }
 }

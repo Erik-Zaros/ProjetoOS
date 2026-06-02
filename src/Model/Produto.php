@@ -5,6 +5,7 @@ namespace App\Model;
 use App\Core\Db;
 use App\Auth\Autenticador;
 use App\Model\LogAuditor;
+use App\Repository\ProdutoRepository;
 
 class Produto
 {
@@ -62,19 +63,6 @@ class Produto
         }
 
         return ['status' => 'error', 'message' => 'Erro ao cadastrar produto!'];
-    }
-
-    public static function buscarPorProduto($produto, $posto)
-    {
-        $con = Db::getConnection();
-        $posto = intval($posto);
-
-        $sql = "SELECT produto, codigo, descricao, ativo FROM tbl_produto WHERE produto = {$produto} AND posto = {$posto}";
-        $res = pg_query($con, $sql);
-
-        return pg_num_rows($res) > 0
-            ? pg_fetch_assoc($res)
-            : ['success' => false, 'error' => 'Produto não encontrado.'];
     }
 
     public function atualizar()
@@ -137,87 +125,21 @@ class Produto
         return ['status' => 'error', 'message' => 'Erro ao atualizar produto.'];
     }
 
-    public static function listarTodos($posto)
-    {
-        $con = Db::getConnection();
-        $posto = intval($posto);
-
-        $sql = "SELECT produto, codigo, descricao, ativo FROM tbl_produto WHERE posto = {$posto} ORDER BY codigo ASC";
-        $res = pg_query($con, $sql);
-
-        $lista = [];
-        while ($row = pg_fetch_assoc($res)) {
-            $lista[] = $row;
-        }
-
-        return $lista;
-    }
-
     public static function excluir($produto, $posto)
     {
         $con = Db::getConnection();
-        $posto = intval($posto);
+        $posto = (int) $posto;
+        $produto = (int) $produto;
 
-        $produto_tem_estoque = self::produtoTemEstoque($produto, $posto);
-
-        if ($produto_tem_estoque == false) {
-        $sql = "DELETE FROM tbl_produto WHERE produto = $produto AND posto = $posto";
-        $res = pg_query($con, $sql);
-
-        return $res ? ['status' => 'success', 'message' => 'Produto excluído com sucesso.'] : ['status' => 'error', 'message' => 'Erro ao excluir produto.'];
-        } else {
+        if (ProdutoRepository::produtoTemEstoque($produto, $posto)) {
             return ['status' => 'error', 'message' => 'Não é possível excluir. O produto ainda está vinculada ao estoque.'];
         }
-    }
 
-    public static function autocompleteProdutos($termo, $posto)
-    {
-        $con   = Db::getConnection();
-        $termo = pg_escape_string($termo);
-        $posto = intval($posto);
-
-        $sql = "SELECT produto,
-                       codigo,
-                       descricao
-                FROM tbl_produto
-                WHERE posto = {$posto}
-                AND (descricao ILIKE '%{$termo}%' OR codigo ILIKE '%{$termo}%')
-                ORDER BY descricao
-                LIMIT 20
-            ";
-
-        $res = pg_query($con, $sql);
-        $sugestoes = [];
-
-        while ($row = pg_fetch_assoc($res)) {
-            $sugestoes[] = [
-                'label'   => $row['descricao'] . " (" . $row['codigo'] . ")",
-                'value'   => $row['descricao'],
-                'produto' => $row['produto'],
-                'codigo'  => $row['codigo']
-            ];
-        }
-        return $sugestoes;
-    }
-
-    private static function produtoTemEstoque($produto, $posto)
-    {
-        $con = Db::getConnection();
-        $produto = intval($produto);
-        $posto = intval($posto);
-
-        $sql = "SELECT qtde
-                FROM tbl_estoque
-                WHERE produto = $produto
-                AND posto = $posto
-            ";
+        $sql = "DELETE FROM tbl_produto WHERE produto = {$produto} AND posto = {$posto}";
         $res = pg_query($con, $sql);
 
-        if (pg_num_rows($res) > 0) {
-            $row = pg_fetch_assoc($res);
-            return $row['qtde'] > 0;
-        }
-
-        return false;
+        return $res
+            ? ['status' => 'success', 'message' => 'Produto excluído com sucesso.']
+            : ['status' => 'error', 'message' => 'Erro ao excluir produto.'];
     }
 }

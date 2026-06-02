@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Model\Os;
@@ -21,33 +23,38 @@ class OsController
 
     public static function buscar($os)
     {
-        $resultado = Os::buscar($os);
-        return $resultado ?: 'Ordem de Serviço não encontrada';
+        $resultado = new OsRepository($posto);
+        return $resultado->buscarPorId($os);
     }
 
     public static function listar($posto)
     {
-        return OsRepository::listarTodos($posto);
+        $resultado = new OsRepository($posto);
+        return $resultado->listarTodos();
     }
 
     public static function filtrar(array $filtros, $posto)
     {
-        return OsRepository::filtrarOrdens($filtros, $posto);
+        $resultado = new OsRepository($posto);
+        return $resultado->filtrarOrdens($filtros);
     }
 
     public static function finalizar($os, $posto)
     {
-        return OsRepository::finalizar($os, $posto);
+        $resultado = new OsRepository($posto);
+        return $resultado->finalizar($os);
     }
 
     public static function cancelar($os, $posto)
     {
-        return OsRepository::cancelar($os, $posto);
+        $resultado = new OsRepository($posto);
+        return $resultado->cancelar($os);
     }
 
-    public static function buscarPorNumero($os, $posto)
+    public static function osPress($os, $posto)
     {
-        $resultado = OsRepository::buscarPorNumero($os, $posto);
+        $resultado = new OsRepository($posto);
+        $resultado = $resultado->os_press($os);
         return $resultado ?: ['error' => 'Ordem de Serviço não encontrada.'];
     }
 }

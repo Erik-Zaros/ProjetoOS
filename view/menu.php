@@ -6,78 +6,9 @@ use App\Auth\Autenticador;
 
 Autenticador::iniciar();
 
-$title     = 'Dashboard';
+$title = 'Dashboard';
 $pageTitle = 'DASHBOARD';
-ob_start();
-?>
-
-<style>
-.kpi-card {
-    background: #fff;
-    border-radius: 10px;
-    border: 1px solid #e8ecf0;
-    padding: 18px 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-    cursor: pointer;
-}
-.kpi-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.09);
-}
-.kpi-icon {
-    width: 48px; height: 48px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px; flex-shrink: 0;
-}
-.kpi-body { flex: 1; min-width: 0; }
-.kpi-value {
-    font-size: 26px; font-weight: 800; color: #1a202c; line-height: 1;
-    font-family: 'Nunito', 'Segoe UI', sans-serif;
-}
-.kpi-label {
-    font-size: 11px; font-weight: 700; color: #718096;
-    text-transform: uppercase; letter-spacing: 0.07em;
-    margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-
-.chart-card {
-    background: #fff;
-    border-radius: 10px;
-    border: 1px solid #e8ecf0;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
-    padding: 4px 8px 8px;
-}
-
-#modalDashboard .modal-title {
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    font-family: 'Nunito', 'Segoe UI', sans-serif;
-}
-#modalDashboard .modal-body { padding: 16px; }
-#modalDashboard table thead th {
-    background: #f5f7fa;
-    font-size: 11.5px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #4a5568;
-    border-bottom: 2px solid #e8ecf0;
-}
-#modalDashboard table tbody td {
-    font-size: 13px;
-    color: #2d3748;
-    vertical-align: middle;
-    border-color: #f0f3f6;
-}
-#modalDashboard table tbody tr:hover { background: #f5f8ff; }
-</style>
+ob_start(); ?>
 
 <div class="row g-3 mb-3">
     <div class="col-6 col-sm-4 col-lg-2">
@@ -189,7 +120,7 @@ ob_start();
 </div>
 
 <div class="modal fade" id="modalDashboard" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title" id="modalDashboardLabel">Registros</span>
