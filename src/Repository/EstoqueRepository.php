@@ -8,7 +8,7 @@ use App\Core\Db;
 
 class EstoqueRepository
 {
-    public function saldo($posto, $produto = null, $peca = null)
+    public static function saldo($posto, $produto = null, $peca = null)
     {
         $con = Db::getConnection();
         $posto = (int) $posto;
@@ -29,7 +29,7 @@ class EstoqueRepository
         return 0;
     }
 
-    public function listarMovimentos($posto, $produto = null, $peca = null, $limit = 20): array
+    public static function listarMovimentos($posto, $produto = null, $peca = null, $limit = 20): array
     {
         $con = Db::getConnection();
         $posto = (int) $posto;
@@ -78,7 +78,7 @@ class EstoqueRepository
         return $rows;
     }
 
-    public function consultarLista($posto, $tipo = 'ambos', $termo = '', $somenteSaldo = false): array
+    public static function consultarLista($posto, $tipo = 'ambos', $termo = '', $somenteSaldo = false): array
     {
         $con = Db::getConnection();
         $posto = (int) $posto;
