@@ -89,10 +89,12 @@ class OsRepository
             : ['status' => 'error', 'message' => 'Erro ao finalizar OS.'];
     }
 
-    public function cancelar($os, $posto)
+    public function cancelar($os)
     {
         $con = Db::getConnection();
-        $sql = "UPDATE tbl_os SET cancelada = true WHERE os = $os AND posto = $posto";
+		$sql = "UPDATE tbl_os SET cancelada = true 
+				WHERE os = {$os} AND posto = {$this->posto}
+			";
         $res = pg_query($con, $sql);
 
         return $res
