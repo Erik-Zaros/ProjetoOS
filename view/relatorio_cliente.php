@@ -12,7 +12,7 @@ ob_start();
 ?>
 
 <div class="card shadow-sm mb-4">
-    <div class="card-header bg-primary text-white">
+    <div class="card-header">
         <i class="bi bi-search"></i> Parâmetros de Pesquisa
     </div>
     <div class="card-body">
@@ -53,7 +53,7 @@ ob_start();
 </div>
 
 <div class="card shadow-sm">
-    <div class="card-header bg-primary text-white">
+    <div class="card-header">
         <i class="bi bi-card-list"></i> Clientes
     </div>
     <div class="card-body">
@@ -84,11 +84,8 @@ ob_start();
 </form>
 
 <div class="text-center mt-4 mb-3">
-    <button type="button" id="btnCSV" class="btn btn-success" style="display:none">
-        Donwload CSV
-    </button>
+    <button type="button" id="btnCSV" class="btn btn-success" style="display:none"><i class="bi bi-file-earmark-spreadsheet-fill"></i> Download CSV</a></button>
 </div>
-
 
 <?php
 $content = ob_get_clean();

@@ -12,7 +12,7 @@ ob_start();
 ?>
 
 <div class="card shadow-sm mb-4">
-    <div class="card-header bg-primary text-white">
+    <div class="card-header">
         <i class="bi bi-search"></i> Parâmetros de Pesquisa
     </div>
     <div class="card-body">
@@ -59,7 +59,7 @@ ob_start();
 </div>
 
 <div class="card shadow-sm">
-    <div class="card-header bg-primary text-white">
+    <div class="card-header">
         <i class="bi bi-card-list"></i> Ordens de Serviço
     </div>
     <div class="card-body">

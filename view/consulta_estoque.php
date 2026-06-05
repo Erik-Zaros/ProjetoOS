@@ -45,7 +45,7 @@ ob_start();
 </div>
 
 <div class="card shadow-sm mb-4">
-  <div class="card-header bg-primary text-white">
+  <div class="card-header">
     <i class="bi bi-funnel-fill me-1"></i> Filtros
   </div>
   <div class="card-body">
@@ -90,7 +90,7 @@ ob_start();
 </div>
 
 <div class="card shadow-sm">
-  <div class="card-header bg-primary text-white">
+  <div class="card-header">
     <i class="bi bi-table me-1"></i> Resultado
   </div>
   <div class="card-body">

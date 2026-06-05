@@ -28,7 +28,7 @@ ob_start();
 ?>
 
 <div class="card shadow-sm mb-4">
-  <div class="card-header bg-primary text-white">
+  <div class="card-header">
     <i class="bi bi-clipboard-data"></i> Dados da OS
   </div>
   <div class="card-body">
@@ -68,7 +68,7 @@ ob_start();
 </div>
 
 <div class="card shadow-sm mb-4">
-  <div class="card-header bg-primary text-white">
+  <div class="card-header">
     <i class="bi bi-person"></i> Informações do Consumidor
   </div>
   <div class="card-body">
@@ -118,7 +118,7 @@ ob_start();
 </div>
 
 <div class="card shadow-sm mb-4">
-  <div class="card-header bg-primary text-white">
+  <div class="card-header">
     <i class="bi bi-box-seam"></i> Informações do Produto
   </div>
   <div class="card-body">
@@ -132,7 +132,7 @@ ob_start();
 </div>
 
 <div class="card shadow-sm mb-4">
-  <div class="card-header bg-primary text-white">
+  <div class="card-header">
     <i class="bi bi-tools"></i> Peças Utilizadas
   </div>
   <div class="card-body">

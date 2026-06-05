@@ -1,58 +1,58 @@
-$(document).ready(function () {
-    function carregarOs() {
-        if ($.fn.DataTable.isDataTable('#osTable')) {
-            $('#osTable').DataTable().destroy();
-        }
-        $.ajax({
-            url: '../public/consulta_os/listar.php',
-            method: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                $('#osTable tbody').empty();
-                data.forEach(function (os) {
-                    if (os.finalizada != true) {
-                        var canceladaButton = os.cancelada ? '' : '<button class="btn btn-danger btn-sm cancelar-os" data-os="' + os.os + '"><i class="bi bi-x-circle"></i> Cancelar</button>';
-                    }
-
-                    if (os.cancelada != true) {
-                        var finalizarButton = os.finalizada ? '' : '<button class="btn btn-success btn-sm finalizar-os" data-os="' + os.os + '"><i class="bi bi-check-all"></i> Finalizar</button>';
-                    }
-
-                    var alterarButton = '<a href=cadastra_os?os='+ os.os +' class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i> Editar</a>';
-                    var canceladaBadge = os.cancelada ? '<span class="badge bg-danger fs-7 px-2 py-1">Cancelada</span>' : '';
-                    var finalizadaBadge = os.finalizada ? '<span class="badge bg-success fs-7 px-2 py-1">Finalizada</span>' : '';
-
-                    $('#osTable tbody').append(`
-                        <tr>
-                            <td><a href="os_press?os=${os.os}" class="link">${os.os}</a></td>
-                            <td>${os.cliente}</td>
-                            <td>${os.cpf}</td>
-                            <td>${os.produto}</td>
-                            <td>${os.data_abertura}</td>
-                            <td>
-                                ${canceladaBadge}
-                                ${os.finalizada == false && os.cancelada == false ? alterarButton : ''}
-                                ${os.finalizada != true ? canceladaButton : ''}
-                                ${os.cancelada != true ? finalizarButton : ''}
-                                ${finalizadaBadge}
-                            </td>
-                        </tr>
-                    `);
-                });
-                if (data.length > 0) {
-                    $('#osTable').DataTable({
-                        responsive: true,
-                        scrollX: true,
-                        autoWidth: false,
-                        language: {
-                            url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-                        }
-                    });
-                }
-            }
-        });
+function carregarOs() {
+    if ($.fn.DataTable.isDataTable('#osTable')) {
+        $('#osTable').DataTable().destroy();
     }
+    $.ajax({
+        url: '../public/consulta_os/listar.php',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            $('#osTable tbody').empty();
+            data.forEach(function (os) {
+                if (os.finalizada != true) {
+                    var canceladaButton = os.cancelada ? '' : '<button class="btn btn-danger btn-sm cancelar-os" data-os="' + os.os + '"><i class="bi bi-x-circle"></i> Cancelar</button>';
+                }
 
+                if (os.cancelada != true) {
+                    var finalizarButton = os.finalizada ? '' : '<button class="btn btn-success btn-sm finalizar-os" data-os="' + os.os + '"><i class="bi bi-check-all"></i> Finalizar</button>';
+                }
+
+                var alterarButton = '<a href=cadastra_os?os='+ os.os +' class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i> Editar</a>';
+                var canceladaBadge = os.cancelada ? '<span class="badge bg-danger fs-7 px-2 py-1">Cancelada</span>' : '';
+                var finalizadaBadge = os.finalizada ? '<span class="badge bg-success fs-7 px-2 py-1">Finalizada</span>' : '';
+
+                $('#osTable tbody').append(`
+                    <tr>
+                        <td class='text-center'><a href="os_press?os=${os.os}" class="link">${os.os}</a></td>
+                        <td class='text-center'>${os.cliente}</td>
+                        <td class='text-center'>${os.cpf}</td>
+                        <td class='text-center'>${os.produto}</td>
+                        <td class='text-center'>${os.data_abertura}</td>
+                        <td class='text-center'>
+                            ${canceladaBadge}
+                            ${os.finalizada == false && os.cancelada == false ? alterarButton : ''}
+                            ${os.finalizada != true ? canceladaButton : ''}
+                            ${os.cancelada != true ? finalizarButton : ''}
+                            ${finalizadaBadge}
+                        </td>
+                    </tr>
+                `);
+            });
+            if (data.length > 0) {
+                $('#osTable').DataTable({
+                    responsive: true,
+                    scrollX: true,
+                    autoWidth: false,
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+                    }
+                });
+            }
+        }
+    });
+}
+
+$(document).ready(function () {
     $('#filtroForm').on('submit', function (e) {
         e.preventDefault();
         var formData = $(this).serialize();
@@ -81,12 +81,12 @@ $(document).ready(function () {
 
                     $('#osTable tbody').append(`
                             <tr>
-								<td><a href="os_press?os=${os.os}" class="link">${os.os}</a></td>
-                                <td>${os.cliente}</td>
-                                <td>${os.cpf}</td>
-                                <td>${os.produto}</td>
-                                <td>${os.data_abertura}</td>
-                                <td>
+								<td class='text-center'><a href="os_press?os=${os.os}" class="link">${os.os}</a></td>
+                                <td class='text-center'>${os.cliente}</td>
+                                <td class='text-center'>${os.cpf}</td>
+                                <td class='text-center'>${os.produto}</td>
+                                <td class='text-center'>${os.data_abertura}</td>
+                                <td class='text-center'>
                                     ${canceladaBadge}
                                     ${os.finalizada == false && os.cancelada == false ? alterarButton : ''}
                                     ${os.finalizada != true ? canceladaButton : ''}

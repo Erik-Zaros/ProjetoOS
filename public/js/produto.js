@@ -14,10 +14,10 @@ $(document).ready(function () {
                         var ativo = produto.ativo == 't' ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>';
                         $('#produtosTable tbody').append(`
                             <tr data-produto="${produto.produto}">
-                                <td>${produto.codigo}</td>
-                                <td>${produto.descricao}</td>
-                                <td>${ativo}</td>
-                                <td>
+                                <td class='text-center'>${produto.codigo}</td>
+                                <td class='text-center'>${produto.descricao}</td>
+                                <td class='text-center'>${ativo}</td>
+                                <td class='text-center'>
                                     <button class='btn btn-warning btn-sm editar-produto' data-produto='${produto.produto}'><i class="bi bi-pencil-square"></i> Editar</button>
                                     <button class='btn btn-danger btn-sm excluir-produto' data-produto='${produto.produto}'><i class="bi bi-trash3-fill"></i> Excluir</button>
                                     <button class='btn btn-info btn-sm btn-log-auditor' data-id='${produto.produto}'data-tabela='tbl_produto'><i class="bi bi-clock-history"></i> Ver Log</button>

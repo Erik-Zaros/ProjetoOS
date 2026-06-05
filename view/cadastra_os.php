@@ -15,7 +15,7 @@ ob_start();
 <form id="osForm">
   <input type="hidden" id="os" name="os" value="">
 <div class="card shadow-sm mb-4">
-  <div class="card-header bg-primary text-white">
+  <div class="card-header">
     <i class="bi bi-clipboard-data"></i> Informações da OS
   </div>
   <div class="card-body">

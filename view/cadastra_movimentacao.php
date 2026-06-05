@@ -45,7 +45,7 @@ ob_start();
 </div>
 
 <div class="card shadow-sm mb-4">
-  <div class="card-header bg-primary text-white">
+  <div class="card-header">
     <i class="bi bi-box-seam"></i> Lançar Movimentação (Entrada/Saída)
   </div>
   <div class="card-body">
@@ -113,7 +113,7 @@ ob_start();
 </div>
 
 <div class="card shadow-sm">
-  <div class="card-header bg-primary text-white">
+  <div class="card-header">
     <i class="bi bi-clock-history"></i> Últimos Lançamentos do Item
   </div>
   <div class="card-body">

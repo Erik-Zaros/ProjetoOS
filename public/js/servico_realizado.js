@@ -15,10 +15,10 @@ $(document).ready(function () {
                         var usa_estoque = servico_realizado.usa_estoque == 't' ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>';
                         $('#servicoRealizadoTable tbody').append(`
                             <tr data-descricao="${servico_realizado.descricao}">
-                                <td>${servico_realizado.descricao}</td>
-                                <td>${ativo}</td>
-                                <td>${usa_estoque}</td>
-                                <td>
+                                <td class='text-center'>${servico_realizado.descricao}</td>
+                                <td class='text-center'>${ativo}</td>
+                                <td class='text-center'>${usa_estoque}</td>
+                                <td class='text-center'>
                                     <button class='btn btn-warning btn-sm editar-servico_realizado' data-servico='${servico_realizado.servico_realizado}'><i class="bi bi-pencil-square"></i> Editar</button>
                                     <button class='btn btn-danger btn-sm excluir-servico_realizado' data-servico='${servico_realizado.servico_realizado}'><i class="bi bi-trash3-fill"></i> Excluir</button>
                                     <button class='btn btn-info btn-sm btn-log-auditor' data-id='${servico_realizado.servico_realizado}'data-tabela='tbl_servico_realizado'><i class="bi bi-clock-history"></i> Ver Log</button>

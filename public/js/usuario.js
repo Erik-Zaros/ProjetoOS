@@ -12,17 +12,17 @@ function carregarUsuarios() {
                 data.forEach(function (usuario) {
                     $('#usuariosTable tbody').append(`
                         <tr>
-                            <td>${usuario.usuario}</td>
-                            <td>${usuario.login}</td>
-                            <td>${usuario.nome}</td>
-                            <td>
+                            <td class='text-center'>${usuario.usuario}</td>
+                            <td class='text-center'>${usuario.login}</td>
+                            <td class='text-center'>${usuario.nome}</td>
+                            <td class='text-center'>
                                 ${usuario.ativo === 't' || usuario.ativo === true ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>'}
                             </td>
-                            <td> ${usuario.tecnico === 't' || usuario.tecnico === true ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>'}
+                            <td class='text-center'> ${usuario.tecnico === 't' || usuario.tecnico === true ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>'}
                             </td>
-                            <td> ${usuario.master === 't' || usuario.master === true ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>'}
+                            <td class='text-center'> ${usuario.master === 't' || usuario.master === true ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>'}
                             </td>
-                            <td>
+                            <td class='text-center'>
                                 <button class="btn btn-warning btn-sm editar" data-usuario="${usuario.usuario}"><i class="bi bi-pencil-square"></i> Editar</button>
                                 <button class='btn btn-info btn-sm btn-log-auditor' data-id='${usuario.usuario}'data-tabela='tbl_usuario'><i class="bi bi-clock-history"></i> Ver Log</button>
                             </td>

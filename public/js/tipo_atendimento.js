@@ -14,10 +14,10 @@ $(document).ready(function () {
                         var ativo = tipo_atendimento.ativo == 't' ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>';
                         $('#tipoAtendimentoTable tbody').append(`
                             <tr data-tipo_atendimento="${tipo_atendimento.tipo_atendimento}">
-                                <td>${tipo_atendimento.codigo}</td>
-                                <td>${tipo_atendimento.descricao}</td>
-                                <td>${ativo}</td>
-                                <td>
+                                <td class='text-center'>${tipo_atendimento.codigo}</td>
+                                <td class='text-center'>${tipo_atendimento.descricao}</td>
+                                <td class='text-center'>${ativo}</td>
+                                <td class='text-center'>
                                     <button class='btn btn-warning btn-sm editar-tipo_atendimento' data-tipo_atendimento='${tipo_atendimento.tipo_atendimento}'><i class="bi bi-pencil-square"></i> Editar</button>
                                     <button class='btn btn-info btn-sm btn-log-auditor' data-id='${tipo_atendimento.tipo_atendimento}'data-tabela='tbl_tipo_atendimento'><i class="bi bi-clock-history"></i> Ver Log</button>
                                 </td>

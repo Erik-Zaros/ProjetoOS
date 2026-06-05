@@ -13,15 +13,15 @@ function carregarClientes() {
                     const cepFormatado = cliente.cep ? cliente.cep.replace(/(\d{5})(\d{3})/, '$1-$2') : '';
                     $('#clientesTable tbody').append(`
                         <tr>
-                            <td>${cliente.cpf || ''}</td>
-                            <td>${cliente.nome || ''}</td>
-                            <td>${cepFormatado}</td>
-                            <td>${cliente.endereco || ''}</td>
-                            <td>${cliente.bairro || ''}</td>
-                            <td>${cliente.numero || ''}</td>
-                            <td>${cliente.cidade || ''}</td>
-                            <td>${cliente.estado || ''}</td>
-                            <td>
+                            <td class='text-center'>${cliente.cpf || ''}</td>
+                            <td class='text-center'>${cliente.nome || ''}</td>
+                            <td class='text-center'>${cepFormatado}</td>
+                            <td class='text-center'>${cliente.endereco || ''}</td>
+                            <td class='text-center'>${cliente.bairro || ''}</td>
+                            <td class='text-center'>${cliente.numero || ''}</td>
+                            <td class='text-center'>${cliente.cidade || ''}</td>
+                            <td class='text-center'>${cliente.estado || ''}</td>
+                            <td class='text-center'>
                                 <button class="btn btn-warning btn-sm editar" data-cpf="${cliente.cpf}"><i class="bi bi-pencil-square"></i> Editar</button>
                                 <button class='btn btn-info btn-sm btn-log-auditor' data-id='${cliente.cliente}'data-tabela='tbl_cliente'><i class="bi bi-clock-history"></i> Ver Log</button>
                             </td>

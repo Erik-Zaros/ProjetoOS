@@ -11,7 +11,7 @@ ob_start();
 ?>
 
 <div class="card shadow-sm mb-4">
-  <div class="card-header bg-primary text-white">
+  <div class="card-header">
     <i class="bi bi-link-45deg"></i> Selecionar Produto
   </div>
   <div class="card-body">

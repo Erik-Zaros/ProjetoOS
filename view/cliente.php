@@ -12,7 +12,7 @@ ob_start();
 ?>
 
 <div class="card shadow-sm mb-4">
-    <div class="card-header bg-primary text-white">
+    <div class="card-header">
         <i class="bi bi-person-fill"></i> Cadastro de Cliente
     </div>
     <div class="card-body">
@@ -63,7 +63,7 @@ ob_start();
 </div>
 
 <div class="card shadow-sm">
-    <div class="card-header bg-primary text-white">
+    <div class="card-header">
         <i class="bi bi-table"></i> Clientes Cadastrados
     </div>
     <div class="card-body">
