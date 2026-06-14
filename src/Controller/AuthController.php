@@ -38,6 +38,8 @@ class AuthController
                 return ['success' => false, 'message' => 'Posto inativo'];
             }
 
+			session_regenerate_id(true);
+
             $_SESSION['usuario']     = $row['usuario'];
             $_SESSION['login']       = $row['login'];
             $_SESSION['posto']       = $row['posto'];
