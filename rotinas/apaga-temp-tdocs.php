@@ -43,7 +43,7 @@ try {
         FROM tbl_tdocs
         WHERE referencia_id IS NULL
         AND hash_temp IS NOT NULL
-        AND data_input < NOW() - INTERVAL '24 hours'
+        AND data_input > NOW() - INTERVAL '24 hours'
         AND ativo IS TRUE
     ";
     $res = pg_query($con, $sql);
