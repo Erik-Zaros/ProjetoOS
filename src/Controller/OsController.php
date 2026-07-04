@@ -21,7 +21,7 @@ class OsController
         return $os->editar();
     }
 
-    public static function buscar($os)
+    public static function buscar($os, $posto)
     {
         $resultado = new OsRepository($posto);
         return $resultado->buscarPorId($os);

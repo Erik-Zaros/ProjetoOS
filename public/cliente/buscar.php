@@ -4,8 +4,10 @@ require '../../vendor/autoload.php';
 session_start();
 
 use App\Controller\ClienteController;
+use App\Auth\Autenticador;
 
-$posto = $_SESSION['login_posto'] ?? 1;
+Autenticador::iniciar();
+$posto = Autenticador::getPosto();
 $cpf = $_GET['cpf'] ?? '';
 
 $result = ClienteController::buscar($cpf, $posto);
