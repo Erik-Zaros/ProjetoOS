@@ -56,8 +56,14 @@ body.dark-mode .main-header .nav-user-button:hover {
   color: var(--dark-accent) !important;
 }
 
-body.dark-mode .main-header .fa-bars {
+/* Botão de recolher (fas fa-bars) mais evidente no escuro */
+body.dark-mode .main-header .nav-link[data-widget="pushmenu"] {
   color: var(--dark-text-secondary) !important;
+}
+body.dark-mode .main-header .nav-link[data-widget="pushmenu"]:hover,
+body.dark-mode .main-header .nav-link[data-widget="pushmenu"]:focus {
+  background-color: rgba(59, 130, 246, 0.18) !important;
+  color: var(--dark-accent) !important;
 }
 
 /* ============================================================
@@ -77,16 +83,34 @@ body.dark-mode .brand-text {
 
 body.dark-mode .sidebar-dark-primary .nav-sidebar .nav-link {
   color: #8899aa !important;
+  border-left: 3px solid transparent !important;
+}
+body.dark-mode .sidebar-dark-primary .nav-sidebar .nav-link .nav-icon {
+  color: #7c8ba1 !important;
 }
 
 body.dark-mode .sidebar-dark-primary .nav-sidebar .nav-link:hover {
-  background-color: rgba(59, 130, 246, 0.15) !important;
+  background-color: rgba(59, 130, 246, 0.12) !important;
+  color: #c8d8e8 !important;
+}
+body.dark-mode .sidebar-dark-primary .nav-sidebar .nav-link:hover .nav-icon {
   color: #c8d8e8 !important;
 }
 
+/* Item ativo: destaque sutil (antes era um bloco azul sólido, agora é fundo leve + barra lateral) */
 body.dark-mode .sidebar-dark-primary .nav-sidebar .nav-link.active {
-  background-color: var(--dark-accent) !important;
-  color: #ffffff !important;
+  background-color: rgba(59, 130, 246, 0.16) !important;
+  color: #cfe1ff !important;
+  border-left: 3px solid var(--dark-accent) !important;
+  font-weight: 600;
+}
+body.dark-mode .sidebar-dark-primary .nav-sidebar .nav-link.active .nav-icon {
+  color: #cfe1ff !important;
+}
+
+/* Remove as bolinhas dos submenus */
+body.dark-mode .sidebar-dark-primary .nav-treeview .nav-link .nav-icon.fa-circle {
+  display: none !important;
 }
 
 body.dark-mode .form-control-sidebar,
@@ -679,4 +703,47 @@ body.dark-mode .kpi-value {
 /*os_press*/
 body.dark-mode .info-value {
   color: var(--dark-text-primary) !important;
+}
+
+/* ============================================================
+   FIX: texto sumindo no :focus/:active e no item pai com submenu
+   aberto no tema escuro (o fix do tema claro não estava travado
+   por body.dark-mode e vazava pra cá)
+   ============================================================ */
+body.dark-mode .sidebar-dark-primary .nav-sidebar .nav-link:focus,
+body.dark-mode .sidebar-dark-primary .nav-sidebar .nav-link:focus p,
+body.dark-mode .sidebar-dark-primary .nav-sidebar .nav-link:active,
+body.dark-mode .sidebar-dark-primary .nav-sidebar .nav-link:active p {
+  color: #8899aa !important;
+}
+body.dark-mode .sidebar-dark-primary .nav-sidebar .nav-link:focus .nav-icon,
+body.dark-mode .sidebar-dark-primary .nav-sidebar .nav-link:active .nav-icon {
+  color: #7c8ba1 !important;
+}
+
+body.dark-mode .sidebar-dark-primary .nav-item.menu-open > .nav-link,
+body.dark-mode .sidebar-dark-primary .nav-item.menu-open > .nav-link p {
+  color: #c8d8e8 !important;
+}
+body.dark-mode .sidebar-dark-primary .nav-item.menu-open > .nav-link .nav-icon,
+body.dark-mode .sidebar-dark-primary .nav-item.menu-open > .nav-link .right {
+  color: #c8d8e8 !important;
+}
+
+body.dark-mode .sidebar-dark-primary .nav-item.menu-open > .nav-link.active,
+body.dark-mode .sidebar-dark-primary .nav-item.menu-open > .nav-link.active p,
+body.dark-mode .sidebar-dark-primary .nav-item.menu-open > .nav-link.active .nav-icon {
+  color: #cfe1ff !important;
+}
+
+/* Submenu no escuro: mantém legível (cinza claro), sem ficar preto */
+body.dark-mode .sidebar-dark-primary .nav-treeview .nav-link,
+body.dark-mode .sidebar-dark-primary .nav-treeview .nav-link p {
+  color: #a8b3c4 !important;
+}
+body.dark-mode .sidebar-dark-primary .nav-treeview .nav-link:hover,
+body.dark-mode .sidebar-dark-primary .nav-treeview .nav-link:hover p,
+body.dark-mode .sidebar-dark-primary .nav-treeview .nav-link.active,
+body.dark-mode .sidebar-dark-primary .nav-treeview .nav-link.active p {
+  color: #cfe1ff !important;
 }

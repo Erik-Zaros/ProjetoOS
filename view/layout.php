@@ -1,10 +1,4 @@
 <?php
-/**
- * view/layout.php  (com suporte a tema dark/light)
- *
- * Lê preferência de tema do cache PHP → aplica classe dark-mode no <body>
- * antes do render, evitando qualquer flash de tema errado.
- */
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -24,7 +18,7 @@ $usuarioLogin  = $layoutContext['usuarioLogin'];
 $usuarioTipo   = $layoutContext['usuarioTipo'];
 $postoNome     = FuncoesService::buscaNomePosto($posto);
 
-/* ── Lê preferência de tema do cache ───────────────────────────── */
+
 $temaAtual = 'light';
 try {
     $temaCache = new Cache('usuario', (string) $usuario);
@@ -61,16 +55,13 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
 
   <link rel="icon" type="image/x-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%232e2e48'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'%3EOS%3C/text%3E%3C/svg%3E">
 
-  <!-- AdminLTE + FontAwesome -->
   <link rel="stylesheet" href="../public/adminlte/plugins/fontawesome-free/css/all.min.css">
   <link rel="stylesheet" href="../public/adminlte/dist/css/adminlte.min.css">
 
-  <!-- CSS globais do projeto -->
   <?php foreach ($imports["global"]["css"] as $css): ?>
     <link rel="stylesheet" href="<?= $css ?>">
   <?php endforeach; ?>
 
-  <!-- CSS específico da página -->
   <?php
   foreach ($imports as $key => $import) {
       if ($current_page === $key && isset($import["css"])) {
@@ -81,13 +72,9 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
   }
   ?>
 
-  <!-- Tema dark (sempre carregado; ativa via classe no body) -->
   <link rel="stylesheet" href="../public/css/dark-theme.css">
 
-  <!--
-    Anti-flash inline: aplica dark antes do primeiro paint caso o PHP
-    já saiba que o usuário prefere dark mode.
-  -->
+
   <?php if ($temaAtual === 'dark'): ?>
   <style>
     body { background-color: #0f1117 !important; }
@@ -98,7 +85,6 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
 <body class="<?= $bodyClass ?>">
 <div class="wrapper">
 
-  <!-- ── NAVBAR ─────────────────────────────────────────────────── -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <div class="container-fluid">
       <div class="row w-100 align-items-center">
@@ -132,7 +118,6 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
     </div>
   </nav>
 
-  <!-- ── SIDEBAR ────────────────────────────────────────────────── -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
     <a class="brand-link text-center">
@@ -209,33 +194,27 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
     </div>
   </aside>
 
-  <!-- ── CONTENT ────────────────────────────────────────────────── -->
   <div class="content-wrapper">
     <section class="content pt-4 px-3">
       <?= $content ?? '' ?>
     </section>
   </div>
 
-</div><!-- /.wrapper -->
+</div>
 
-<!-- Modais -->
 <?php include __DIR__ . '/modal_perfil.php'; ?>
 <?php include __DIR__ . '/modal_log.php'; ?>
 
-<!-- Scripts base (ordem importa para AdminLTE) -->
 <script src="../public/adminlte/plugins/jquery/jquery.min.js"></script>
 <script src="../public/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../public/adminlte/dist/js/adminlte.min.js"></script>
 
-<!-- Dark theme JS (carrega antes dos scripts globais) -->
 <script src="../public/js/dark-theme.js"></script>
 
-<!-- Scripts globais -->
 <?php foreach ($imports["global"]["js"] as $js): ?>
   <script src="<?= $js ?>"></script>
 <?php endforeach; ?>
 
-<!-- Scripts específicos da página -->
 <?php
 foreach ($imports as $key => $import) {
     if ($current_page === $key && isset($import["js"])) {

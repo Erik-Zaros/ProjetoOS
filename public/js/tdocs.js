@@ -34,7 +34,7 @@ const TdocsWidget = (function () {
   function _renderCard() {
     $(_cfg.container).html(`
       <div class="card shadow-sm mb-4">
-        <div class="card-header bg-success text-white">
+        <div class="card-header bg-secondary text-white">
           <i class="bi bi-paperclip"></i> Anexos
         </div>
         <div class="card-body">

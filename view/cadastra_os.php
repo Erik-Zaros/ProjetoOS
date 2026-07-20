@@ -90,7 +90,7 @@ ob_start();
 </div>
 
 <div class="card shadow-sm mb-4">
-  <div class="card-header bg-info text-white">
+  <div class="card-header bg-secondary text-white">
     <i class="bi bi-box"></i> Informações do Produto
   </div>
   <div class="card-body">
@@ -99,7 +99,7 @@ ob_start();
 </div>
 
 <div class="card shadow-sm">
-  <div class="card-header bg-success text-white">
+  <div class="card-header bg-secondary text-white">
     <i class="bi bi-nut"></i> Peças do Produto
   </div>
   <div class="card-body">

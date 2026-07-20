@@ -2,82 +2,117 @@ body {
   background-color: #f4f6f9 !important;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
-
 .main-header.navbar {
   border-bottom: 1px solid #dfe5ec;
   box-shadow: 0 1px 8px rgba(15, 23, 42, 0.07);
 }
-
 .content-wrapper {
   background-color: #f4f6f9 !important;
 }
 
+/* ============================================================
+   SIDEBAR - TEMA CLARO (branca)
+   ============================================================ */
 .sidebar-dark-primary {
-  background: linear-gradient(180deg, #2f3b52 0%, #253145 100%) !important;
+  background: #ffffff !important;
+  border-right: 1px solid #e5e9f0;
 }
-
 .brand-link {
   text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid #eef1f6;
 }
-
 .brand-text {
-  color: #ffffff !important;
+  color: #1e293b !important;
   font-weight: 600 !important;
   letter-spacing: 0.02em;
 }
 
 .sidebar-dark-primary .nav-sidebar .nav-link {
-  color: #d4d9e1;
+  color: #1e293b;
   border-radius: 0.375rem;
   margin: 2px 8px;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  border-left: 3px solid transparent;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
-
+.sidebar-dark-primary .nav-sidebar .nav-link .nav-icon {
+  color: #334155;
+}
 .sidebar-dark-primary .nav-sidebar .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background-color: #eef4ff;
+  color: #0d6efd;
+}
+.sidebar-dark-primary .nav-sidebar .nav-link:hover .nav-icon {
+  color: #0d6efd;
 }
 
+/* Item ativo bem evidente */
 .sidebar-dark-primary .nav-sidebar .nav-link.active {
-  background-color: #0d6efd;
-  color: #ffffff;
+  background-color: #e7f0ff !important;
+  color: #0d6efd !important;
+  font-weight: 600;
+  border-left: 3px solid #0d6efd !important;
 }
-
+.sidebar-dark-primary .nav-sidebar .nav-link.active .nav-icon {
+  color: #0d6efd !important;
+}
 .sidebar-dark-primary .nav-sidebar .nav-link i.right,
 .sidebar-dark-primary .nav-sidebar .nav-treeview > .nav-item > .nav-link.active i,
 .sidebar-dark-primary .nav-sidebar .nav-treeview > .nav-item > .nav-link:hover i {
-  color: #cfe2ff !important;
+  color: inherit !important;
+}
+
+/* Remove as bolinhas dos submenus */
+.sidebar-dark-primary .nav-treeview .nav-link .nav-icon.fa-circle {
+  display: none !important;
+}
+.sidebar-dark-primary .nav-treeview .nav-link p {
+  margin-left: 0;
 }
 
 .form-inline {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid #eef1f6;
 }
-
 .form-control-sidebar,
 #sidebarSearch {
-  background-color: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: #ffffff;
+  background-color: #f4f6f9 !important;
+  border: 1px solid #e2e8f0;
+  color: #1e293b;
 }
-
 .form-control-sidebar::placeholder {
-  color: #cbd5e1;
+  color: #94a3b8;
 }
-
 #sidebarSearchIcon {
-  background-color: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: #dbeafe;
+  background-color: #f4f6f9 !important;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
   width: 40px;
   height: 38px;
   line-height: 1;
 }
 
 .nav-icon,
-#sidebarSearchIcon,
-.fa-bars {
-  color: #e2e8f0;
+#sidebarSearchIcon {
+  color: #64748b;
+}
+
+/* ============================================================
+   BOTÃO DE RECOLHER (fas fa-bars) - mais evidente
+   ============================================================ */
+.main-header .nav-link[data-widget="pushmenu"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: #475569 !important;
+  font-size: 1.05rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.main-header .nav-link[data-widget="pushmenu"]:hover,
+.main-header .nav-link[data-widget="pushmenu"]:focus {
+  background-color: #eef4ff;
+  color: #0d6efd !important;
 }
 
 .card,
@@ -85,95 +120,131 @@ body {
   border-radius: 0.5rem;
   box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
 }
-
 .card-header {
   border-bottom: 1px solid #e9edf3;
 }
-
 .table thead th {
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.02em;
 }
-
 .modal-content {
   border-radius: 0.5rem;
   border: 1px solid #dfe5ec;
   box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
 }
-
 .modal-header {
   border-bottom: 1px solid #e9edf3;
 }
-
 .nav-user-button {
   color: #334155;
   font-size: 0.9rem;
   font-weight: 500;
 }
-
 .nav-user-button:hover {
   color: #0d6efd;
 }
-
 body {
   background-color: #f8fafc !important;
 }
-
 .content-wrapper {
   background-color: #f8fafc !important;
 }
-
 .content .card {
   background: transparent;
   border: 0;
   box-shadow: none;
 }
-
 .content .card-header {
   background: transparent !important;
   color: #334155 !important;
   border-bottom: 0;
 }
-
 .content .card-header[class*="bg-"] {
   background: transparent !important;
   color: #334155 !important;
 }
-
 .content .card-body {
   background: #ffffff;
   border: 1px solid #edf1f6;
   border-radius: 0.375rem;
   padding: 1rem;
 }
-
 .table {
   --bs-table-bg: #ffffff;
   --bs-table-hover-bg: #f8fafc;
   --bs-table-striped-bg: #fbfcfe;
 }
-
 .table thead th {
   background: #ffffff;
   color: #475569;
   border-bottom: 2px solid #e8edf3;
 }
-
 .table > :not(caption) > * > * {
   border-bottom: 1px solid #eef2f6;
 }
-
 .table-bordered > :not(caption) > * {
   border-width: 0;
 }
-
 .table-bordered > :not(caption) > * > * {
   border-width: 0 0 1px 0;
   border-color: #eef2f6;
 }
-
 .small-box {
   border-radius: 0.375rem;
   box-shadow: 0 1px 6px rgba(15, 23, 42, 0.06);
+}
+
+/* ============================================================
+   FIX: hover deixando o texto do menu branco (sumindo no fundo claro)
+   ============================================================ */
+.sidebar-dark-primary .nav-sidebar .nav-link:hover,
+.sidebar-dark-primary .nav-sidebar .nav-link:hover p {
+  color: #0d6efd !important;
+}
+.sidebar-dark-primary .nav-sidebar .nav-link:hover .nav-icon {
+  color: #0d6efd !important;
+}
+
+/* ============================================================
+   FIX: texto ficando branco depois de clicar (estado :focus/:active
+   e o item pai quando o submenu permanece aberto)
+   ============================================================ */
+.sidebar-dark-primary .nav-sidebar .nav-link:focus,
+.sidebar-dark-primary .nav-sidebar .nav-link:focus p,
+.sidebar-dark-primary .nav-sidebar .nav-link:active,
+.sidebar-dark-primary .nav-sidebar .nav-link:active p {
+  color: #1e293b !important;
+}
+.sidebar-dark-primary .nav-sidebar .nav-link:focus .nav-icon,
+.sidebar-dark-primary .nav-sidebar .nav-link:active .nav-icon {
+  color: #334155 !important;
+}
+
+.sidebar-dark-primary .nav-item.menu-open > .nav-link,
+.sidebar-dark-primary .nav-item.menu-open > .nav-link p {
+  color: #1e293b !important;
+}
+.sidebar-dark-primary .nav-item.menu-open > .nav-link .nav-icon,
+.sidebar-dark-primary .nav-item.menu-open > .nav-link .right {
+  color: #334155 !important;
+}
+
+/* Se o próprio link ativo estiver com o submenu aberto, mantém o azul */
+.sidebar-dark-primary .nav-item.menu-open > .nav-link.active,
+.sidebar-dark-primary .nav-item.menu-open > .nav-link.active p,
+.sidebar-dark-primary .nav-item.menu-open > .nav-link.active .nav-icon {
+  color: #0d6efd !important;
+}
+
+/* Submenu com texto mais preto (mais fácil leitura) */
+.sidebar-dark-primary .nav-treeview .nav-link,
+.sidebar-dark-primary .nav-treeview .nav-link p {
+  color: #1e293b !important;
+}
+.sidebar-dark-primary .nav-treeview .nav-link:hover,
+.sidebar-dark-primary .nav-treeview .nav-link:hover p,
+.sidebar-dark-primary .nav-treeview .nav-link.active,
+.sidebar-dark-primary .nav-treeview .nav-link.active p {
+  color: #0d6efd !important;
 }
