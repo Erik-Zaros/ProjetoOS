@@ -14,8 +14,7 @@ DECLARE
     v_mov_id   BIGINT;
     v_motivo   TEXT;
 BEGIN
-    IF (p_produto IS NOT NULL AND p_peca IS NOT NULL)
-       OR (p_produto IS NULL AND p_peca IS NULL) THEN
+    IF (p_produto IS NOT NULL AND p_peca IS NOT NULL) OR (p_produto IS NULL AND p_peca IS NULL) THEN
         RAISE EXCEPTION 'Informe apenas PRODUTO ou apenas PEÇA.';
     END IF;
 

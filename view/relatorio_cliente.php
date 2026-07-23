@@ -38,7 +38,7 @@ ob_start();
 
             <div class="row mt-3">
                 <div class="col-md-2">
-                    <label class="form-label" for="os_finalizada">Cliente tem OS</label>
+                    <label class="form-label" for="cliente_os">Cliente tem OS</label>
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="cliente_os" name="cliente_os">
                     </div>

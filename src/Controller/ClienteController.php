@@ -6,42 +6,43 @@ namespace App\Controller;
 
 use App\Model\Cliente;
 use App\Repository\ClienteRepository;
+use App\Service\ClienteService;
 
 class ClienteController
 {
-    public static function cadastrar($dados, $posto)
+    public static function cadastrar(array $dados): array
     {
-        $cliente = new Cliente($dados, $posto);
-        return $cliente->salvar();
+        $service = new ClienteService();
+        return $service->cadastrar($dados);
     }
 
-    public static function editar($dados, $posto)
+    public static function editar(array $dados): array
     {
-        $cliente = new Cliente($dados, $posto);
-        return $cliente->atualizar();
+        $service = new ClienteService();
+        return $service->atualizar($dados);
     }
 
-    public static function buscar($cpf, $posto)
+    public static function buscar(string $cpf): ?array
     {
-        $resultado = new ClienteRepository($posto);
-        return $resultado->buscarPorCpf($cpf);
+        $service = new ClienteService();
+        return $service->buscarPorCpf($cpf);
     }
 
-    public static function listar($posto)
+    public static function listar(): array
     {
-        $resultado = new ClienteRepository($posto);
-        return $resultado->listarTodos();
+        $service = new ClienteService();
+        return $service->listarTodos();
     }
 
-    public static function autocomplete($termo, $posto)
+    public static function autocomplete($termo)
     {
-        $resultado = new ClienteRepository($posto);
-        return $resultado->autocompleteClientes($termo);
+        $service = new ClienteService();
+        return $service->autocompleteClientes($termo);
     }
 
-    public static function relatorio(array $filtros, $posto)
+    public static function relatorio(array $filtros): array
     {
-        $resultado = new ClienteRepository($posto);
-        return $resultado->relatorio($filtros);
+        $service = new ClienteService();
+        return $service->relatorio($filtros);
     }
 }

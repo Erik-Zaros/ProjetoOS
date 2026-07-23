@@ -2,208 +2,57 @@
 
 namespace App\Model;
 
-use App\Core\Db;
-use App\Auth\Autenticador;
-use App\Model\LogAuditor;
-
 class Cliente
 {
-    private $dados;
-    private $posto;
+    private ?int   $id;
+    private string $cpf;
+    private string $nome;
+    private string $cep;
+    private string $endereco;
+    private string $bairro;
+    private string $numero;
+    private string $cidade;
+    private string $estado;
+    private int    $posto;
 
-    public function __construct(array $dados, $posto)
+    public function __construct(array $dados, int $posto)
     {
-        $this->dados = $dados;
-        $this->posto = $posto;
+        $this->id       = isset($dados['cliente']) ? (int) $dados['cliente'] : null;
+        $this->cpf      = preg_replace('/[^0-9]/', '', $dados['cpf']   ?? '');
+        $this->nome     = trim($dados['nome']     ?? '');
+        $this->cep      = preg_replace('/[^0-9]/', '', $dados['cep']   ?? '');
+        $this->endereco = trim($dados['endereco'] ?? '');
+        $this->bairro   = trim($dados['bairro']   ?? '');
+        $this->numero   = trim($dados['numero']   ?? '');
+        $this->cidade   = trim($dados['cidade']   ?? '');
+        $this->estado   = trim($dados['estado']   ?? '');
+        $this->posto    = $posto;
     }
 
-    public function salvar()
+    public function getId(): ?int         { return $this->id; }
+    public function getCpf(): string      { return $this->cpf; }
+    public function getNome(): string     { return $this->nome; }
+    public function getCep(): string      { return $this->cep; }
+    public function getEndereco(): string { return $this->endereco; }
+    public function getBairro(): string   { return $this->bairro; }
+    public function getNumero(): string   { return $this->numero; }
+    public function getCidade(): string   { return $this->cidade; }
+    public function getEstado(): string   { return $this->estado; }
+    public function getPosto(): int       { return $this->posto; }
+
+    public function toArray(): array
     {
-        $con = Db::getConnection();
-        $usuario = Autenticador::getUsuario();
-
-        $cpf      = pg_escape_string($this->dados['cpf']);
-		$cpf      = preg_replace('/[^0-9]/', '', $cpf);
-        $nome     = pg_escape_string($this->dados['nome']);
-        $cep      = pg_escape_string($this->dados['cep']);
-        $cep      = preg_replace('/[^0-9]/', '', $cep);
-        $endereco = pg_escape_string($this->dados['endereco']);
-        $bairro   = pg_escape_string($this->dados['bairro']);
-        $numero   = pg_escape_string($this->dados['numero']);
-        $cidade   = pg_escape_string($this->dados['cidade']);
-        $estado   = pg_escape_string($this->dados['estado']);
-        $posto    = intval($this->posto);
-
-        $sql_valida = "SELECT cliente, nome, cpf, cep, endereco, bairro, numero, cidade, estado FROM tbl_cliente WHERE trim(cpf) = trim('{$cpf}') AND posto = {$posto}";
-        $res_valida = pg_query($con, $sql_valida);
-
-        if (pg_num_rows($res_valida) > 0) {
-			$id_cliente = pg_fetch_result($res_valida, 0, 'cliente');
-
-            $nomeAntes = pg_fetch_result($res_valida, 0, 'nome');
-            $cpfAntes = pg_fetch_result($res_valida, 0, 'cpf');
-            $cepAntes = pg_fetch_result($res_valida, 0, 'cep');
-            $enderecoAntes = pg_fetch_result($res_valida, 0, 'endereco');
-            $bairroAntes = pg_fetch_result($res_valida, 0, 'bairro');
-            $numeroAntes = pg_fetch_result($res_valida, 0, 'numero');
-            $cidadeAntes = pg_fetch_result($res_valida, 0, 'cidade');
-            $estadoAntes = pg_fetch_result($res_valida, 0, 'estado');
-
-            $antes = [
-                'nome'     => $nomeAntes,
-                'cpf'      => $cpfAntes,
-                'cep'      => $cepAntes,
-                'endereco' => $enderecoAntes,
-                'bairro'   => $bairroAntes,
-                'numero'   => $numeroAntes,
-                'cidade'   => $cidadeAntes,
-                'estado'   => $estadoAntes
-            ];
-
-            $sql = "UPDATE tbl_cliente SET nome='{$nome}', cep='{$cep}', endereco='{$endereco}', bairro='{$bairro}', numero='{$numero}', cidade='{$cidade}', estado='{$estado}'
-                    WHERE cpf = '{$cpf}' AND posto = {$posto}";
-            $res = pg_query($con, $sql);
-
-            if (!$res) {
-                return ['status' => 'error', 'message' => 'Erro ao atualizar cliente!'];
-            }
-
-            if ($res) {
-                $depois = [
-                    'nome'     => $nome,
-                    'cpf'      => $cpf,
-                    'cep'      => $cep,
-                    'endereco' => $endereco,
-                    'bairro'   => $bairro,
-                    'numero'   => $numero,
-                    'cidade'   => $cidade,
-                    'estado'   => $estado
-                ];
-
-                LogAuditor::registrar(
-                    'tbl_cliente',
-                    $id_cliente,
-                    'update',
-                    $antes,
-                    $depois,
-                    $usuario,
-                    $posto
-                );
-
-                return ['status' => 'success', 'message' => 'Cliente atualizado com sucesso!'];
-            }
-        } else {
-            $sql = "INSERT INTO tbl_cliente (cpf, nome, cep, endereco, bairro, numero, cidade, estado, posto)
-                    VALUES ('{$cpf}','{$nome}','{$cep}','{$endereco}','{$bairro}','{$numero}','{$cidade}','{$estado}',{$posto}) RETURNING cliente";
-            $res = pg_query($con, $sql);
-
-            if (!$res) {
-                return ['status' => 'error', 'message' => 'Erro ao inserir cliente!'];
-            }
-
-            if (pg_num_rows($res) > 0) {
-                $cliente = pg_fetch_result($res, 0, 'cliente');
-                $depois = [
-                    'cpf'    => $cpf,
-                    'nome' => $nome,
-                    'cep'     => $cep,
-                    'endereco' => $endereco,
-                    'bairro'   => $bairro,
-                    'numero'   => $numero,
-                    'cidade'   => $cidade,
-                    'estado'   => $estado
-                ];
-
-                $antes = null;
-
-                LogAuditor::registrar(
-                    'tbl_cliente',
-                    $cliente,
-                    'insert',
-                    $antes,
-                    $depois,
-                    $usuario,
-                    $posto
-                );
-
-                return ['status' => 'success', 'message' => 'Cliente cadastrado com sucesso!'];
-            }
-        }
-
-        return ['status' => 'error', 'message' => 'Erro ao cadastrar cliente!'];
-    }
-
-    public function atualizar()
-    {
-        $con = Db::getConnection();
-        $usuario = Autenticador::getUsuario();
-
-        $nome  = pg_escape_string($this->dados['nome']);
-        $cep   = pg_escape_string(str_replace('-', '', $this->dados['cep']));
-        $endereco = pg_escape_string($this->dados['endereco']);
-        $bairro   = pg_escape_string($this->dados['bairro']);
-        $numero   = pg_escape_string($this->dados['numero']);
-        $cidade   = pg_escape_string($this->dados['cidade']);
-        $estado   = pg_escape_string($this->dados['estado']);
-        $cpf      = pg_escape_string($this->dados['cpf']);
-        $posto    = intval($this->posto);
-        $cliente = intval($this->dados['cliente']);
-
-        $sqlAntes = "SELECT nome, cpf, cep, endereco, bairro, numero, cidade, estado FROM tbl_cliente WHERE cliente = $cliente AND posto = $posto";
-        $resAntes = pg_query($con, $sqlAntes);
-
-        if (pg_num_rows($resAntes) > 0) {
-            $nomeAntes = pg_fetch_result($resAntes, 0, 'nome');
-            $cpfAntes = pg_fetch_result($resAntes, 0, 'cpf');
-            $cepAntes = pg_fetch_result($resAntes, 0, 'cep');
-            $enderecoAntes = pg_fetch_result($resAntes, 0, 'endereco');
-            $bairroAntes = pg_fetch_result($resAntes, 0, 'bairro');
-            $numeroAntes = pg_fetch_result($resAntes, 0, 'numero');
-            $cidadeAntes = pg_fetch_result($resAntes, 0, 'cidade');
-            $estadoAntes = pg_fetch_result($resAntes, 0, 'estado');
-
-            $antes = [
-                'nome'     => $nomeAntes,
-                'cpf'      => $cpfAntes,
-                'cep'      => $cepAntes,
-                'endereco' => $enderecoAntes,
-                'bairro'   => $bairroAntes,
-                'numero'   => $numeroAntes,
-                'cidade'   => $cidadeAntes,
-                'estado'   => $estadoAntes
-            ];
-        }
-
-        $sql = "UPDATE tbl_cliente SET nome='{$nome}', cep='{$cep}', endereco='{$endereco}', bairro='{$bairro}', numero='{$numero}', cidade='{$cidade}', estado='{$estado}'
-                WHERE cpf = '{$cpf}' AND posto = {$posto}";
-
-        $res = pg_query($con, $sql);
-
-        if ($res) {
-            $depois = [
-                'nome'     => $nome,
-                'cpf'      => $cpf,
-                'cep'      => $cep,
-                'endereco' => $endereco,
-                'bairro'   => $bairro,
-                'numero'   => $numero,
-                'cidade'   => $cidade,
-                'estado'   => $estado
-            ];
-
-            LogAuditor::registrar(
-                'tbl_cliente',
-                $cliente,
-                'update',
-                $antes,
-                $depois,
-                $usuario,
-                $posto
-            );
-
-            return ['status' => 'success', 'message' => 'Cliente atualizado com sucesso!'];
-        }
-
-        return ['status' => 'error', 'message' => 'Erro ao atualizar cliente.'];
+        return [
+            'cliente'  => $this->id,
+            'cpf'      => $this->cpf,
+            'nome'     => $this->nome,
+            'cep'      => $this->cep,
+            'endereco' => $this->endereco,
+            'bairro'   => $this->bairro,
+            'numero'   => $this->numero,
+            'cidade'   => $this->cidade,
+            'estado'   => $this->estado,
+            'posto'    => $this->posto,
+        ];
     }
 }

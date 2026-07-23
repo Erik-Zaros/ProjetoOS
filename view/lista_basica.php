@@ -23,7 +23,7 @@ ob_start();
 
 <div id="areaPecas" style="display:none;">
   <div class="card shadow-sm mb-4">
-    <div class="card-header bg-success text-white">
+    <div class="card-header text-white">
       <i class="bi bi-boxes"></i> Peças Amarradas
     </div>
     <div class="card-body">
