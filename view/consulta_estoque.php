@@ -3,13 +3,20 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Auth\Autenticador;
+use App\Service\FuncoesService;
 
 Autenticador::iniciar();
 
 $title     = 'Consulta de Estoque';
 $pageTitle = 'CONSULTA DE ESTOQUE';
+
+$usa_modulo_estoque = FuncoesService::usaModuloEstoque();
+
 ob_start();
-?>
+
+if ($usa_modulo_estoque == false) {
+  include 'modal_sem_permissao.php';
+} else { ?>
 
 <div class="row">
   <div class="col-lg-4 col-12">
@@ -149,6 +156,7 @@ ob_start();
 </div>
 
 <?php
+}
 $content = ob_get_clean();
 include 'layout.php';
 ?>

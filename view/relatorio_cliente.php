@@ -76,7 +76,7 @@ ob_start();
     </div>
 </div>
 
-<form id="formCSV" method="POST" action="../public/relatorio_cliente/relatorio.php" target="_blank">
+<form id="formCSV" method="POST" action="../public/relatorio_cliente/csv.php" target="_blank">
     <input type="hidden" name="dataInicio">
     <input type="hidden" name="dataFim">
     <input type="hidden" name="cpf">

@@ -1,7 +1,7 @@
 .kpi-card {
     background: #fff;
     border-radius: 10px;
-    border: 1px solid #e8ecf0;
+    /* border: 1px solid #e8ecf0; */
     padding: 18px 20px;
     display: flex;
     align-items: center;
@@ -46,7 +46,7 @@
 .chart-card {
     background: #fff;
     border-radius: 10px;
-    border: 1px solid #e8ecf0;
+    /* border: 1px solid #e8ecf0; */
     box-shadow: 0 1px 4px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
     padding: 4px 8px 8px;
 }

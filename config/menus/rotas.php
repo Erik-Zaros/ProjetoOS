@@ -1,4 +1,7 @@
 <?php
+
+use App\Service\FuncoesService;
+
 $rotas = [
     "usuario" => [
         "titulo" => "Usuários Admin",
@@ -79,3 +82,11 @@ $rotas = [
         ]
     ]
 ];
+
+$usa_modulo_estoque = FuncoesService::usaModuloEstoque();
+
+if ($usa_modulo_estoque == false) {
+    unset($rotas["estoque"]);
+}
+
+?>

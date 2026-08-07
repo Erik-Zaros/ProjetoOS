@@ -123,4 +123,27 @@ class FuncoesService
 
         return $valor;
     }
+
+    public static function usaModuloEstoque() {
+        $con = Db::getConnection();
+        $posto = Autenticador::getPosto();
+
+        if (empty($posto)) {
+            return false;
+        }
+
+        $sql = "SELECT 1
+                FROM tbl_posto
+                WHERE posto = {$posto}
+                AND modulo ? 'estoque'
+                AND trim(modulo->>'estoque') = 't'
+            ";
+        $res = pg_query($con, $sql);
+
+        if (pg_num_rows($res) > 0) {
+            return true;
+        }
+
+        return false;
+    }
 }

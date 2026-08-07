@@ -2,3 +2,4 @@
 src/Core/Db.php
 .env
 /public/adminlte/
+*.swp

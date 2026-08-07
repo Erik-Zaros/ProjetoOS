@@ -171,23 +171,23 @@ class ClienteRepository
         return $sugestoes;
     }
 
-    public function relatorio(array $filtros)
+    public function relatorio(array $filtros, bool $limit)
     {
         $con = Db::getConnection();
         $posto = intval($this->posto);
 
         $dataInicio = $filtros['dataInicio'] ?? '';
         $dataFim    = $filtros['dataFim'] ?? '';
-        $cpf        = pg_escape_string(trim($filtros['cpf'] ?? ''));
-        $nome       = pg_escape_string(trim($filtros['nome'] ?? ''));
+        $cpf        = pg_escape_string($con, trim($filtros['cpf'] ?? ''));
+        $nome       = pg_escape_string($con, trim($filtros['nome'] ?? ''));
         $clienteOs  = $filtros['cliente_os'] ?? null;
 
         if (empty($dataInicio) || empty($dataFim)) {
             return ['status' => 'alert', 'message' => "A data é obrigatória para consulta"];
         }
 
-        $dataInicio = pg_escape_string($dataInicio);
-        $dataFim    = pg_escape_string($dataFim);
+        $dataInicio = pg_escape_string($con, $dataInicio);
+        $dataFim    = pg_escape_string($con, $dataFim);
 
         $cond = " AND tbl_cliente.data_input::date BETWEEN '{$dataInicio}' AND '{$dataFim}' ";
 
@@ -201,6 +201,11 @@ class ClienteRepository
         $condPri = "";
         if ($clienteOs === 'on') {
             $condPri = " AND os_cliente.oss IS NOT NULL ";
+        }
+
+        $cond_limit = "";
+        if ($limit == true) {
+            $cond_limit = "LIMIT 500";
         }
 
         $sql = "WITH clientes_filtrados AS (
@@ -231,6 +236,7 @@ class ClienteRepository
             WHERE 1=1
             {$condPri}
             ORDER BY clientes_filtrados.nome
+            {$cond_limit}
         ";
 
         $res = pg_query($con, $sql);

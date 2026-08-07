@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Auth\Autenticador;
+use App\Service\FuncoesService;
 
 Autenticador::iniciar();
 

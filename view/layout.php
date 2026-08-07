@@ -18,7 +18,6 @@ $usuarioLogin  = $layoutContext['usuarioLogin'];
 $usuarioTipo   = $layoutContext['usuarioTipo'];
 $postoNome     = FuncoesService::buscaNomePosto($posto);
 
-
 $temaAtual = 'light';
 try {
     $temaCache = new Cache('usuario', (string) $usuario);
@@ -33,7 +32,6 @@ try {
 
 $bodyClass = $temaAtual === 'dark' ? 'hold-transition sidebar-mini layout-fixed dark-mode' : 'hold-transition sidebar-mini layout-fixed';
 
-/* ── Rotas e assets ─────────────────────────────────────────────── */
 require_once __DIR__ . '/../config/menus/rotas.php';
 if (file_exists(__DIR__ . "/../config/menus/posto/{$posto}/rotas.php")) {
     include __DIR__ . "/../config/menus/posto/{$posto}/rotas.php";
@@ -75,11 +73,11 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
   <link rel="stylesheet" href="../public/css/dark-theme.css">
 
 
-  <?php if ($temaAtual === 'dark'): ?>
+  <?php if ($temaAtual === 'dark') { ?>
   <style>
     body { background-color: #0f1117 !important; }
   </style>
-  <?php endif; ?>
+  <?php } ?>
 </head>
 
 <body class="<?= $bodyClass ?>">
@@ -151,15 +149,15 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
           data-accordion="false"
           id="menuSidebar"
         >
-          <?php foreach ($rotas as $chave => $menu): ?>
-            <?php if (!isset($menu['submenus'])): ?>
+          <?php foreach ($rotas as $chave => $menu) { ?>
+            <?php if (!isset($menu['submenus'])) { ?>
               <li class="nav-item">
                 <a href="<?= $menu['link'] ?>" class="nav-link <?= ($current_page == $menu['link']) ? 'active' : '' ?>">
                   <i class="nav-icon <?= $menu['icone'] ?>"></i>
                   <p><?= $menu['titulo'] ?></p>
                 </a>
               </li>
-            <?php else: ?>
+            <?php } else { ?>
               <li class="nav-item has-treeview <?= in_array($current_page, array_column($menu['submenus'], 'link')) ? 'menu-open' : '' ?>">
                 <a href="#" class="nav-link <?= in_array($current_page, array_column($menu['submenus'], 'link')) ? 'active' : '' ?>">
                   <i class="nav-icon <?= $menu['icone'] ?>"></i>
@@ -169,25 +167,26 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
-                  <?php foreach ($menu['submenus'] as $submenu): ?>
+                  <?php foreach ($menu['submenus'] as $submenu) { ?>
                     <li class="nav-item">
                       <a href="<?= $submenu['link'] ?>" class="nav-link <?= ($current_page == $submenu['link']) ? 'active' : '' ?>">
                         <i class="far fa-circle nav-icon"></i>
                         <p><?= $submenu['titulo'] ?></p>
                       </a>
                     </li>
-                  <?php endforeach; ?>
+                  <?php } ?>
                 </ul>
               </li>
-            <?php endif; ?>
-          <?php endforeach; ?>
+            <?php } ?>
+          <?php } ?>
 
+		  <!--
           <li class="nav-item">
             <a href="../logout.php" class="nav-link text-danger">
               <i class="nav-icon fas fa-sign-out-alt"></i>
               <p>Sair</p>
             </a>
-          </li>
+          </li> -->
         </ul>
       </nav>
 

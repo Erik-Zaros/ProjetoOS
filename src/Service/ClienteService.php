@@ -107,12 +107,17 @@ class ClienteService
         return $erros;
     }
 
-    public function relatorio(array $filtros): array
+    public function relatorio(array $filtros, bool $csv): array
     {
         if (empty($filtros['dataInicio']) || empty($filtros['dataFim'])) {
             return ['status' => 'alert', 'message' => 'A data é obrigatória para consulta'];
         }
-        return $this->repository->relatorio($filtros);
+
+        if ($csv == true) {
+            return $this->repository->relatorio($filtros, false);
+        }
+
+        return $this->repository->relatorio($filtros, true);
     }
 
     private function cpfValido(string $cpf): bool

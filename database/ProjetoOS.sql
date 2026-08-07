@@ -57,7 +57,8 @@ CREATE TABLE tbl_os (
 CREATE TABLE tbl_posto (
   posto SERIAL PRIMARY KEY,
   nome TEXT NOT NULL,
-  ativo BOOLEAN DEFAULT TRUE
+  ativo BOOLEAN DEFAULT TRUE,
+  modulo JSONB
 );
 
 CREATE TABLE tbl_usuario (

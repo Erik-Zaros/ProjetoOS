@@ -1,12 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Controller;
 
 use App\Model\Cliente;
 use App\Repository\ClienteRepository;
 use App\Service\ClienteService;
+use App\Service\Export\CsvExporter;
 
 class ClienteController
 {
@@ -43,6 +42,30 @@ class ClienteController
     public static function relatorio(array $filtros): array
     {
         $service = new ClienteService();
-        return $service->relatorio($filtros);
+        return $service->relatorio($filtros, false);
+    }
+
+    public function exportarCsv(array $filtros): void
+    {
+        $service = new ClienteService();
+        $dados = $service->relatorio($filtros, true);
+
+        if (isset($dados['status'])) {
+            http_response_code(400);
+            header('Content-Type: text/plain; charset=UTF-8');
+            echo $dados['message'];
+            exit;
+        }
+
+        $headers = ['Nome','CPF','CEP','Endereço','Bairro','Número','Cidade','Estado','Data Cadastro','OS'];
+
+        $linhas = array_map(fn($row) => [
+            $row['nome'], $row['cpf'], $row['cep'], $row['endereco'],
+            $row['numero'], $row['bairro'], $row['cidade'], $row['estado'],
+            $row['data_cadastro'], $row['oss'],
+        ], $dados);
+
+        $csv = new CsvExporter();
+        $csv->stream('relatorio_cliente.csv', $headers, $linhas);
     }
 }
