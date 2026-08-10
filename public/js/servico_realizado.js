@@ -1,5 +1,6 @@
 $(document).ready(function () {
     function carregarServicoRealizado() {
+        let usa_modulo_estoque = $("#usa_modulo_estoque").val();
         if ($.fn.DataTable.isDataTable('#servicoRealizadoTable')) {
             $('#servicoRealizadoTable').DataTable().destroy();
         }
@@ -9,6 +10,10 @@ $(document).ready(function () {
             dataType: 'json',
             success: function (data) {
                 $('#servicoRealizadoTable tbody').empty();
+                coluna_estoque = "";
+                if (usa_modulo_estoque == "true") {
+                    coluna_estoque = "<td class='text-center'>${usa_estoque}</td>";
+                }
                 if (data.length > 0) {
                     data.forEach(function (servico_realizado) {
                         var ativo = servico_realizado.ativo == 't' ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>';
@@ -17,7 +22,7 @@ $(document).ready(function () {
                             <tr data-descricao="${servico_realizado.descricao}">
                                 <td class='text-center'>${servico_realizado.descricao}</td>
                                 <td class='text-center'>${ativo}</td>
-                                <td class='text-center'>${usa_estoque}</td>
+                                `+coluna_estoque+`
                                 <td class='text-center'>
                                     <button class='btn btn-warning btn-sm editar-servico_realizado' data-servico='${servico_realizado.servico_realizado}'><i class="bi bi-pencil-square"></i> Editar</button>
                                     <button class='btn btn-danger btn-sm excluir-servico_realizado' data-servico='${servico_realizado.servico_realizado}'><i class="bi bi-trash3-fill"></i> Excluir</button>
@@ -196,7 +201,6 @@ $(document).ready(function () {
             }
         });
     });
-
 
     const urlParams = new URLSearchParams(window.location.search);
     const alerta = urlParams.get('alerta');

@@ -9,8 +9,13 @@ Autenticador::iniciar();
 
 $title = 'Cadastro de Serviço Realizado';
 $pageTitle = 'CADASTRO DE SERVIÇO';
+
+$usa_modulo_estoque = FuncoesService::usaModuloEstoque();
+
 ob_start();
 ?>
+
+<input type="hidden" id="usa_modulo_estoque" value="<?= $usa_modulo_estoque == true ? "true" : "false" ?>">
 
 <div class="card shadow-sm mb-4">
     <div class="card-header">
@@ -31,13 +36,15 @@ ob_start();
                         <label class="form-check-label" for="ativo">Ativo</label>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <label for="usa_estoque" class="form-label d-block">Usa Estoque</label>
-                    <div class="form-check form-switch mt-2">
-                        <input class="form-check-input" type="checkbox" id="usa_estoque" name="usa_estoque">
-                        <label class="form-check-label" for="usa_estoque">Ativo</label>
+                <?php if ($usa_modulo_estoque == true) { ?>
+                    <div class="col-md-2">
+                        <label for="usa_estoque" class="form-label d-block">Usa Estoque</label>
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input" type="checkbox" id="usa_estoque" name="usa_estoque">
+                            <label class="form-check-label" for="usa_estoque">Ativo</label>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
             </div>
             <button type="submit" class="btn btn-success btn-sm mt-3">Gravar</button>
         </form>
@@ -52,10 +59,12 @@ ob_start();
         <table class="table table-bordered table-striped table-hover nowrap" id="servicoRealizadoTable">
             <thead>
                 <tr>
-                    <th>Descrição</th>
-                    <th>Ativo</th>
-                    <th>Usa Estoque</th>
-                    <th>Ações</th>
+                    <th class="text-center">Descrição</th>
+                    <th class="text-center">Ativo</th>
+                    <?php if ($usa_modulo_estoque == true) { ?>
+                        <th class="text-center">Usa Estoque</th>
+                    <?php } ?>
+                    <th class="text-center">Ações</th>
                 </tr>
             </thead>
             <tbody></tbody>
