@@ -4,7 +4,7 @@ USE projeto_os;
 CREATE TABLE tbl_cliente (
     cliente SERIAL PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
-    cpf VARCHAR(14) UNIQUE NOT NULL,
+    cpf VARCHAR(14) NOT NULL,
     cep VARCHAR(10),
     endereco VARCHAR(255),
     bairro VARCHAR(255),
@@ -63,7 +63,7 @@ CREATE TABLE tbl_posto (
 
 CREATE TABLE tbl_usuario (
   usuario SERIAL PRIMARY KEY,
-  login TEXT NOT NULL UNIQUE,
+  login TEXT NOT NULL,
   senha TEXT NOT NULL,
   nome TEXT NOT NULL,
   posto INTEGER REFERENCES tbl_posto(posto),
