@@ -29,7 +29,10 @@ class CepService
             ]);
         }
 
-        $cache->writeCache($response);
+		$retorno = json_decode($response, true);
+		if (!array_key_exists("erro", $retorno)) {
+			$cache->writeCache($response);
+		}
 
         return $response;
     }
