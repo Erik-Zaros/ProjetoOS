@@ -91,7 +91,7 @@ $(document).ready(function () {
         $("#tecnico").append('<option value="">Selecione o Técnico</option>');
 
         tecnicos.forEach(function (usuario) {
-          if (usuario.tecnico === "t" && usuario.ativo === "t") {
+          if (usuario.tecnico && usuario.ativo) {
             let selected =
               tecnicoSelecionado && usuario.usuario == tecnicoSelecionado
                 ? "selected"
