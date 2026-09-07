@@ -4,14 +4,17 @@ namespace App\Repository;
 
 use App\Core\Db;
 use App\Model\Cliente;
+use App\Model\LogAuditor;
 
 class ClienteRepository
 {
     private $posto;
+    private $usuario;
 
-    public function __construct($posto)
+    public function __construct($posto, $usuario)
     {
-        $this->posto = $posto;
+        $this->posto   = $posto;
+        $this->usuario = $usuario;
     }
 
     public function inserir(Cliente $cliente): ?int
@@ -27,6 +30,7 @@ class ClienteRepository
         $cidade   = pg_escape_string($cliente->getCidade());
         $estado   = pg_escape_string($cliente->getEstado());
         $posto    = $this->posto;
+        $usuario  = $this->usuario;
 
         $sql = "INSERT INTO tbl_cliente (cpf, nome, cep, endereco, bairro, numero, cidade, estado, posto)
                 VALUES ('{$cpf}','{$nome}','{$cep}','{$endereco}','{$bairro}','{$numero}','{$cidade}','{$estado}',{$posto})
@@ -38,29 +42,82 @@ class ClienteRepository
             return null;
         }
 
-        return (int) pg_fetch_result($res, 0, 'cliente');
+        $novoId = (int) pg_fetch_result($res, 0, 'cliente');
+
+        LogAuditor::registrar(
+            'tbl_cliente',
+            $novoId,
+            'insert',
+            null,
+            [
+                'cpf'      => $cpf,
+                'nome'     => $nome,
+                'cep'      => $cep,
+                'endereco' => $endereco,
+                'bairro'   => $bairro,
+                'numero'   => $numero,
+                'cidade'   => $cidade,
+                'estado'   => $estado
+            ],
+            $usuario,
+            $posto
+        );
+
+        return $novoId;
     }
 
     public function atualizar(Cliente $cliente): bool
     {
         $con = Db::getConnection();
 
-        $cpf      = pg_escape_string($cliente->getCpf());
-        $nome     = pg_escape_string($cliente->getNome());
-        $cep      = pg_escape_string($cliente->getCep());
-        $endereco = pg_escape_string($cliente->getEndereco());
-        $bairro   = pg_escape_string($cliente->getBairro());
-        $numero   = pg_escape_string($cliente->getNumero());
-        $cidade   = pg_escape_string($cliente->getCidade());
-        $estado   = pg_escape_string($cliente->getEstado());
-        $posto     = $this->posto;
+        $cliente_id  = pg_escape_string($cliente->getId());
+        $cpf         = pg_escape_string($cliente->getCpf());
+        $nome        = pg_escape_string($cliente->getNome());
+        $cep         = pg_escape_string($cliente->getCep());
+        $endereco    = pg_escape_string($cliente->getEndereco());
+        $bairro      = pg_escape_string($cliente->getBairro());
+        $numero      = pg_escape_string($cliente->getNumero());
+        $cidade      = pg_escape_string($cliente->getCidade());
+        $estado      = pg_escape_string($cliente->getEstado());
+        $posto       = $this->posto;
+        $usuario     = $this->usuario;
+
+        $antes = null;
+        $sqlAntes = "SELECT cpf, nome, cep, endereco, bairro, numero, cidade, estado
+                     FROM tbl_cliente WHERE cliente = {$cliente_id} AND posto = {$posto}";
+        $resAntes = pg_query($con, $sqlAntes);
+        if (pg_num_rows($resAntes) > 0) {
+            $antes = pg_fetch_assoc($resAntes);
+        }
 
         $sql = "UPDATE tbl_cliente
                 SET nome='{$nome}', cep='{$cep}', endereco='{$endereco}',
                     bairro='{$bairro}', numero='{$numero}', cidade='{$cidade}', estado='{$estado}'
-                WHERE cpf = '{$cpf}' AND posto = {$posto}";
+                WHERE cliente = '{$cliente_id}' AND posto = {$posto}";
+        $res = pg_query($con, $sql);
 
-        return (bool) pg_query($con, $sql);
+        if ($res) {
+            LogAuditor::registrar(
+                'tbl_cliente',
+                $cliente_id,
+                'update',
+                $antes,
+                [
+                    'cpf'      => $cpf,
+                    'nome'     => $nome,
+                    'cep'      => $cep,
+                    'endereco' => $endereco,
+                    'bairro'   => $bairro,
+                    'numero'   => $numero,
+                    'cidade'   => $cidade,
+                    'estado'   => $estado
+                ],
+                $usuario,
+                $posto
+            );
+        }
+
+        return (bool) $res;
     }
 
     public function buscarPorCpf(string $cpf): ?Cliente

@@ -10,11 +10,13 @@ class ClienteService
 {
     private ClienteRepository $repository;
     private int $posto;
+    private int $usuario;
 
     public function __construct()
     {
         $this->posto       = (int) Autenticador::getPosto();
-        $this->repository  = new ClienteRepository($this->posto);
+        $this->usuario     = (int) Autenticador::getUsuario();
+        $this->repository  = new ClienteRepository($this->posto, $this->usuario);
     }
 
     public function cadastrar(array $dados): array
@@ -25,7 +27,6 @@ class ClienteService
         }
 
         $cliente   = new Cliente($dados, $this->posto);
-        $usuario   = Autenticador::getUsuario();
         $existente = $this->repository->buscarPorCpf($cliente->getCpf());
 
         if ($existente) {
@@ -55,7 +56,6 @@ class ClienteService
         }
 
         $cliente   = new Cliente($dados, $this->posto);
-        $usuario   = Autenticador::getUsuario();
         $existente = $this->repository->buscarPorId($cliente->getId());
 
         if (!$existente) {
