@@ -159,7 +159,7 @@ $(document).ready(function () {
                         method: 'POST',
                         dataType: 'json',
                         data: {
-                            data: data.cliente,
+                            cliente: data.cliente,
                             cpf: data.cpf,
                             nome: $('#nome').val(),
                             cep: cepSemHifen,
