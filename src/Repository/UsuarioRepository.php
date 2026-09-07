@@ -9,23 +9,26 @@ use App\Model\LogAuditor;
 class UsuarioRepository
 {
     private $posto;
+    private $usuario_logado;
 
-    public function __construct($posto)
+    public function __construct($posto, $usuario_logado)
     {
         $this->posto = $posto;
+        $this->usuario_logado = $usuario_logado;
     }
 
-    public function inserir(Usuario $usuario, string $usuarioLogadoId): ?int
+    public function inserir(Usuario $usuario): ?int
     {
         $con = Db::getConnection();
 
-        $login      = pg_escape_string($usuario->getLogin());
-        $nome       = pg_escape_string($usuario->getNome());
-        $senhaHash  = pg_escape_string(password_hash($usuario->getSenha(), PASSWORD_DEFAULT));
-        $ativo      = $usuario->isAtivo()   ? 't' : 'f';
-        $tecnico    = $usuario->isTecnico() ? 't' : 'f';
-        $master     = $usuario->isMaster()  ? 't' : 'f';
-        $posto      = $this->posto;
+        $login          = pg_escape_string($usuario->getLogin());
+        $nome           = pg_escape_string($usuario->getNome());
+        $senhaHash      = pg_escape_string(password_hash($usuario->getSenha(), PASSWORD_DEFAULT));
+        $ativo          = $usuario->isAtivo()   ? 't' : 'f';
+        $tecnico        = $usuario->isTecnico() ? 't' : 'f';
+        $master         = $usuario->isMaster()  ? 't' : 'f';
+        $posto          = $this->posto;
+        $usuario_logado = $this->usuario_logado;
 
         $sql = "INSERT INTO tbl_usuario (login, nome, senha, ativo, tecnico, master, posto)
                 VALUES ('{$login}', '{$nome}', '{$senhaHash}', '{$ativo}', '{$tecnico}', '{$master}', {$posto})
@@ -45,24 +48,25 @@ class UsuarioRepository
             'insert',
             null,
             ['login' => $login, 'nome' => $nome, 'ativo' => $ativo, 'tecnico' => $tecnico, 'master' => $master],
-            $usuarioLogadoId,
+            $usuario_logado,
             $posto
         );
 
         return $novoId;
     }
 
-    public function atualizar(Usuario $usuario, string $usuarioLogadoId): bool
+    public function atualizar(Usuario $usuario): bool
     {
         $con = Db::getConnection();
 
-        $usuarioId = $usuario->getId();
-        $login     = pg_escape_string($usuario->getLogin());
-        $nome      = pg_escape_string($usuario->getNome());
-        $ativo     = $usuario->isAtivo()   ? 't' : 'f';
-        $tecnico   = $usuario->isTecnico() ? 't' : 'f';
-        $master    = $usuario->isMaster()  ? 't' : 'f';
-        $posto     = $this->posto;
+        $usuarioId      = $usuario->getId();
+        $login          = pg_escape_string($usuario->getLogin());
+        $nome           = pg_escape_string($usuario->getNome());
+        $ativo          = $usuario->isAtivo()   ? 't' : 'f';
+        $tecnico        = $usuario->isTecnico() ? 't' : 'f';
+        $master         = $usuario->isMaster()  ? 't' : 'f';
+        $posto          = $this->posto;
+        $usuario_logado = $this->usuario_logado;
 
         $antes = null;
         $sqlAntes = "SELECT login, nome, ativo, tecnico, master
@@ -94,7 +98,7 @@ class UsuarioRepository
                 'update',
                 $antes,
                 ['login' => $login, 'nome' => $nome, 'ativo' => $ativo, 'tecnico' => $tecnico, 'master' => $master],
-                $usuarioLogadoId,
+                $usuario_logado,
                 $posto
             );
         }

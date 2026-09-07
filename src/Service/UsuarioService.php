@@ -10,11 +10,13 @@ class UsuarioService
 {
     private UsuarioRepository $repository;
     private int $posto;
+    private int $usuarioLogado;
 
     public function __construct()
     {
         $this->posto      = (int) Autenticador::getPosto();
-        $this->repository = new UsuarioRepository($this->posto);
+        $this->usuario    = (int) Autenticador::getUsuario();
+        $this->repository = new UsuarioRepository($this->posto, $this->usuario);
     }
 
     public function cadastrar(array $dados): array
@@ -25,14 +27,13 @@ class UsuarioService
         }
 
         $usuario        = new Usuario($dados, $this->posto);
-        $usuarioLogado  = Autenticador::getUsuario();
         $existente      = $this->repository->buscarPorLogin($usuario->getLogin());
 
         if ($existente) {
             return ['status' => 'error', 'message' => 'Login já cadastrado!'];
         }
 
-        $novoId = $this->repository->inserir($usuario, $usuarioLogado);
+        $novoId = $this->repository->inserir($usuario);
 
         if (!$novoId) {
             return ['status' => 'error', 'message' => 'Erro ao cadastrar usuário!'];
@@ -49,7 +50,6 @@ class UsuarioService
         }
 
         $usuario       = new Usuario($dados, $this->posto);
-        $usuarioLogado = Autenticador::getUsuario();
         $existente     = $this->repository->buscarPorId($usuario->getId());
 
         if (!$existente) {
@@ -61,7 +61,7 @@ class UsuarioService
             return ['status' => 'error', 'message' => 'Login já cadastrado!'];
         }
 
-        $resultado = $this->repository->atualizar($usuario, $usuarioLogado);
+        $resultado = $this->repository->atualizar($usuario);
 
         if (!$resultado) {
             return ['status' => 'error', 'message' => 'Erro ao atualizar usuário.'];
