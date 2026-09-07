@@ -2,7 +2,7 @@
   aria-labelledby="modalLogAuditorLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-dialog modal-xl ">
+  <div class="modal-dialog modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content">
 
       <div class="modal-header py-2 px-3">

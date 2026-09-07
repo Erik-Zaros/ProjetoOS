@@ -120,7 +120,7 @@ ob_start(); ?>
 </div>
 
 <div class="modal fade" id="modalDashboard" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title" id="modalDashboardLabel">Registros</span>
