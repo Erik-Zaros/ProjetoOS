@@ -194,3 +194,15 @@ INSERT INTO tbl_tipo_anexo (descricao, codigo, contexto_anexo) VALUES
 ('Nota Fiscal', 'nota_fiscal', (SELECT contexto_anexo FROM tbl_contexto_anexo WHERE codigo = 'os')),
 ('Foto do Produto', 'foto_produto', (SELECT contexto_anexo FROM tbl_contexto_anexo WHERE codigo = 'os')),
 ('Laudo Técnico', 'laudo', (SELECT contexto_anexo FROM tbl_contexto_anexo WHERE codigo = 'os'));
+
+CREATE TABLE tbl_ip_acesso (
+  ip_acesso SERIAL PRIMARY KEY,
+  data      TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
+  usuario   INTEGER REFERENCES tbl_usuario(usuario),
+  ip        CIDR,
+  provedor  TEXT,
+  ping      INTEGER
+);
+CREATE INDEX tbl_ip_acesso_usuario_data ON tbl_ip_acesso (usuario, data);
+CREATE INDEX tbl_ip_acesso_data         ON tbl_ip_acesso (data);
+CREATE INDEX tbl_ip_acesso_ip           ON tbl_ip_acesso (ip);

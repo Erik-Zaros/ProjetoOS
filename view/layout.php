@@ -5,6 +5,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use App\Core\Db;
 use App\Auth\Autenticador;
 use App\Service\FuncoesService;
+use App\Controller\PostoController;
 use App\Service\Cache;
 
 Autenticador::iniciar();
@@ -16,7 +17,7 @@ $layoutContext = FuncoesService::buscaInfoUsuario($usuario);
 $usuarioNome   = $layoutContext['usuarioNome'];
 $usuarioLogin  = $layoutContext['usuarioLogin'];
 $usuarioTipo   = $layoutContext['usuarioTipo'];
-$postoNome     = FuncoesService::buscaNomePosto($posto);
+$postoNome     = PostoController::buscarNome($posto);
 
 $temaAtual = 'light';
 try {
@@ -27,7 +28,7 @@ try {
         $temaAtual = ($temaData['tema'] ?? 'light') === 'dark' ? 'dark' : 'light';
     }
 } catch (\Throwable $e) {
-    // Sem cache disponível → usa light
+    // Sem cache disponível usa light
 }
 
 $bodyClass = $temaAtual === 'dark' ? 'hold-transition sidebar-mini layout-fixed dark-mode' : 'hold-transition sidebar-mini layout-fixed';
@@ -71,7 +72,6 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
   ?>
 
   <link rel="stylesheet" href="../public/css/dark-theme.css">
-
 
   <?php if ($temaAtual === 'dark') { ?>
   <style>

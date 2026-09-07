@@ -4,30 +4,31 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Model\Usuario;
-use App\Repository\UsuarioRepository;
+use App\Service\UsuarioService;
 
 class UsuarioController
 {
-    public static function cadastrar($dados, $posto)
+    public static function cadastrar(array $dados): array
     {
-        $usuario = new Usuario($dados, $posto);
-        return $usuario->salvar();
+        $service = new UsuarioService();
+        return $service->cadastrar($dados);
     }
 
-    public static function editar($dados, $posto)
+    public static function editar(array $dados): array
     {
-        $usuario = new Usuario($dados, $posto);
-        return $usuario->atualizar();
+        $service = new UsuarioService();
+        return $service->atualizar($dados);
     }
 
-    public static function listar($posto)
+    public static function buscar(int $usuarioId): ?array
     {
-        return UsuarioRepository::listarTodos($posto);
+        $service = new UsuarioService();
+        return $service->buscarPorId($usuarioId);
     }
 
-    public static function buscar($usuarioId, $posto)
+    public static function listar(): array
     {
-        return UsuarioRepository::buscarPorId($usuarioId, $posto);
+        $service = new UsuarioService();
+        return $service->listarTodos();
     }
 }

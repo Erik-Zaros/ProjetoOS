@@ -38,6 +38,8 @@ class AuthController
                 return ['success' => false, 'message' => 'Posto inativo'];
             }
 
+            \App\Repository\IpAcessoRepository::registrar((int) $row['usuario'], \App\Repository\IpAcessoRepository::getIp());
+
 			session_regenerate_id(true);
 
             $_SESSION['usuario']     = $row['usuario'];
