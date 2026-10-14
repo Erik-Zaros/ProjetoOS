@@ -67,13 +67,13 @@ ob_start();
         <table class="table table-bordered table-striped table-hover nowrap" id="usuariosTable">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Login</th>
-                    <th>Nome</th>
-                    <th>Ativo</th>
-                    <th>Técnico</th>
-                    <th>Master</th>
-                    <th>Ações</th>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Login</th>
+                    <th class="text-center">Nome</th>
+                    <th class="text-center">Ativo</th>
+                    <th class="text-center">Técnico</th>
+                    <th class="text-center">Master</th>
+                    <th class="text-center">Ações</th>
                 </tr>
             </thead>
             <tbody></tbody>

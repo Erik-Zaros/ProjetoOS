@@ -1,7 +1,5 @@
 function carregarUsuarios() {
-    if ($.fn.DataTable.isDataTable('#usuariosTable')) {
-        $('#usuariosTable').DataTable().destroy();
-    }
+    MiniDataTable.destroy('#usuariosTable');
     $.ajax({
         url: '../public/usuario/listar.php',
         method: 'GET',
@@ -22,35 +20,47 @@ function carregarUsuarios() {
                             </td>
                             <td class='text-center'> ${usuario.master === 't' || usuario.master === true ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>'}
                             </td>
-                            <td class='text-center'>
-                                <button class="btn btn-warning btn-sm editar" data-usuario="${usuario.usuario}"><i class="bi bi-pencil-square"></i> Editar</button>
-                                <button class='btn btn-info btn-sm btn-log-auditor' data-id='${usuario.usuario}'data-tabela='tbl_usuario'><i class="bi bi-clock-history"></i> Ver Log</button>
-                            </td>
+						<td class="coluna-acoes text-center">
+							<div class="btn-group">
+								<button type="button" class="btn btn-outline-warning btn-sm btn-acoes dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" title="Ações">
+									<i class="bi bi-list"></i>
+								</button>
+								<ul class="dropdown-menu dropdown-menu-end">
+									<li>
+										<a href="javascript:void(0)"
+										   class="dropdown-item editar"
+										   data-usuario="${usuario.usuario}">
+											<i class="bi bi-pencil-square text-warning"></i>
+											Editar
+										</a>
+									</li>
+									<li>
+										<a href="javascript:void(0)"
+										   class="dropdown-item btn-log-auditor"
+										   data-id="${usuario.usuario}"
+										   data-tabela="tbl_usuario">
+											<i class="bi bi-clock-history text-info"></i>
+											Ver Log
+										</a>
+									</li>
+								</ul>
+							</div>
+						</td>
+
                         </tr>
                     `);
                 });
-            } else {
-                $('#usuariosTable tbody').append(`
-                    <tr>
-                        <td colspan="4" class="text-center">NENHUM USUÁRIO CADASTRADO</td>
-                    </tr>
-                `);
             }
-            $('#usuariosTable').DataTable({
-                responsive: true,
-                scrollX: true,
-                autoWidth: false,
-                language: {
-                    url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-                }
-            });
+            new MiniDataTable('#usuariosTable');
         },
         error: function () {
             Swal.fire({
-                icon: 'error',
-                title: 'Erro!',
-                text: 'Erro ao carregar os usuários.'
-            });
+               toast: true,
+               position: 'top-end',
+               showConfirmButton: false,
+               icon: 'error',
+               text: 'Erro ao carregar os usuários.'
+             });
         }
     });
 }
@@ -71,14 +81,19 @@ $(document).ready(function () {
 
                 if (response.status === 'error') {
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Erro!',
-                        text: response.message,
-                    });
+                       toast: true,
+                       position: 'top-end',
+                       showConfirmButton: false,
+                       icon: 'error',
+                       text: response.message
+                     });
                 } else {
                     Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
                         icon: 'success',
-                        title: 'Sucesso!',
+                        timer: 2000,
                         text: response.message,
                     }).then(() => {
                         $('#usuarioForm')[0].reset();
@@ -120,14 +135,19 @@ $(document).ready(function () {
 
                             if (res.status === 'error') {
                                 Swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
                                     icon: 'error',
-                                    title: 'Erro!',
                                     text: res.message,
                                 });
                             } else {
                                 Swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
                                     icon: 'success',
-                                    title: 'Sucesso!',
+                                    timer: 2000,
                                     text: res.message,
                                 }).then(() => {
                                     carregarUsuarios();

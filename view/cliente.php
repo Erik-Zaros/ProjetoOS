@@ -20,11 +20,11 @@ ob_start();
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="cpf" class="form-label">CPF</label>
-                    <input type="text" class="form-control" id="cpf" name="cpf" required>
+                    <input type="text" class="form-control" id="cpf" name="cpf">
                 </div>
                 <div class="col-md-6">
                     <label for="nome" class="form-label">Nome</label>
-                    <input type="text" class="form-control" id="nome" name="nome" required maxlength="80">
+                    <input type="text" class="form-control" id="nome" name="nome" maxlength="80">
                 </div>
             </div>
             <div class="row mb-3">
@@ -70,15 +70,15 @@ ob_start();
         <table class="table table-bordered table-striped table-hover nowrap" id="clientesTable">
             <thead>
                 <tr>
-                    <th>CPF</th>
-                    <th>Nome</th>
-                    <th>CEP</th>
-                    <th>Endereço</th>
-                    <th>Bairro</th>
-                    <th>Número</th>
-                    <th>Cidade</th>
-                    <th>Estado</th>
-                    <th>Ações</th>
+                    <th class="text-center">CPF</th>
+                    <th class="text-center">Nome</th>
+                    <th class="text-center">CEP</th>
+                    <th class="text-center">Endereço</th>
+                    <th class="text-center">Bairro</th>
+                    <th class="text-center">Número</th>
+                    <th class="text-center">Cidade</th>
+                    <th class="text-center">Estado</th>
+                    <th class="text-center">Ações</th>
                 </tr>
             </thead>
             <tbody></tbody>

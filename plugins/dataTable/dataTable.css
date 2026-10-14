@@ -1,0 +1,307 @@
+/*!
+ * MiniDataTable 1.1 - estilos
+ * Complementa o Bootstrap 5 e respeita o tema escuro (body.dark-mode).
+ */
+
+/* ============================================================
+   Variáveis (tema claro)  ->  sobrescritas no tema escuro
+   ============================================================ */
+.mdt-wrapper {
+    --mdt-pg-color: #495057;
+    --mdt-pg-bg: #fff;
+    --mdt-pg-border: #ced4da;
+    --mdt-pg-hover-bg: #e9ecef;
+    --mdt-pg-active-bg: #5c6770;
+    --mdt-pg-active-border: #5c6770;
+    --mdt-pg-active-color: #fff;
+    --mdt-pg-disabled: #adb5bd;
+
+    --mdt-card-bg: var(--bs-body-bg, #fff);
+    --mdt-card-border: var(--bs-border-color, #dee2e6);
+    --mdt-label: #6c757d;
+    --mdt-value: var(--bs-body-color, #212529);
+    --mdt-muted: var(--bs-secondary-color, #6c757d);
+}
+
+body.dark-mode .mdt-wrapper {
+    --mdt-pg-color: var(--dark-text-secondary, #94a3b8);
+    --mdt-pg-bg: var(--dark-bg-input, #252938);
+    --mdt-pg-border: var(--dark-border, #2e3348);
+    --mdt-pg-hover-bg: var(--dark-bg-hover, #2a2f42);
+    --mdt-pg-active-bg: #4b5470;
+    --mdt-pg-active-border: #5b6585;
+    --mdt-pg-active-color: #fff;
+    --mdt-pg-disabled: #475569;
+
+    --mdt-card-bg: var(--dark-bg-surface, #171b26);
+    --mdt-card-border: var(--dark-border-light, #353a52);
+    --mdt-label: var(--dark-text-secondary, #94a3b8);
+    --mdt-value: var(--dark-text-primary, #e2e8f0);
+    --mdt-muted: var(--dark-text-secondary, #94a3b8);
+}
+
+/* ============================================================
+   Controles (limitador / busca / info)
+   ============================================================ */
+.mdt-wrapper label {
+    font-size: .875rem;
+}
+
+.mdt-wrapper .mdt-search {
+    width: 100%;
+    max-width: 260px;
+}
+
+/* select do limitador: número sem ficar escondido pela seta */
+.mdt-wrapper .mdt-length-select {
+    /* min-width: 5rem; */
+    padding-left: .75rem !important;
+    padding-right: 2.25rem !important;
+    background-position: right .65rem center !important;
+    background-size: 14px 10px !important;
+    text-align: left;
+}
+
+/* seta do select visível no tema escuro */
+body.dark-mode .mdt-wrapper .form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23cbd5e1' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+
+.mdt-wrapper .mdt-info {
+    font-size: .875rem;
+    color: var(--mdt-muted);
+}
+
+/* ============================================================
+   Paginador (cinza, discreto)
+   ============================================================ */
+.mdt-wrapper .pagination {
+    --bs-pagination-color: var(--mdt-pg-color);
+    --bs-pagination-bg: var(--mdt-pg-bg);
+    --bs-pagination-border-color: var(--mdt-pg-border);
+    --bs-pagination-hover-color: var(--mdt-pg-color);
+    --bs-pagination-hover-bg: var(--mdt-pg-hover-bg);
+    --bs-pagination-hover-border-color: var(--mdt-pg-border);
+    --bs-pagination-focus-color: var(--mdt-pg-color);
+    --bs-pagination-focus-bg: var(--mdt-pg-hover-bg);
+    --bs-pagination-focus-box-shadow: 0 0 0 .2rem rgba(108, 117, 125, .25);
+    --bs-pagination-active-color: var(--mdt-pg-active-color);
+    --bs-pagination-active-bg: var(--mdt-pg-active-bg);
+    --bs-pagination-active-border-color: var(--mdt-pg-active-border);
+    --bs-pagination-disabled-color: var(--mdt-pg-disabled);
+    --bs-pagination-disabled-bg: var(--mdt-pg-bg);
+    --bs-pagination-disabled-border-color: var(--mdt-pg-border);
+}
+
+.mdt-wrapper .page-link {
+    cursor: pointer;
+}
+
+.mdt-wrapper .page-item.disabled .page-link {
+    cursor: default;
+}
+
+/* ============================================================
+   Ordenação (setas ▲▼ - a ativa fica em destaque)
+   ============================================================ */
+.mdt-table th.mdt-sortable {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    padding-right: 1.9rem !important;
+    white-space: nowrap;
+}
+
+.mdt-table th.mdt-sortable::before,
+.mdt-table th.mdt-sortable::after {
+    position: absolute;
+    right: .6rem;
+    font-size: .6rem;
+    line-height: 1;
+    opacity: .35;
+    transition: opacity .15s;
+}
+
+.mdt-table th.mdt-sortable::before {
+    content: "\25B2";
+    top: calc(50% - .75em);
+}
+
+.mdt-table th.mdt-sortable::after {
+    content: "\25BC";
+    top: calc(50% + .05em);
+}
+
+.mdt-table th.mdt-sortable:hover::before,
+.mdt-table th.mdt-sortable:hover::after {
+    opacity: .65;
+}
+
+.mdt-table th.mdt-sort-asc::before,
+.mdt-table th.mdt-sort-desc::after {
+    opacity: 1 !important;
+}
+
+.mdt-table th.mdt-sort-asc::after,
+.mdt-table th.mdt-sort-desc::before {
+    opacity: .2 !important;
+}
+
+.mdt-table th.mdt-sortable:focus-visible {
+    outline: 2px solid #6c757d;
+    outline-offset: -2px;
+}
+
+/* ============================================================
+   Cabeçalho fixo (desktop)
+   ============================================================ */
+@media (min-width: 768px) {
+    .mdt-table.mdt-sticky thead th {
+        position: sticky;
+        top: var(--mdt-sticky-top, 0px);
+        z-index: 3;
+        background-clip: padding-box;
+        box-shadow: inset 0 -1px 0 var(--bs-border-color, #dee2e6), 0 2px 4px rgba(0, 0, 0, .08);
+    }
+
+    .mdt-table.mdt-sticky thead th {
+        background-color: var(--bs-body-bg, #fff);
+    }
+
+    body.dark-mode .mdt-table.mdt-sticky thead th {
+        background-color: var(--dark-bg-surface, #171b26) !important;
+        box-shadow: inset 0 -1px 0 var(--dark-border-light, #353a52), 0 2px 6px rgba(0, 0, 0, .35);
+    }
+}
+
+/* ============================================================
+   Mensagem de vazio
+   ============================================================ */
+.mdt-table tr.mdt-empty:hover > * {
+    --bs-table-hover-bg: transparent;
+}
+
+/* ============================================================
+   Botão "Ações" (dropdown agrupado) - destacado nos dois temas
+   ============================================================ */
+.btn.btn-acoes {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #d97706;
+    --bs-btn-border-color: #d97706;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #b45309;
+    --bs-btn-hover-border-color: #b45309;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #b45309;
+    --bs-btn-active-border-color: #b45309;
+    --bs-btn-focus-shadow-rgb: 217, 119, 6;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+    white-space: nowrap;
+}
+
+.btn.btn-acoes i {
+    color: #fff !important;
+}
+
+/* tema escuro: ícones/botões da tabela em branco (nada apagado) */
+body.dark-mode .mdt-table .btn-warning,
+body.dark-mode .mdt-table .btn-info,
+body.dark-mode .mdt-table .btn-warning i,
+body.dark-mode .mdt-table .btn-info i {
+    color: #fff !important;
+}
+
+body.dark-mode .mdt-table .dropdown-item i {
+    color: #fff !important;
+}
+
+/* ============================================================
+   Celular (< 768px): cada linha vira um card
+   ============================================================ */
+@media (max-width: 767.98px) {
+
+    .mdt-wrapper table.mdt-table,
+    .mdt-wrapper table.mdt-table > tbody,
+    .mdt-wrapper table.mdt-table > tbody > tr,
+    .mdt-wrapper table.mdt-table > tbody > tr > td {
+        display: block;
+        width: 100%;
+    }
+
+    .mdt-wrapper table.mdt-table {
+        border: 0 !important;
+    }
+
+    .mdt-wrapper table.mdt-table > thead {
+        display: none;
+    }
+
+    /* seletores repetidos de propósito: vencem o striped/hover do Bootstrap
+       e as regras de tabela do tema escuro */
+    .mdt-wrapper table.mdt-table.mdt-table.mdt-table > tbody > tr {
+        margin-bottom: .75rem;
+        padding: .25rem 0;
+        border: 1px solid var(--mdt-card-border) !important;
+        border-radius: .5rem;
+        background-color: var(--mdt-card-bg) !important;
+        box-shadow: 0 .125rem .35rem rgba(0, 0, 0, .12);
+    }
+
+    .mdt-wrapper table.mdt-table.mdt-table.mdt-table > tbody > tr > td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: .5rem .85rem;
+        text-align: right !important;
+        white-space: normal !important;
+        word-break: break-word;
+        color: var(--mdt-value) !important;
+        border: 0 !important;
+        border-bottom: 1px solid var(--mdt-card-border) !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
+    }
+
+    .mdt-wrapper table.mdt-table.mdt-table.mdt-table > tbody > tr > td:last-child {
+        border-bottom: 0 !important;
+    }
+
+    .mdt-wrapper table.mdt-table > tbody > tr > td::before {
+        content: attr(data-label);
+        flex: 0 0 38%;
+        max-width: 38%;
+        font-weight: 600;
+        text-align: left;
+        color: var(--mdt-label);
+    }
+
+    /* mensagem "nenhum resultado" ocupa o card inteiro */
+    .mdt-wrapper table.mdt-table.mdt-table.mdt-table > tbody > tr > td.mdt-empty-cell {
+        display: block;
+        text-align: center !important;
+        color: var(--mdt-muted) !important;
+    }
+
+    .mdt-wrapper table.mdt-table > tbody > tr > td.mdt-empty-cell::before {
+        display: none;
+    }
+
+    /* paginador: Anterior / página atual / Próximo */
+    .mdt-wrapper .mdt-hide-xs {
+        display: none;
+    }
+
+    .mdt-wrapper .mdt-search {
+        max-width: none;
+    }
+
+    .mdt-wrapper .mdt-pager {
+        justify-content: center !important;
+    }
+
+    .mdt-wrapper .mdt-info {
+        text-align: center;
+    }
+}

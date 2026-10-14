@@ -1,7 +1,5 @@
 function carregarClientes() {
-    if ($.fn.DataTable.isDataTable('#clientesTable')) {
-        $('#clientesTable').DataTable().destroy();
-    }
+    MiniDataTable.destroy('#clientesTable');
     $.ajax({
         url: '../public/cliente/listar.php',
         method: 'GET',
@@ -21,37 +19,42 @@ function carregarClientes() {
                             <td class='text-center'>${cliente.numero || ''}</td>
                             <td class='text-center'>${cliente.cidade || ''}</td>
                             <td class='text-center'>${cliente.estado || ''}</td>
-                            <td class='text-center'>
-                                <button class="btn btn-warning btn-sm editar" data-cpf="${cliente.cpf}"><i class="bi bi-pencil-square"></i> Editar</button>
-                                <button class='btn btn-info btn-sm btn-log-auditor' data-id='${cliente.cliente}'data-tabela='tbl_cliente'><i class="bi bi-clock-history"></i> Ver Log</button>
+                            <td class="coluna-acoes text-center">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-acoes dropdown-toggle"
+                                            data-bs-toggle="dropdown" aria-expanded="false" title="Ações">
+                                        <i class="bi bi-list"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a href="javascript:void(0)" class="dropdown-item editar"
+                                               data-cpf="${cliente.cpf}">
+                                                <i class="bi bi-pencil-square"></i> Editar
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="dropdown-item btn-log-auditor"
+                                               data-id="${cliente.cliente}" data-tabela="tbl_cliente">
+                                                <i class="bi bi-clock-history text-info"></i> Ver Log
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </td>
                         </tr>
                     `);
                 });
-            } else {
-                $('#clientesTable tbody').append(`
-                    <tr>
-                        <td colspan="9" class="text-center">NENHUM CLIENTE CADASTRADO</td>
-                    </tr>
-                `);
             }
-            if (data.length > 0) {
-                $('#clientesTable').DataTable({
-                    responsive: true,
-                    scrollX: true,
-                    autoWidth: false,
-                    language: {
-                        url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-                    }
-                });
-            }
+            new MiniDataTable('#clientesTable');
         },
-        error: function (xhr, status, error) {
+        error: function () {
             Swal.fire({
-                icon: 'error',
-                title: 'Erro!',
-                text: 'Erro ao carregar os clientes.',
-            });
+               toast: true,
+               position: 'top-end',
+               showConfirmButton: false,
+               icon: 'error',
+               text: 'Erro ao carregar os clientes'
+             });
         }
     });
 }
@@ -76,26 +79,32 @@ $(document).ready(function () {
                         $('#estado').val(data.uf || '');
                     } else {
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Erro!',
-                            text: 'CEP inválido!',
-                        });
+                           toast: true,
+                           position: 'top-end',
+                           showConfirmButton: false,
+                           icon: 'error',
+                           text: 'CEP inválido!'
+                         });
                     }
                 },
                 error: function (xhr, status, error) {
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Erro!',
-                        text: 'Erro ao buscar CEP.',
-                    });
+                       toast: true,
+                       position: 'top-end',
+                       showConfirmButton: false,
+                       icon: 'error',
+                       text: 'Erro ao buscar CEP.'
+                     });
                 }
             });
         } else {
             Swal.fire({
-                icon: 'error',
-                title: 'Erro!',
-                text: 'CEP deve ter 8 dígitos.',
-            });
+               toast: true,
+               position: 'top-end',
+               showConfirmButton: false,
+               icon: 'error',
+               text: 'CEP deve ter 8 dígitos.'
+             });
         }
     });
 
@@ -114,14 +123,17 @@ $(document).ready(function () {
 
                 if (response.status === 'error') {
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Erro!',
-                        text: response.message,
-                    });
+                       toast: true,
+                       position: 'top-end',
+                       showConfirmButton: false,
+                       icon: 'error',
+                       text: response.message
+                     });
                 } else {
                     Swal.fire({
+                        toast: true,
+                        position: 'top-end',
                         icon: 'success',
-                        title: 'Sucesso!',
                         text: response.message,
                     }).then(() => {
                         $('#clienteForm')[0].reset();
@@ -173,14 +185,18 @@ $(document).ready(function () {
 
                             if (response.status === 'error') {
                                 Swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
                                     icon: 'error',
-                                    title: 'Erro!',
                                     text: response.message,
                                 });
                             } else if (response.status === "success") {
                                 Swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    timer: 2500,
                                     icon: 'success',
-                                    title: 'Sucesso!',
                                     text: response.message,
                                 }).then(() => {
                                     carregarClientes();
@@ -191,8 +207,10 @@ $(document).ready(function () {
                         },
                         error: function (xhr, status, error) {
                             Swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
                                 icon: 'error',
-                                title: 'Erro!',
                                 text: 'Erro ao editar cliente.',
                             });
                         }
@@ -201,24 +219,13 @@ $(document).ready(function () {
             },
             error: function (xhr, status, error) {
                 Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
                     icon: 'error',
-                    title: 'Erro!',
                     text: 'Erro ao buscar cliente.',
                 });
             }
         });
     });
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const alerta = urlParams.get('alerta');
-
-    if (alerta === 'true') {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Atenção',
-            text: 'Nenhum cliente cadastrado!',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#007bff'
-        });
-    }
 });

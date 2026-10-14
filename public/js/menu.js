@@ -18,13 +18,6 @@ $(document).ready(function () {
             console.error('Erro ao carregar dados do dashboard.');
         }
     });
-
-    $('#modalDashboard').on('hidden.bs.modal', function () {
-        if ($.fn.DataTable.isDataTable('#modalTabela')) {
-            $('#modalTabela').DataTable().destroy();
-        }
-        $('#modalTabela').empty();
-    });
 });
 
 function abrirModal(tipo, filtro) {
@@ -101,17 +94,7 @@ function abrirModal(tipo, filtro) {
                     '</table>' +
                 '</div>'
             );
-
-            $('#modalTabela').DataTable({
-                language: {
-                    url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json'
-                },
-                pageLength: 10,
-                lengthMenu: [10, 25, 50, 100],
-                order: [],
-                autoWidth: false,
-                columnDefs: [{ targets: '_all', className: 'align-middle' }]
-            });
+            new MiniDataTable('#modalTabela');
         },
         error: function () {
             $('#modalCorpo').html('<div class="alert alert-danger m-3">Erro ao buscar dados.</div>');

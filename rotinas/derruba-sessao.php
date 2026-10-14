@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set('America/Sao_Paulo');
+
 $path = session_save_path();
 if (!$path) {
     $path = sys_get_temp_dir();
@@ -8,7 +10,7 @@ if (!$path) {
 $arquivos = glob(rtrim($path, '/') . '/sess_*');
 
 if ($arquivos === false || count($arquivos) === 0) {
-    echo "Nenhuma sessão encontrada em: $path\n";
+	echo '[' . date('d/m/Y H:i:s') . '] ' . "Nenhuma sessão encontrada em: ". $path . "\n";
     exit;
 }
 
@@ -19,5 +21,4 @@ foreach ($arquivos as $arquivo) {
     }
 }
 
-echo "Sessões removidas: $total\n";
-echo "Diretório: $path\n";
+echo '[' . date('d/m/Y H:i:s') . '] ' . "Sessões removidas: " .$total. " Diretório: " .$path. "\n";

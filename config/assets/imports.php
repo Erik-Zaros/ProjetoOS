@@ -8,7 +8,6 @@ $imports = [
             "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css",
             "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css",
             "https://code.jquery.com/ui/1.14.2/themes/base/jquery-ui.css",
-            "https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css",
             "../public/css/layout.css",
             "../public/css/form.css",
             "../public/css/button.css",
@@ -20,22 +19,21 @@ $imports = [
             "https://code.jquery.com/ui/1.14.2/jquery-ui.min.js",
             "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
             "https://cdn.jsdelivr.net/npm/sweetalert2@11",
-            "https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js",
             "../public/js/log_auditor.js"
         ]
     ],
     "usuario" => [
-        "css" => ["../public/css/usuario.css"],
-        "js" => ["../public/js/usuario.js"]
+        "css" => ["../public/css/usuario.css", "../plugins/dataTable/dataTable.css"],
+        "js" => ["../public/js/usuario.js", "../plugins/dataTable/dataTable.js"]
     ],
     "menu" => [
-        "css" => ["../public/css/menu.css"],
+        "css" => ["../public/css/menu.css", "../plugins/dataTable/dataTable.css"],
         "js" => ["../public/js/menu.js",
-                 "https://cdn.jsdelivr.net/npm/highcharts@9.1.2/highcharts.js"],
+                 "https://cdn.jsdelivr.net/npm/highcharts@9.1.2/highcharts.js", "../plugins/dataTable/dataTable.js"],
     ],
     "cliente" => [
-        "css" => ["../public/css/cliente.css"],
-        "js" => ["../public/js/cliente.js"]
+        "css" => ["../public/css/cliente.css", "../plugins/dataTable/dataTable.css"],
+        "js" => ["../public/js/cliente.js", "../plugins/dataTable/dataTable.js"]
     ],
     "produto" => [
         "css" => ["../public/css/produto.css"],
