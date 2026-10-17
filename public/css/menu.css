@@ -1,17 +1,17 @@
 .kpi-card {
-    background: #fff;
+    background: var(--bs-body-bg, #fff);
+    border: 1px solid var(--bs-border-color, #e8ecf0);
     border-radius: 10px;
-    /* border: 1px solid #e8ecf0; */
-    padding: 18px 20px;
+    padding: 16px 18px;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 .kpi-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.09);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
 }
 .kpi-icon {
     width: 48px;
@@ -27,47 +27,69 @@
 .kpi-value {
     font-size: 26px;
     font-weight: 800;
-    color: #1a202c;
+    color: var(--bs-body-color, #1a202c);
     line-height: 1;
-    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    font-family: inherit;
 }
 .kpi-label {
     font-size: 11px;
     font-weight: 700;
-    color: #718096;
+    color: var(--bs-secondary-color, #718096);
     text-transform: uppercase;
     letter-spacing: 0.07em;
-    margin-top: 3px;
+    margin-top: 4px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .chart-card {
-    background: #fff;
+    background: var(--bs-body-bg, #fff);
+    border: 1px solid var(--bs-border-color, #e8ecf0);
     border-radius: 10px;
-    /* border: 1px solid #e8ecf0; */
     box-shadow: 0 1px 4px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
-    padding: 4px 8px 8px;
+    padding: 14px 16px;
+    position: relative;
 }
 
-.bi-loader {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    color: #a0aec0;
-    font-size: 12px;
-    gap: 8px;
+.chart-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--bs-body-color, #2d3748);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
 }
-.bi-loader::before {
-    content: '';
-    width: 16px;
-    height: 16px;
-    border: 2px solid #e2e6ea;
-    border-top-color: #4a6fa5;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    flex-shrink: 0;
+
+.chart-subtitle {
+    font-size: 11px;
+    color: var(--bs-secondary-color, #a0aec0);
+    margin-bottom: 8px;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
+
+[data-bs-theme="dark"] .kpi-card,
+[data-bs-theme="dark"] .chart-card {
+    background-color: #212529 !important;
+    border-color: #373b3e !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-bs-theme="dark"] .kpi-value {
+    color: #f8f9fa !important;
+}
+
+[data-bs-theme="dark"] .kpi-label {
+    color: #94a3b8 !important;
+}
+
+[data-bs-theme="dark"] .kpi-icon {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-bs-theme="dark"] .chart-card h6 {
+    color: #f8f9fa !important;
+}
+
+[data-bs-theme="dark"] .chart-card small {
+    color: #94a3b8 !important;
+}

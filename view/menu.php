@@ -69,52 +69,72 @@ ob_start(); ?>
 
 <div class="row g-3 mb-3">
     <div class="col-md-8">
-        <div class="chart-card">
-            <div id="grafico-os-timeline" style="height:280px;"></div>
+        <div class="chart-card p-3">
+            <h6 class="fw-bold mb-1 text-body">OS ABERTAS — ÚLTIMOS 30 DIAS</h6>
+            <small class="text-body-secondary d-block mb-3">Clique nos pontos para visualizar ordens de serviço</small>
+            <div style="position: relative; height: 260px;">
+                <canvas id="grafico-os-timeline"></canvas>
+            </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="chart-card">
-            <div id="grafico-pizza-os-status" style="height:280px;"></div>
+        <div class="chart-card p-3">
+            <h6 class="fw-bold mb-1 text-body">STATUS DAS OS</h6>
+            <small class="text-body-secondary d-block mb-3">Clique em uma fatia para ver detalhes</small>
+            <div style="position: relative; height: 260px;">
+                <canvas id="grafico-pizza-os-status"></canvas>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="row g-3 mb-3">
     <div class="col-md-6">
-        <div class="chart-card">
-            <div id="grafico-os-tecnico" style="height:280px;"></div>
+        <div class="chart-card p-3">
+            <h6 class="fw-bold mb-1 text-body">OS POR TÉCNICO</h6>
+            <small class="text-body-secondary d-block mb-3">Clique na barra para ver as OS do técnico</small>
+            <div style="position: relative; height: 260px;">
+                <canvas id="grafico-os-tecnico"></canvas>
+            </div>
         </div>
     </div>
     <div class="col-md-6">
-        <div class="chart-card">
-            <div id="grafico-estoque-mensal" style="height:280px;"></div>
+        <div class="chart-card p-3">
+            <h6 class="fw-bold mb-1 text-body">MOVIMENTAÇÃO DE ESTOQUE</h6>
+            <small class="text-body-secondary d-block mb-3">Entradas e saídas nos últimos 6 meses</small>
+            <div style="position: relative; height: 260px;">
+                <canvas id="grafico-estoque-mensal"></canvas>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="row g-3 mb-3">
     <div class="col-md-6">
-        <div class="chart-card">
-            <div id="grafico-pecas-usadas" style="height:280px;"></div>
+        <div class="chart-card p-3">
+            <h6 class="fw-bold mb-1 text-body">PEÇAS MAIS UTILIZADAS</h6>
+            <small class="text-body-secondary d-block mb-3">Clique na barra para ver as OS correspondentes</small>
+            <div style="position: relative; height: 260px;">
+                <canvas id="grafico-pecas-usadas"></canvas>
+            </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="chart-card">
-            <div id="grafico-pizza-status-produto" style="height:280px;"></div>
+        <div class="chart-card p-3">
+            <h6 class="fw-bold mb-1 text-body">PRODUTOS</h6>
+            <small class="text-body-secondary d-block mb-3">Ativos · Inativos</small>
+            <div style="position: relative; height: 260px;">
+                <canvas id="grafico-pizza-status-produto"></canvas>
+            </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="chart-card">
-            <div id="grafico-pizza-status-peca" style="height:280px;"></div>
-        </div>
-    </div>
-</div>
-
-<div class="row g-3 mb-4">
-    <div class="col-md-12">
-        <div class="chart-card">
-            <div id="grafico-colunas" style="height:260px;"></div>
+        <div class="chart-card p-3">
+            <h6 class="fw-bold mb-1 text-body">PEÇAS</h6>
+            <small class="text-body-secondary d-block mb-3">Ativas · Inativas</small>
+            <div style="position: relative; height: 260px;">
+                <canvas id="grafico-pizza-status-peca"></canvas>
+            </div>
         </div>
     </div>
 </div>

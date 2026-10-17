@@ -3,13 +3,20 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Auth\Autenticador;
+use App\Service\UsuarioService;
 
 Autenticador::iniciar();
+$usuario = Autenticador::getUsuario();
+$usuario_service = new UsuarioService();
+$usuario_info = $usuario_service->buscarPorId($usuario);
 
 $title = 'Cadastro de Usuário';
 $pageTitle = 'CADASTRO DE USUÁRIO';
 ob_start();
-?>
+
+if ($usuario_info["master"] == false) {
+    include 'modal_sem_permissao.php';
+} else { ?>
 
 <div class="card shadow-sm mb-4">
     <div class="card-header">
@@ -82,6 +89,7 @@ ob_start();
 </div>
 
 <?php
+}
 $content = ob_get_clean();
 include 'layout.php';
 ?>

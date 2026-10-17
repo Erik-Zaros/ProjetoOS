@@ -1,12 +1,11 @@
 <?php
 
-require '../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-use App\Service\Export\ClienteCsvExportService;
+use App\Controller\ClienteController;
 use App\Auth\Autenticador;
 
 Autenticador::iniciar();
+$posto = (int) Autenticador::getPosto();
 
-$posto = Autenticador::getPosto();
-$service = new ClienteCsvExportService();
-$service->gerar($posto);
+ClienteController::exportarListagemCsv($posto);

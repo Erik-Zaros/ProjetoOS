@@ -23,21 +23,21 @@
     --mdt-muted: var(--bs-secondary-color, #6c757d);
 }
 
-body.dark-mode .mdt-wrapper {
-    --mdt-pg-color: var(--dark-text-secondary, #94a3b8);
-    --mdt-pg-bg: var(--dark-bg-input, #252938);
-    --mdt-pg-border: var(--dark-border, #2e3348);
-    --mdt-pg-hover-bg: var(--dark-bg-hover, #2a2f42);
-    --mdt-pg-active-bg: #4b5470;
-    --mdt-pg-active-border: #5b6585;
+[data-bs-theme="dark"] .mdt-wrapper {
+    --mdt-pg-color: #cbd5e1;
+    --mdt-pg-bg: #212529;
+    --mdt-pg-border: #373b3e;
+    --mdt-pg-hover-bg: #2b3035;
+    --mdt-pg-active-bg: #3d4554;
+    --mdt-pg-active-border: #4f586d;
     --mdt-pg-active-color: #fff;
-    --mdt-pg-disabled: #475569;
+    --mdt-pg-disabled: #495057;
 
-    --mdt-card-bg: var(--dark-bg-surface, #171b26);
-    --mdt-card-border: var(--dark-border-light, #353a52);
-    --mdt-label: var(--dark-text-secondary, #94a3b8);
-    --mdt-value: var(--dark-text-primary, #e2e8f0);
-    --mdt-muted: var(--dark-text-secondary, #94a3b8);
+    --mdt-card-bg: #1e222d;
+    --mdt-card-border: #33394d;
+    --mdt-label: #94a3b8;
+    --mdt-value: #f1f5f9;
+    --mdt-muted: #94a3b8;
 }
 
 /* ============================================================
@@ -63,7 +63,7 @@ body.dark-mode .mdt-wrapper {
 }
 
 /* seta do select visível no tema escuro */
-body.dark-mode .mdt-wrapper .form-select {
+[data-bs-theme="dark"] .mdt-wrapper .form-select {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23cbd5e1' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
 }
 
@@ -108,6 +108,9 @@ body.dark-mode .mdt-wrapper .form-select {
     cursor: pointer;
     user-select: none;
     position: relative;
+    /* padding simétrico: o texto fica centralizado de verdade,
+       e as setas (position:absolute) ocupam a área reservada à direita */
+    padding-left: 1.9rem !important;
     padding-right: 1.9rem !important;
     white-space: nowrap;
 }
@@ -156,21 +159,56 @@ body.dark-mode .mdt-wrapper .form-select {
    Cabeçalho fixo (desktop)
    ============================================================ */
 @media (min-width: 768px) {
-    .mdt-table.mdt-sticky thead th {
+    .app-main {
+        overflow: visible !important;
+    }
+
+    .table-responsive:has(.mdt-table),
+    .table-responsive:has(.mdt-wrapper) {
+        overflow: visible !important;
+    }
+
+    .card:has(.mdt-table),
+    .card-body:has(.mdt-table),
+    .card:has(.mdt-wrapper),
+    .card-body:has(.mdt-wrapper) {
+        overflow: visible !important;
+    }
+
+    .mdt-wrapper {
+        overflow: visible !important;
+    }
+
+    .mdt-table thead,
+    .mdt-table.mdt-sticky thead {
         position: sticky;
-        top: var(--mdt-sticky-top, 0px);
-        z-index: 3;
+        top: var(--mdt-sticky-top, 56px);
+        z-index: 1020;
+    }
+
+    .mdt-table thead th,
+    .mdt-table.mdt-sticky thead th {
+        position: sticky !important;
+        top: var(--mdt-sticky-top, 56px) !important;
+        z-index: 1020 !important;
         background-clip: padding-box;
         box-shadow: inset 0 -1px 0 var(--bs-border-color, #dee2e6), 0 2px 4px rgba(0, 0, 0, .08);
+        background-color: var(--bs-body-bg, #fff) !important;
     }
 
-    .mdt-table.mdt-sticky thead th {
-        background-color: var(--bs-body-bg, #fff);
+    [data-bs-theme="dark"] .mdt-table thead th,
+    [data-bs-theme="dark"] .mdt-table.mdt-sticky thead th {
+        background-color: #1e222d !important;
+        color: #f8f9fa !important;
+        box-shadow: inset 0 -1px 0 #373b3e, 0 2px 6px rgba(0, 0, 0, .35);
     }
 
-    body.dark-mode .mdt-table.mdt-sticky thead th {
-        background-color: var(--dark-bg-surface, #171b26) !important;
-        box-shadow: inset 0 -1px 0 var(--dark-border-light, #353a52), 0 2px 6px rgba(0, 0, 0, .35);
+    /* Em modais, o topo é zero (sem navbar) */
+    .modal .mdt-table thead,
+    .modal .mdt-table.mdt-sticky thead,
+    .modal .mdt-table thead th,
+    .modal .mdt-table.mdt-sticky thead th {
+        top: var(--mdt-sticky-top, 0px) !important;
     }
 }
 
@@ -205,14 +243,14 @@ body.dark-mode .mdt-wrapper .form-select {
 }
 
 /* tema escuro: ícones/botões da tabela em branco (nada apagado) */
-body.dark-mode .mdt-table .btn-warning,
-body.dark-mode .mdt-table .btn-info,
-body.dark-mode .mdt-table .btn-warning i,
-body.dark-mode .mdt-table .btn-info i {
+[data-bs-theme="dark"] .mdt-table .btn-warning,
+[data-bs-theme="dark"] .mdt-table .btn-info,
+[data-bs-theme="dark"] .mdt-table .btn-warning i,
+[data-bs-theme="dark"] .mdt-table .btn-info i {
     color: #fff !important;
 }
 
-body.dark-mode .mdt-table .dropdown-item i {
+[data-bs-theme="dark"] .mdt-table .dropdown-item i {
     color: #fff !important;
 }
 

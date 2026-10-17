@@ -7,5 +7,6 @@ use App\Auth\Autenticador;
 
 Autenticador::iniciar();
 $posto = Autenticador::getPosto();
-$result = OsController::filtrar($_POST, $posto);
+$filtros = !empty($_GET) ? $_GET : $_POST;
+$result = OsController::filtrar($filtros, $posto);
 echo json_encode($result);

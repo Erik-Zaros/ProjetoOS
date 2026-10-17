@@ -41,7 +41,7 @@ ob_start();
 </div>
 
 <div class="card shadow-sm mb-4">
-  <div class="card-header bg-secondary text-white">
+  <div class="card-header">
     <i class="bi bi-person"></i> Informações do Consumidor
   </div>
   <div class="card-body">
@@ -90,7 +90,7 @@ ob_start();
 </div>
 
 <div class="card shadow-sm mb-4">
-  <div class="card-header bg-secondary text-white">
+  <div class="card-header">
     <i class="bi bi-box"></i> Informações do Produto
   </div>
   <div class="card-body">
@@ -98,8 +98,8 @@ ob_start();
   </div>
 </div>
 
-<div class="card shadow-sm">
-  <div class="card-header bg-secondary text-white">
+<div class="card shadow-sm mb-4">
+  <div class="card-header">
     <i class="bi bi-nut"></i> Peças do Produto
   </div>
   <div class="card-body">
@@ -141,10 +141,10 @@ ob_start();
   </div>
 </div>
 
-<div id="secaoAnexos"></div>
+<div id="secaoAnexos" class="card shadow-sm mb-4"></div>
 
 <div class="text-center mt-3">
-  <button type="submit" class="btn btn-secondary btn-sm">Gravar</button>
+  <button type="submit" class="btn btn-secondary">Gravar</button>
 </div>
 
 <br>

@@ -6,7 +6,6 @@ use App\Controller\ClienteController;
 use App\Auth\Autenticador;
 
 Autenticador::iniciar();
-$posto = Autenticador::getPosto();
+$posto = (int) Autenticador::getPosto();
 
-$controller = new ClienteController();
-$controller->exportarCsv($_POST);
+ClienteController::exportarCsv($_REQUEST, $posto);

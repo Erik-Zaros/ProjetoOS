@@ -3,14 +3,15 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Auth\Autenticador;
-use App\Service\FuncoesService;
+use App\Service\PostoService;
 
 Autenticador::iniciar();
+$posto_service = new PostoService();
 
 $title     = 'Consulta de Estoque';
 $pageTitle = 'CONSULTA DE ESTOQUE';
 
-$usa_modulo_estoque = FuncoesService::usaModuloEstoque();
+$usa_modulo_estoque = $posto_service->usaModulo("estoque");
 
 ob_start();
 
@@ -20,32 +21,32 @@ if ($usa_modulo_estoque == false) {
 
 <div class="row">
   <div class="col-lg-4 col-12">
-    <div class="small-box bg-primary">
+    <div class="small-box text-bg-primary">
       <div class="inner">
         <h3 id="kpiTotal">—</h3>
         <p>Total de Itens</p>
       </div>
-      <div class="icon"><i class="bi bi-box-seam icone"></i></div>
+      <i class="small-box-icon bi bi-box-seam"></i>
       <span class="small-box-footer">&nbsp;</span>
     </div>
   </div>
   <div class="col-lg-4 col-12">
-    <div class="small-box bg-success">
+    <div class="small-box text-bg-success">
       <div class="inner">
         <h3 id="kpiComSaldo">—</h3>
         <p>Com Saldo</p>
       </div>
-      <div class="icon"><i class="bi bi-graph-up icone"></i></div>
+      <i class="small-box-icon bi bi-graph-up"></i>
       <span class="small-box-footer">&nbsp;</span>
     </div>
   </div>
   <div class="col-lg-4 col-12">
-    <div class="small-box bg-warning">
+    <div class="small-box text-bg-warning">
       <div class="inner">
         <h3 id="kpiZerados">—</h3>
         <p>Zerados</p>
       </div>
-      <div class="icon"><i class="bi bi-slash-circle icone"></i></div>
+      <i class="small-box-icon bi bi-slash-circle"></i>
       <span class="small-box-footer">&nbsp;</span>
     </div>
   </div>
@@ -82,7 +83,7 @@ if ($usa_modulo_estoque == false) {
       </div>
 
       <div class="col-md-2 d-flex align-items-end">
-        <div class="form-check">
+        <div class="form-check form-switch">
           <input class="form-check-input" type="checkbox" id="somenteSaldo" name="somente_saldo">
           <label class="form-check-label" for="somenteSaldo">Somente com saldo</label>
         </div>
@@ -105,13 +106,13 @@ if ($usa_modulo_estoque == false) {
       <table class="table table-bordered table-striped table-hover nowrap" id="estoqueTable">
         <thead>
           <tr>
-            <th>Tipo</th>
-            <th>Código</th>
-            <th>Descrição</th>
-            <th class="text-end">Saldo</th>
-            <th>Última Entrada</th>
-            <th>Última Saída</th>
-            <th style="width: 110px">Ações</th>
+            <th class="text-center">Tipo</th>
+            <th class="text-center">Código</th>
+            <th class="text-center">Descrição</th>
+            <th class="text-center">Saldo</th>
+            <th class="text-center">Última Entrada</th>
+            <th class="text-center">Última Saída</th>
+            <th class="text-center">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -123,7 +124,7 @@ if ($usa_modulo_estoque == false) {
 </div>
 
 <div class="modal fade" id="movModal" tabindex="-1" aria-labelledby="movModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="movModalLabel"><i class="bi bi-clock-history me-1"></i> Movimentações do Item</h5>
@@ -134,12 +135,12 @@ if ($usa_modulo_estoque == false) {
           <table class="table table-bordered table-striped table-hover nowrap" id="movModalTable">
             <thead>
               <tr>
-                <th>#</th>
-                <th>Data</th>
-                <th>Tipo</th>
-                <th>Qtde</th>
-                <th>OS</th>
-                <th>Motivo</th>
+                <th class="text-center">#</th>
+                <th class="text-center">Data</th>
+                <th class="text-center">Tipo</th>
+                <th class="text-center">Qtde</th>
+                <th class="text-center">OS</th>
+                <th class="text-center">Motivo</th>
               </tr>
             </thead>
             <tbody>

@@ -20,11 +20,11 @@ ob_start();
             <div class="row">
                 <div class="col-md-2">
                     <label for="dataInicio" class="form-label">Data Início</label>
-                    <input type="text" class="form-control" id="dataInicio" name="dataInicio">
+                    <input type="text" class="form-control" id="dataInicio" name="dataInicio" placeholder="dd/mm/aaaa">
                 </div>
                 <div class="col-md-2">
                     <label for="dataFim" class="form-label">Data Fim</label>
-                    <input type="text" class="form-control" id="dataFim" name="dataFim">
+                    <input type="text" class="form-control" id="dataFim" name="dataFim" placeholder="dd/mm/aaaa">
                 </div>
                 <div class="col-md-3">
                     <label for="cpf" class="form-label">CPF/CNPJ</label>
@@ -60,15 +60,15 @@ ob_start();
         <table class="table table-bordered table-striped" id="clienteTable">
             <thead>
                 <tr>
-                    <th>Nome</th>
-                    <th>CPF</th>
-                    <th>CEP</th>
-                    <th>Endereço</th>
-                    <th>Bairro</th>
-                    <th>Cidade</th>
-                    <th>Estado</th>
-                    <th>Data Cadastro</th>
-                    <th>OS's</th>
+                    <th class="text-center">Nome</th>
+                    <th class="text-center">CPF</th>
+                    <th class="text-center">CEP</th>
+                    <th class="text-center">Endereço</th>
+                    <th class="text-center">Bairro</th>
+                    <th class="text-center">Cidade</th>
+                    <th class="text-center">Estado</th>
+                    <th class="text-center">Data Cadastro</th>
+                    <th class="text-center">OS's</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -76,15 +76,11 @@ ob_start();
     </div>
 </div>
 
-<form id="formCSV" method="POST" action="../public/relatorio_cliente/csv.php" target="_blank">
-    <input type="hidden" name="dataInicio">
-    <input type="hidden" name="dataFim">
-    <input type="hidden" name="cpf">
-    <input type="hidden" name="nome">
-</form>
-
-<div class="text-center mt-4 mb-3">
-    <button type="button" id="btnCSV" class="btn btn-success" style="display:none"><i class="bi bi-file-earmark-spreadsheet-fill"></i> Download CSV</a></button>
+<div class="text-center mt-4 mb-3" id="btnCSV" style="display:none;">
+    <a href="../public/relatorio_cliente/csv.php?<?= htmlspecialchars(http_build_query($_GET)) ?>"
+       class="btn btn-success btn-sm" target="_blank">
+        <i class="bi bi-file-earmark-spreadsheet-fill"></i> Download CSV
+    </a>
 </div>
 
 <?php

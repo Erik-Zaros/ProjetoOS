@@ -51,8 +51,8 @@ ob_start();
                 </div>
             </div>
             <div class="mt-3">
-                <button type="submit" class="btn btn-success btn-sm">Filtrar</button>
-                <button type="button" class="btn btn-secondary btn-sm" id="limparFiltros">Limpar</button>
+                <button type="submit" class="btn btn-success">Pesquisar</button>
+                <button type="button" class="btn btn-secondary" id="limparFiltros">Limpar</button>
             </div>
         </form>
     </div>
@@ -66,12 +66,12 @@ ob_start();
         <table class="table table-bordered table-striped" id="osTable">
             <thead>
                 <tr>
-                    <th>Número OS</th>
-                    <th>Nome do Cliente</th>
-                    <th>CPF</th>
-                    <th>Produto</th>
-                    <th>Data de Abertura</th>
-                    <th>Ações</th>
+                    <th class="text-center">Número OS</th>
+                    <th class="text-center">Nome do Cliente</th>
+                    <th class="text-center">CPF</th>
+                    <th class="text-center">Produto</th>
+                    <th class="text-center">Data de Abertura</th>
+                    <th class="text-center">Ações</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -80,7 +80,7 @@ ob_start();
 </div>
 
 <div class="text-center mt-4 mb-3">
-    <a href="../public/consulta_os/relatorio.php" class="btn btn-success btn-sm"><i class="bi bi-file-earmark-spreadsheet-fill"></i> Download CSV</a>
+    <a href="../public/consulta_os/relatorio.php" class="btn btn-success"><i class="bi bi-file-earmark-spreadsheet-fill"></i> Download CSV</a>
 </div>
 
 <?php

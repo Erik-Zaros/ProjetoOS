@@ -1,10 +1,10 @@
 <?php
 
-use App\Service\FuncoesService;
+use App\Service\PostoService;
 
 $rotas = [
     "usuario" => [
-        "titulo" => "Usuários Admin",
+        "titulo" => "Gestão de Usuários",
         "icone" => "bi bi-person-circle",
         "link" => "usuario"
     ],
@@ -83,7 +83,9 @@ $rotas = [
     ]
 ];
 
-$usa_modulo_estoque = FuncoesService::usaModuloEstoque();
+$posto_service = new PostoService();
+
+$usa_modulo_estoque = $posto_service->usaModulo("estoque");
 
 if ($usa_modulo_estoque == false) {
     unset($rotas["estoque"]);

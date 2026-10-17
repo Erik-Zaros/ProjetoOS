@@ -1,61 +1,80 @@
 $(document).ready(function () {
 
-    $('#buscarProduto').on('input', function () {
-        const termo = $(this).val();
-        if (termo.length < 2) return;
-
-        $.get('../public/lista_basica/buscar_produtos.php', { termo }, function (data) {
-            let html = '';
-            data.forEach(p => {
-                html += `<li class="list-group-item list-produto" data-id="${p.produto}">
-                            <strong>${p.codigo}</strong> - ${p.descricao}
-                         </li>`;
-            });
-            $('#listaProdutos').html(html).show();
-        }, 'json');
-    });
-
-    $(document).on('click', '.list-produto', function () {
-        const produtoId = $(this).data('id');
-        const produtoNome = $(this).text().trim();
+    window.retorna_produto = function (p) {
+        if (!p) return;
+        const produtoId = p.produto || p.id;
+        const codigo = p.codigo || '';
+        const descricao = p.descricao || '';
+        const rotulo = (codigo ? codigo + ' - ' : '') + descricao;
 
         $('#produtoSelecionado').val(produtoId);
-        $('#listaProdutos').hide();
+        $('#buscarProduto').val(rotulo);
         $('#areaPecas').fadeIn();
 
-		$('#nomeProduto').text(produtoNome);
-		$('#produtoTitulo').fadeIn();
+        $('#nomeProduto').text(rotulo);
+        $('#produtoTitulo').fadeIn();
 
         $('#btnExcelContainer').fadeIn();
         $('#btnExcel').attr('href', `../public/lista_basica/relatorio.php?produto=${produtoId}`);
 
         carregarPecas(produtoId);
+        Alerta.info(rotulo, 'Produto Selecionado');
+    };
 
-        Swal.fire({
-            icon: 'info',
-            title: 'Produto selecionado',
-            text: produtoNome,
-            timer: 1500,
-            showConfirmButton: false
+    $('#btnLupaProduto').on('click', function () {
+        if (!window.Lupa) {
+            console.error('Módulo Lupa não encontrado.');
+            return;
+        }
+
+        Lupa.abrir({
+            url: '../public/lista_basica/buscar_produtos.php',
+            titulo: 'Selecionar Produto',
+            placeholder: 'Digite código ou descrição para buscar...',
+            colunas: [
+                { titulo: 'Código', campo: 'codigo', largura: '150px', classe: 'fw-bold' },
+                { titulo: 'Descrição', campo: 'descricao' },
+                { titulo: 'Status', campo: 'ativo', largura: '110px', tipo: 'ativo', classe: 'text-center' },
+                { titulo: 'Ação', largura: '120px', tipo: 'acao', classe: 'text-center' }
+            ],
+            callback: window.retorna_produto
         });
     });
 
     function carregarPecas(produtoId) {
+        MiniDataTable.destroy('#tabelaPecas');
         $.get('../public/lista_basica/buscar_pecas_produto.php', { produto: produtoId }, function (data) {
             let html = '';
-            data.forEach(p => {
-            let ativo = p.ativo == 't' ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>';
-                html += `
-                    <tr>
-                        <td>${p.codigo}</td>
-                        <td>${p.descricao}</td>
-                        <td>${ativo}</td>
-                        <td>
-                            <button class="btn btn-danger btn-sm removerPeca" data-id="${p.lista_basica}"><i class="bi bi-trash3-fill"></i> Excluir</button>
-                        </td>
-                    </tr>`;
-            });
+            if (Array.isArray(data) && data.length > 0) {
+                data.forEach(p => {
+                    let ativo = p.ativo == 't' || p.ativo === true
+                        ? '<i class="bi bi-check-circle-fill text-success"></i>'
+                        : '<i class="bi bi-x-circle-fill text-danger"></i>';
+
+                    html += `
+                        <tr>
+                            <td class='text-center'>${p.codigo}</td>
+                            <td class='text-center'>${p.descricao}</td>
+                            <td class='text-center'>${ativo}</td>
+                            <td class="coluna-acoes text-center">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-warning btn-sm btn-acoes dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" title="Ações">
+                                        <i class="bi bi-list"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a href="javascript:void(0)" class="dropdown-item removerPeca" data-id="${p.lista_basica}">
+                                                <i class="bi bi-trash3-fill text-danger me-1"></i> Excluir
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>`;
+                });
+            }
             $('#tabelaPecas tbody').html(html);
+            new MiniDataTable('#tabelaPecas');
         }, 'json');
     }
 
@@ -63,7 +82,7 @@ $(document).ready(function () {
         const termo = $(this).val();
         if (termo.length < 2) return;
 
-        $.get('../public/lista_basica/buscar_pecas.php', { termo }, function (data) {
+        $.get('../public/lista_basica/buscar_pecas.php', { termo: termo }, function (data) {
             let html = '';
             data.forEach(p => {
                 html += `<li class="list-group-item list-peca" data-id="${p.peca}">
@@ -78,34 +97,16 @@ $(document).ready(function () {
         const produto = $('#produtoSelecionado').val();
         const peca = $(this).data('id');
 
-        $.post('../public/lista_basica/adicionar_peca.php', { produto, peca }, function (resp) {
+        $.post('../public/lista_basica/adicionar_peca.php', { produto: produto, peca: peca }, function (resp) {
             if (resp.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Peça adicionada!',
-                    text: 'A peça foi amarrada com sucesso ao produto.',
-                    timer: 1500,
-                    showConfirmButton: false
-                });
+                Alerta.success('A peça foi amarrada com sucesso ao produto.', 'Peça adicionada!');
                 carregarPecas(produto);
                 $('#buscarPeca').val('');
                 $('#listaPecas').hide();
             } else if (resp.error) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Já existe!',
-                    text: 'Esta peça já está amarrada ao produto não é possível lançar novamente!',
-                    timer: 2500,
-                    showConfirmButton: false
-                });
+                Alerta.warning('Esta peça já está amarrada ao produto.', 'Já existe!');
             } else {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Falha',
-                    text: 'Falha ao processar',
-                    timer: 1800,
-                    showConfirmButton: false
-                });
+                Alerta.warning('Falha ao processar solicitação.', 'Atenção');
             }
         }, 'json');
     });
@@ -114,33 +115,19 @@ $(document).ready(function () {
         const id = $(this).data('id');
         const produto = $('#produtoSelecionado').val();
 
-        Swal.fire({
+        Alerta.confirm({
             title: 'Remover peça?',
             text: 'Essa amarração será excluída permanentemente.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Sim, remover!',
+            confirmButtonText: 'Sim, remover',
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                $.post('../public/lista_basica/remover_peca.php', { id }, function (resp) {
+                $.post('../public/lista_basica/remover_peca.php', { id: id }, function (resp) {
                     if (resp.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Removida!',
-                            text: 'A amarração foi removida com sucesso.',
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
+                        Alerta.success('A amarração foi removida com sucesso.', 'Removida!');
                         carregarPecas(produto);
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Erro!',
-                            text: 'Não foi possível remover a peça.',
-                        });
+                        Alerta.error('Não foi possível remover a peça.');
                     }
                 }, 'json');
             }

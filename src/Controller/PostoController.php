@@ -29,13 +29,6 @@ class PostoController
         return $service->usaModulo($modulo);
     }
 
-    public static function usaModuloEstoque(): bool
-    {
-        $service = new PostoService();
-
-        return $service->usaModuloEstoque();
-    }
-
     public static function listar(): array
     {
         $service = new PostoService();

@@ -7,5 +7,6 @@ use App\Auth\Autenticador;
 
 Autenticador::iniciar();
 $posto = Autenticador::getPosto();
-$result = ClienteController::relatorio($_POST, $posto);
+$params = !empty($_GET) ? $_GET : $_POST;
+$result = ClienteController::relatorio($params, $posto);
 echo json_encode($result);

@@ -52,13 +52,13 @@ $(function () {
 
             $tb.append(`
               <tr>
-                <td>${m.estoque_movimento}</td>
-                <td>${m.data}</td>
-                <td>${rotulo}</td>
-                <td>${m.qtde}</td>
-                <td>${m.os ?? ''}</td>
-                <td>${m.motivo ?? ''}</td>
-                <td>${m.item}</td>
+                <td class='text-center'>${m.estoque_movimento}</td>
+                <td class='text-center'>${m.data}</td>
+                <td class='text-center'>${rotulo}</td>
+                <td class='text-center'>${m.qtde}</td>
+                <td class='text-center'>${m.os ?? ''}</td>
+                <td class='text-center'>${m.motivo ?? ''}</td>
+                <td class='text-center'>${m.item}</td>
               </tr>
             `);
           });
@@ -122,11 +122,11 @@ $(function () {
     const peca    = $('#peca').val();
 
     if (!produto && !peca) {
-      Swal.fire({ icon: 'warning', title: 'Atenção', text: 'Selecione um produto ou uma peça pelo autocomplete.' });
+      Alerta.warning('Selecione um produto ou uma peça pelo autocomplete.', 'Atenção');
       return;
     }
     if (!qtde || parseInt(qtde) <= 0) {
-      Swal.fire({ icon: 'warning', title: 'Atenção', text: 'Quantidade deve ser maior que zero.' });
+      Alerta.warning('Quantidade deve ser maior que zero.', 'Atenção');
       return;
     }
 
@@ -139,16 +139,16 @@ $(function () {
       data: dados,
       success: function (resp) {
         if (resp.status === 'success') {
-          Swal.fire({ icon: 'success', title: 'Sucesso', text: resp.message });
+          Alerta.success(resp.message, 'Sucesso');
           $('#qtde').val(''); $('#motivo').val('');
           if (produto) { carregarSaldo({ produto }); carregarMov({ produto }); }
           if (peca)    { carregarSaldo({ peca });    carregarMov({ peca }); }
         } else {
-          Swal.fire({ icon: 'error', title: resp.title || 'Erro', text: resp.message || 'Falha ao lançar movimentação.' });
+          Alerta.error(resp.message || 'Falha ao lançar movimentação.', resp.title || 'Erro');
         }
       },
       error: function () {
-        Swal.fire({ icon: 'error', title: 'Erro', text: 'Erro ao comunicar com o servidor.' });
+        Alerta.error('Erro ao comunicar com o servidor.');
       }
     });
   });

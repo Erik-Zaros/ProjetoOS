@@ -1,0 +1,151 @@
+/* ============================================================
+   Ajustes Globais de Layout - AdminLTE 4 & ProjetoOS
+   ============================================================ */
+
+/* Permite que position: sticky funcione na rolagem da página */
+.app-main {
+    overflow: visible !important;
+}
+   
+/* Alinhamento perfeito dos itens da Navbar (tela cheia, tema, usuário) */
+.app-header .navbar-nav {
+    display: flex;
+    align-items: center;
+}
+
+.app-header .navbar-nav .nav-item {
+    display: flex;
+    align-items: center;
+}
+
+.app-header .navbar-nav .nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5rem;
+    width: 2.5rem;
+    padding: 0 !important;
+    line-height: 1;
+}
+
+.app-header .navbar-nav .nav-link i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    font-size: 1.25rem;
+    vertical-align: middle;
+}
+
+/* Card-header mais compacto em todo o sistema */
+.card-header {
+    padding: 0.5rem 0.875rem !important;
+    font-size: 0.925rem;
+    font-weight: 600;
+}
+
+.card-header .card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+/* ============================================================
+   Tema Escuro - Flatpickr
+   ============================================================ */
+[data-bs-theme="dark"] .flatpickr-calendar {
+    background: #1e222d !important;
+    border: 1px solid #33394d !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45) !important;
+    color: #e2e8f0 !important;
+}
+
+[data-bs-theme="dark"] .flatpickr-calendar.arrowTop:before,
+[data-bs-theme="dark"] .flatpickr-calendar.arrowTop:after {
+    border-bottom-color: #1e222d !important;
+}
+
+[data-bs-theme="dark"] .flatpickr-calendar.arrowBottom:before,
+[data-bs-theme="dark"] .flatpickr-calendar.arrowBottom:after {
+    border-top-color: #1e222d !important;
+}
+
+[data-bs-theme="dark"] .flatpickr-months {
+    background: #252a38 !important;
+    border-bottom: 1px solid #33394d;
+}
+
+[data-bs-theme="dark"] .flatpickr-months .flatpickr-month {
+    color: #f1f5f9 !important;
+    fill: #f1f5f9 !important;
+}
+
+[data-bs-theme="dark"] .flatpickr-current-month .numInputWrapper span.arrowUp:after {
+    border-bottom-color: #f1f5f9 !important;
+}
+
+[data-bs-theme="dark"] .flatpickr-current-month .numInputWrapper span.arrowDown:after {
+    border-top-color: #f1f5f9 !important;
+}
+
+[data-bs-theme="dark"] .flatpickr-months .flatpickr-prev-month,
+[data-bs-theme="dark"] .flatpickr-months .flatpickr-next-month {
+    color: #f1f5f9 !important;
+    fill: #f1f5f9 !important;
+}
+
+[data-bs-theme="dark"] span.flatpickr-weekday {
+    color: #94a3b8 !important;
+    background: #252a38 !important;
+}
+
+[data-bs-theme="dark"] .flatpickr-day {
+    color: #cbd5e1 !important;
+}
+
+[data-bs-theme="dark"] .flatpickr-day:hover,
+[data-bs-theme="dark"] .flatpickr-day:focus {
+    background: #33394d !important;
+    border-color: #33394d !important;
+    color: #fff !important;
+}
+
+[data-bs-theme="dark"] .flatpickr-day.selected,
+[data-bs-theme="dark"] .flatpickr-day.startRange,
+[data-bs-theme="dark"] .flatpickr-day.endRange {
+    background: #0d6efd !important;
+    border-color: #0d6efd !important;
+    color: #fff !important;
+}
+
+[data-bs-theme="dark"] .flatpickr-day.today {
+    border-color: #0d6efd !important;
+}
+
+[data-bs-theme="dark"] .flatpickr-day.prevMonthDay,
+[data-bs-theme="dark"] .flatpickr-day.nextMonthDay {
+    color: #4b5563 !important;
+}
+
+[data-bs-theme="dark"] .flatpickr-time {
+    background: #1e222d !important;
+    border-top: 1px solid #33394d !important;
+}
+
+[data-bs-theme="dark"] .flatpickr-time input {
+    color: #f1f5f9 !important;
+}
+
+/* ============================================================
+   Tema Escuro - SweetAlert2
+   ============================================================ */
+[data-bs-theme="dark"] .swal2-popup {
+    background: #1e222d !important;
+    color: #e2e8f0 !important;
+    border: 1px solid #33394d !important;
+}
+
+[data-bs-theme="dark"] .swal2-title,
+[data-bs-theme="dark"] .swal2-html-container {
+    color: #e2e8f0 !important;
+}

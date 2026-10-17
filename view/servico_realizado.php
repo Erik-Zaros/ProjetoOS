@@ -3,14 +3,15 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Auth\Autenticador;
-use App\Service\FuncoesService;
+use App\Service\PostoService;
 
 Autenticador::iniciar();
+$posto_service = new PostoService();
 
 $title = 'Cadastro de Serviço Realizado';
 $pageTitle = 'CADASTRO DE SERVIÇO';
 
-$usa_modulo_estoque = FuncoesService::usaModuloEstoque();
+$usa_modulo_estoque = $posto_service->usaModulo("estoque");
 
 ob_start();
 ?>

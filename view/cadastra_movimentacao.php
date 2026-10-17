@@ -3,13 +3,15 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Auth\Autenticador;
-use App\Service\FuncoesService;
+use App\Service\PostoService;
 
 Autenticador::iniciar();
+$posto_service = new PostoService();
+
 $title = 'Movimentação de Estoque';
 $pageTitle = 'CADASTRA MOVIMENTAÇÃO';
 
-$usa_modulo_estoque = FuncoesService::usaModuloEstoque();
+$usa_modulo_estoque = $posto_service->usaModulo("estoque");
 
 ob_start();
 
@@ -19,32 +21,32 @@ if ($usa_modulo_estoque == false) {
 
 <div class="row">
   <div class="col-lg-4 col-12">
-    <div class="small-box bg-primary">
+    <div class="small-box text-bg-primary">
       <div class="inner">
         <h3 id="sbSaldo">—</h3>
         <p>Saldo Atual do Item</p>
       </div>
-      <div class="icon"><i class="bi bi-graph-up-arrow icone"></i></div>
-      <a href="consulta_estoque" class="small-box-footer icone">Ver estoque <i class="bi bi-arrow-right icone"></i></a>
+      <i class="small-box-icon bi bi-graph-up-arrow"></i>
+      <a href="consulta_estoque" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">Ver estoque <i class="bi bi-arrow-right"></i></a>
     </div>
   </div>
   <div class="col-lg-4 col-12">
-    <div class="small-box bg-success">
+    <div class="small-box text-bg-success">
       <div class="inner">
         <h3 id="sbUltEntrada">—</h3>
         <p>Última Entrada</p>
       </div>
-      <div class="icon"><i class="bi bi-box-arrow-in-down icone"></i></div>
+      <i class="small-box-icon bi bi-box-arrow-in-down"></i>
       <span class="small-box-footer">&nbsp;</span>
     </div>
   </div>
   <div class="col-lg-4 col-12">
-    <div class="small-box bg-danger">
+    <div class="small-box text-bg-danger">
       <div class="inner">
         <h3 id="sbUltSaida">—</h3>
         <p>Última Saída</p>
       </div>
-      <div class="icon"><i class="bi bi-box-arrow-up icone"></i></div>
+      <i class="small-box-icon bi bi-box-arrow-up"></i>
       <span class="small-box-footer">&nbsp;</span>
     </div>
   </div>
@@ -127,13 +129,13 @@ if ($usa_modulo_estoque == false) {
       <table class="table table-bordered table-striped table-hover nowrap" id="movTable">
         <thead>
           <tr>
-            <th>#</th>
-            <th>Data</th>
-            <th>Tipo</th>
-            <th>Qtde</th>
-            <th>OS</th>
-            <th>Motivo</th>
-            <th>Item</th>
+            <th class="text-center">#</th>
+            <th class="text-center">Data</th>
+            <th class="text-center">Tipo</th>
+            <th class="text-center">Qtde</th>
+            <th class="text-center">OS</th>
+            <th class="text-center">Motivo</th>
+            <th class="text-center">Item</th>
           </tr>
         </thead>
         <tbody></tbody>

@@ -8,7 +8,10 @@ function carregarClientes() {
             $('#clientesTable tbody').empty();
             if (Array.isArray(data) && data.length > 0) {
                 data.forEach(function (cliente) {
-                    const cepFormatado = cliente.cep ? cliente.cep.replace(/(\d{5})(\d{3})/, '$1-$2') : '';
+                    const cepFormatado = cliente.cep
+                        ? cliente.cep.replace(/(\d{5})(\d{3})/, '$1-$2')
+                        : '';
+
                     $('#clientesTable tbody').append(`
                         <tr>
                             <td class='text-center'>${cliente.cpf || ''}</td>
@@ -29,13 +32,13 @@ function carregarClientes() {
                                         <li>
                                             <a href="javascript:void(0)" class="dropdown-item editar"
                                                data-cpf="${cliente.cpf}">
-                                                <i class="bi bi-pencil-square"></i> Editar
+                                                <i class="bi bi-pencil-square text-warning me-1"></i> Editar
                                             </a>
                                         </li>
                                         <li>
                                             <a href="javascript:void(0)" class="dropdown-item btn-log-auditor"
                                                data-id="${cliente.cliente}" data-tabela="tbl_cliente">
-                                                <i class="bi bi-clock-history text-info"></i> Ver Log
+                                                <i class="bi bi-clock-history text-info me-1"></i> Ver Log
                                             </a>
                                         </li>
                                     </ul>
@@ -48,13 +51,7 @@ function carregarClientes() {
             new MiniDataTable('#clientesTable');
         },
         error: function () {
-            Swal.fire({
-               toast: true,
-               position: 'top-end',
-               showConfirmButton: false,
-               icon: 'error',
-               text: 'Erro ao carregar os clientes'
-             });
+            Alerta.error('Erro ao carregar os clientes.');
         }
     });
 }
@@ -71,40 +68,21 @@ $(document).ready(function () {
                 dataType: 'json',
                 data: { cep: cep },
                 success: function (data) {
-
                     if (!data.erro) {
                         $('#logradouro').val(data.logradouro || '');
                         $('#bairro').val(data.bairro || '');
                         $('#cidade').val(data.localidade || '');
                         $('#estado').val(data.uf || '');
                     } else {
-                        Swal.fire({
-                           toast: true,
-                           position: 'top-end',
-                           showConfirmButton: false,
-                           icon: 'error',
-                           text: 'CEP inválido!'
-                         });
+                        Alerta.error('CEP inválido!');
                     }
                 },
-                error: function (xhr, status, error) {
-                    Swal.fire({
-                       toast: true,
-                       position: 'top-end',
-                       showConfirmButton: false,
-                       icon: 'error',
-                       text: 'Erro ao buscar CEP.'
-                     });
+                error: function () {
+                    Alerta.error('Erro ao buscar CEP.');
                 }
             });
-        } else {
-            Swal.fire({
-               toast: true,
-               position: 'top-end',
-               showConfirmButton: false,
-               icon: 'error',
-               text: 'CEP deve ter 8 dígitos.'
-             });
+        } else if (cep.length > 0) {
+            Alerta.warning('CEP deve ter 8 dígitos.');
         }
     });
 
@@ -120,31 +98,21 @@ $(document).ready(function () {
             dataType: 'json',
             data: $.param(formData),
             success: function (response) {
-
                 if (response.status === 'error') {
-                    Swal.fire({
-                       toast: true,
-                       position: 'top-end',
-                       showConfirmButton: false,
-                       icon: 'error',
-                       text: response.message
-                     });
+                    Alerta.error(response.message);
                 } else {
-                    Swal.fire({
-                        toast: true,
-                        position: 'top-end',
-                        icon: 'success',
-                        text: response.message,
-                    }).then(() => {
-                        $('#clienteForm')[0].reset();
-                        carregarClientes();
-                    });
+                    Alerta.success(response.message || 'Cliente cadastrado com sucesso.');
+                    $('#clienteForm')[0].reset();
+                    carregarClientes();
                 }
             },
+            error: function () {
+                Alerta.error('Erro ao cadastrar cliente.');
+            }
         });
     });
 
-        $(document).on('click', '.editar', function () {
+    $(document).on('click', '.editar', function () {
         var cpf = $(this).data('cpf');
         $.ajax({
             url: '../public/cliente/buscar.php',
@@ -182,49 +150,23 @@ $(document).ready(function () {
                             estado: $('#estado').val()
                         },
                         success: function (response) {
-
                             if (response.status === 'error') {
-                                Swal.fire({
-                                    toast: true,
-                                    position: 'top-end',
-                                    showConfirmButton: false,
-                                    icon: 'error',
-                                    text: response.message,
-                                });
-                            } else if (response.status === "success") {
-                                Swal.fire({
-                                    toast: true,
-                                    position: 'top-end',
-                                    timer: 2500,
-                                    icon: 'success',
-                                    text: response.message,
-                                }).then(() => {
-                                    carregarClientes();
-                                    $('#clienteForm')[0].reset();
-                                    $('#cpf').prop('disabled', false);
-                                });
+                                Alerta.error(response.message);
+                            } else {
+                                Alerta.success(response.message || 'Cliente atualizado com sucesso.');
+                                carregarClientes();
+                                $('#clienteForm')[0].reset();
+                                $('#cpf').prop('disabled', false);
                             }
                         },
-                        error: function (xhr, status, error) {
-                            Swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                icon: 'error',
-                                text: 'Erro ao editar cliente.',
-                            });
+                        error: function () {
+                            Alerta.error('Erro ao editar cliente.');
                         }
                     });
                 });
             },
-            error: function (xhr, status, error) {
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    icon: 'error',
-                    text: 'Erro ao buscar cliente.',
-                });
+            error: function () {
+                Alerta.error('Erro ao buscar cliente.');
             }
         });
     });

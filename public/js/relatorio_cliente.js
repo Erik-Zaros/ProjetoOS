@@ -1,92 +1,80 @@
-const STORAGE_KEY = 'relatorioClientes';
-
 $(document).ready(function () {
 
-    $("#btnCSV").on("click", function () {
-        $("#formCSV input[name=dataInicio]").val($("#dataInicio").val());
-        $("#formCSV input[name=dataFim]").val($("#dataFim").val());
-        $("#formCSV input[name=cpf]").val($("#cpf").val());
-        $("#formCSV input[name=nome]").val($("#nome").val());
-        $("#formCSV").submit();
-    });
+    if (window.flatpickr) {
+        flatpickr('#dataInicio', {
+            locale: 'pt',
+            dateFormat: 'Y-m-d',
+            altInput: true,
+            altFormat: 'd/m/Y',
+            allowInput: true
+        });
+        flatpickr('#dataFim', {
+            locale: 'pt',
+            dateFormat: 'Y-m-d',
+            altInput: true,
+            altFormat: 'd/m/Y',
+            allowInput: true
+        });
+    }
 
     $("#pesquisaForm").on('submit', function (e) {
         e.preventDefault();
         var formData = $(this).serialize();
+        atualizarUrl(formData);
         carregarClientes(formData);
     });
 
     $('#limparPesquisa').on('click', function () {
         $('#pesquisaForm')[0].reset();
-        sessionStorage.removeItem(STORAGE_KEY);
-        if ($.fn.DataTable.isDataTable('#clienteTable')) {
-            $('#clienteTable').DataTable().destroy();
-            $('#clienteTable tbody').empty();
-        }
+        const di = document.getElementById('dataInicio');
+        if (di && di._flatpickr) di._flatpickr.clear();
+        const df = document.getElementById('dataFim');
+        if (df && df._flatpickr) df._flatpickr.clear();
+        
+        history.pushState(null, '', window.location.pathname);
+        MiniDataTable.destroy('#clienteTable');
+        $('#clienteTable tbody').empty();
         $("#btnCSV").hide();
     });
 
-    $("#dataInicio, #dataFim").datepicker({
-        dateFormat: "dd/mm/yy",
-        changeMonth: true,
-        changeYear: true,
-        showButtonPanel: true
-    });
-
-    restauraSession();
+    restauraUrl();
 });
 
-function salvaSession(formData, dados) {
-    const estado = {
-        filtros: {
-            dataInicio: $("#dataInicio").val(),
-            dataFim: $("#dataFim").val(),
-            cpf: $("#cpf").val(),
-            nome: $("#nome").val()
-        },
-        resultado: dados
-    };
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
+function atualizarUrl(formData) {
+    if (window.history && window.history.pushState) {
+        const url = window.location.pathname + '?' + formData;
+        window.history.pushState(null, '', url);
+    }
 }
 
 function renderizarTabela(data) {
-    if ($.fn.DataTable.isDataTable('#clienteTable')) {
-        $('#clienteTable').DataTable().destroy();
-    }
-
-    $("#btnCSV").show();
+    MiniDataTable.destroy('#clienteTable');
     $('#clienteTable tbody').empty();
 
-    data.forEach(function (cliente) {
-        $('#clienteTable tbody').append(`
-            <tr>
-                <td>${cliente.nome || ''}</td>
-                <td>${cliente.cpf || ''}</td>
-                <td>${cliente.cep || ''}</td>
-                <td>${cliente.endereco || ''}</td>
-                <td>${cliente.bairro || ''}</td>
-                <td>${cliente.cidade || ''}</td>
-                <td>${cliente.estado || ''}</td>
-                <td>${cliente.data_cadastro || ''}</td>
-                <td>${cliente.oss || ''}</td>
-            </tr>
-        `);
-    });
+    if (Array.isArray(data)) {
+        $("#btnCSV").show();
+        data.forEach(function (cliente) {
+            $('#clienteTable tbody').append(`
+                <tr>
+                    <td>${cliente.nome || ''}</td>
+                    <td class='text-center'>${cliente.cpf || ''}</td>
+                    <td class='text-center'>${cliente.cep || ''}</td>
+                    <td>${cliente.endereco || ''}</td>
+                    <td>${cliente.bairro || ''}</td>
+                    <td>${cliente.cidade || ''}</td>
+                    <td class='text-center'>${cliente.estado || ''}</td>
+                    <td class='text-center'>${cliente.data_cadastro || ''}</td>
+                    <td class='text-center'>${cliente.oss || ''}</td>
+                </tr>
+            `);
+        });
+    }
 
-    $('#clienteTable').DataTable({
-        destroy: true,
-        responsive: true,
-        scrollX: false,
-        language: {
-            url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-        }
-    });
+    new MiniDataTable('#clienteTable');
 }
 
 function carregarClientes(formData) {
-    if ($.fn.DataTable.isDataTable('#clienteTable')) {
-        $('#clienteTable').DataTable().destroy();
-    }
+    MiniDataTable.destroy('#clienteTable');
     $.ajax({
         url: '../public/relatorio_cliente/pesquisar.php',
         method: 'POST',
@@ -94,43 +82,48 @@ function carregarClientes(formData) {
         dataType: 'json',
         success: function (data) {
             if (data.status === 'alert') {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Atenção',
-                    text: data.message
-                });
+                Alerta.warning(data.message, 'Atenção');
                 return;
             }
             renderizarTabela(data);
-            salvaSession(formData, data);
         },
         error: function () {
-            Swal.fire({
-                icon: 'error',
-                title: 'Erro',
-                text: 'Erro ao consultar os dados'
-            });
+            Alerta.error('Erro ao consultar os dados.');
         }
     });
 }
 
-function restauraSession() {
-    const salvo = sessionStorage.getItem(STORAGE_KEY);
-    if (!salvo) return;
+function restauraUrl() {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.toString()) return;
 
-    try {
-        const estado = JSON.parse(salvo);
+    const dataInicio = params.get('dataInicio') || '';
+    const dataFim = params.get('dataFim') || '';
+    const cpf = params.get('cpf') || '';
+    const nome = params.get('nome') || '';
+    const clienteOs = params.get('cliente_os');
 
-        $("#dataInicio").val(estado.filtros.dataInicio);
-        $("#dataFim").val(estado.filtros.dataFim);
-        $("#cpf").val(estado.filtros.cpf);
-        $("#nome").val(estado.filtros.nome);
+    const di = document.getElementById('dataInicio');
+    if (di && di._flatpickr && dataInicio) {
+        di._flatpickr.setDate(dataInicio, true);
+    } else {
+        $("#dataInicio").val(dataInicio);
+    }
 
-        if (Array.isArray(estado.resultado) && estado.resultado.length > 0) {
-            renderizarTabela(estado.resultado);
-        }
-    } catch (e) {
-        console.error('Erro ao restaurar estado do relatório:', e);
-        sessionStorage.removeItem(STORAGE_KEY);
+    const df = document.getElementById('dataFim');
+    if (df && df._flatpickr && dataFim) {
+        df._flatpickr.setDate(dataFim, true);
+    } else {
+        $("#dataFim").val(dataFim);
+    }
+
+    $("#cpf").val(cpf);
+    $("#nome").val(nome);
+    if (clienteOs === 'on' || clienteOs === '1' || clienteOs === 'true') {
+        $("#cliente_os").prop('checked', true);
+    }
+
+    if (dataInicio && dataFim) {
+        carregarClientes($('#pesquisaForm').serialize());
     }
 }

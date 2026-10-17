@@ -1,12 +1,13 @@
 <?php
 
 use App\Auth\Autenticador;
-use App\Service\FuncoesService;
+use App\Service\UsuarioService;
 
 $usuario = Autenticador::getUsuario();
-$master = FuncoesService::usuarioMaster($usuario);
+$usuario_service = new UsuarioService();
+$usuario_info = $usuario_service->buscarPorId($usuario);
 
-if ($master === false) {
+if ($usuario_info["master"] === false) {
     unset($rotas['usuario']);
 }
 

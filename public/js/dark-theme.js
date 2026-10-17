@@ -1,45 +1,48 @@
 (function () {
   'use strict';
 
-  const API_URL  = '../public/tema/tema.php';
-  const LS_KEY   = 'projetoos_tema';
-  const DARK_CLS = 'dark-mode';
-
-  const savedLocal = localStorage.getItem(LS_KEY);
-  if (savedLocal === 'dark') {
-    document.body.classList.add(DARK_CLS);
-  }
+  const API_URL = '../public/tema/tema.php';
+  const LS_KEY  = 'projetoos_tema';
 
   function applyTheme(tema) {
-    if (tema === 'dark') {
-      document.body.classList.add(DARK_CLS);
-    } else {
-      document.body.classList.remove(DARK_CLS);
-    }
-    localStorage.setItem(LS_KEY, tema);
-    syncToggleUI(tema);
+    const isDark = tema === 'dark';
+    document.documentElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
+    localStorage.setItem(LS_KEY, isDark ? 'dark' : 'light');
+    syncToggleUI(isDark ? 'dark' : 'light');
   }
 
   function syncToggleUI(tema) {
+    const isDark = tema === 'dark';
+
+    const navIcon = document.getElementById('navTemaIcon');
+    if (navIcon) {
+      navIcon.className = isDark ? 'bi bi-sun-fill text-warning' : 'bi bi-moon-stars-fill';
+    }
+
     const toggle = document.getElementById('temaToggle');
     if (toggle) {
-      toggle.checked = tema === 'dark';
+      toggle.checked = isDark;
     }
 
     const icon  = document.getElementById('temaIcon');
     const label = document.getElementById('temaLabel');
-    if (icon)  icon.className  = tema === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
-    if (label) label.textContent = tema === 'dark' ? 'Modo Escuro' : 'Modo Claro';
+    if (icon)  icon.className  = isDark ? 'bi bi-moon-stars-fill text-warning' : 'bi bi-sun-fill';
+    if (label) label.textContent = isDark ? 'Modo Escuro' : 'Modo Claro';
   }
 
   function loadTemaFromServer() {
     fetch(API_URL, { method: 'GET', credentials: 'same-origin' })
       .then(r => r.json())
       .then(data => {
-        applyTheme(data.tema ?? 'light');
+        if (data.tema) {
+          applyTheme(data.tema);
+        }
       })
       .catch(() => {
-        applyTheme(savedLocal ?? 'light');
+        const saved = localStorage.getItem(LS_KEY);
+        if (saved) {
+          applyTheme(saved);
+        }
       });
   }
 
@@ -54,8 +57,8 @@
 
   window.ProjetoOSTema = {
     toggle: function () {
-      const isDark = document.body.classList.contains(DARK_CLS);
-      const novo   = isDark ? 'light' : 'dark';
+      const current = document.documentElement.getAttribute('data-bs-theme') || 'light';
+      const novo = current === 'dark' ? 'light' : 'dark';
       applyTheme(novo);
       saveTemaToServer(novo);
     },
@@ -64,12 +67,22 @@
       saveTemaToServer(tema);
     },
     get: function () {
-      return document.body.classList.contains(DARK_CLS) ? 'dark' : 'light';
+      return document.documentElement.getAttribute('data-bs-theme') || 'light';
     }
   };
 
   document.addEventListener('DOMContentLoaded', function () {
+    const currentAttr = document.documentElement.getAttribute('data-bs-theme') || localStorage.getItem(LS_KEY) || 'light';
+    syncToggleUI(currentAttr);
     loadTemaFromServer();
+
+    const btnNav = document.getElementById('btnTemaToggle');
+    if (btnNav) {
+      btnNav.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.ProjetoOSTema.toggle();
+      });
+    }
 
     const toggle = document.getElementById('temaToggle');
     if (toggle) {

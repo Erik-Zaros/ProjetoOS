@@ -321,22 +321,19 @@
         // NUNCA mexe em quem realmente rola (modal, offcanvas, áreas com scroll).
         var el = this.wrap.parentElement;
         while (el && el !== document.body && el !== document.documentElement) {
-            var cs = getComputedStyle(el);
-
-            if (el.classList.contains('table-responsive')) {
-                // só existe para rolar na horizontal e impediria o cabeçalho fixo;
-                // no celular os cards já resolvem a responsividade
-                this._ovr.push({ el: el, prev: el.style.overflow });
-                el.style.overflow = 'visible';
-            } else if (el.matches('.modal, .offcanvas, .modal-body, .overflow-auto, .overflow-scroll') ||
-                       cs.overflowY === 'scroll' ||
-                       (cs.overflowY === 'auto' && el.scrollHeight > el.clientHeight + 1)) {
-                // container que rola de verdade: o sticky se ancora nele
+            // Se for modal ou offcanvas, é um container de scroll interno legítimo
+            if (el.matches('.modal, .offcanvas, .modal-body, .modal-dialog')) {
                 this._hasScrollParent = true;
                 break;
-            } else if (cs.overflowX === 'hidden' || cs.overflowY === 'hidden') {
+            }
+
+            var cs = getComputedStyle(el);
+            if (el.classList.contains('table-responsive')) {
                 this._ovr.push({ el: el, prev: el.style.overflow });
-                el.style.overflow = 'clip';
+                el.style.overflow = 'visible';
+            } else if (cs.overflowX !== 'visible' || cs.overflowY !== 'visible') {
+                this._ovr.push({ el: el, prev: el.style.overflow });
+                el.style.overflow = 'visible';
             }
             el = el.parentElement;
         }
@@ -357,18 +354,21 @@
         var off = this.opts.stickyOffset;
         if (typeof off !== 'number') {
             off = 0;
-            if (!this._hasScrollParent) {
-                var sels = ['.main-header', '.navbar.fixed-top', '.navbar.sticky-top', 'header.fixed-top', 'header.sticky-top'];
+            if (this._hasScrollParent) {
+                off = 0;
+            } else {
+                var sels = ['.app-header', '.main-header', '.navbar.fixed-top', '.navbar.sticky-top', 'header.fixed-top', 'header.sticky-top'];
                 for (var i = 0; i < sels.length; i++) {
                     var n = document.querySelector(sels[i]);
                     if (!n) continue;
-                    var pos = getComputedStyle(n).position;
-                    if (pos === 'fixed' || pos === 'sticky') {
-                        off = Math.round(n.getBoundingClientRect().height);
+                    var h = Math.round(n.getBoundingClientRect().height);
+                    if (h > 0) {
+                        off = h;
                         break;
                     }
                 }
-            } 
+                if (off <= 0) off = 56;
+            }
         }
         this.table.style.setProperty('--mdt-sticky-top', off + 'px');
     };

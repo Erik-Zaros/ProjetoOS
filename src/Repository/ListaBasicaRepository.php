@@ -36,11 +36,10 @@ class ListaBasicaRepository
         $termo = pg_escape_string($con, $termo);
 
         $sql = "
-            SELECT produto, codigo, descricao
+            SELECT produto, codigo, descricao, ativo
             FROM tbl_produto
             WHERE codigo ILIKE '%{$termo}%' OR descricao ILIKE '%{$termo}%'
             ORDER BY descricao ASC
-            LIMIT 10
         ";
 
         $res = pg_query($con, $sql);

@@ -14,9 +14,9 @@ $usuario = Autenticador::getUsuario();
 $posto   = Autenticador::getPosto();
 
 $layoutContext = FuncoesService::buscaInfoUsuario($usuario);
-$usuarioNome   = $layoutContext['usuarioNome'];
-$usuarioLogin  = $layoutContext['usuarioLogin'];
-$usuarioTipo   = $layoutContext['usuarioTipo'];
+$usuarioNome   = $layoutContext['usuarioNome'] ?? '';
+$usuarioLogin  = $layoutContext['usuarioLogin'] ?? '';
+$usuarioTipo   = $layoutContext['usuarioTipo'] ?? '';
 $postoNome     = PostoController::buscarNome($posto);
 
 $temaAtual = 'light';
@@ -28,10 +28,7 @@ try {
         $temaAtual = ($temaData['tema'] ?? 'light') === 'dark' ? 'dark' : 'light';
     }
 } catch (\Throwable $e) {
-    // Sem cache disponível usa light
 }
-
-$bodyClass = $temaAtual === 'dark' ? 'hold-transition sidebar-mini layout-fixed dark-mode' : 'hold-transition sidebar-mini layout-fixed';
 
 require_once __DIR__ . '/../config/menus/rotas.php';
 if (file_exists(__DIR__ . "/../config/menus/posto/{$posto}/rotas.php")) {
@@ -46,16 +43,13 @@ if (file_exists(__DIR__ . "/../config/assets/posto/{$posto}/imports.php")) {
 $current_page = basename($_SERVER['PHP_SELF'], '.php');
 ?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-bs-theme="<?= $temaAtual ?>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= $title ?? 'ProjetoOS' ?></title>
 
   <link rel="icon" type="image/x-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%232e2e48'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'%3EOS%3C/text%3E%3C/svg%3E">
-
-  <link rel="stylesheet" href="../public/adminlte/plugins/fontawesome-free/css/all.min.css">
-  <link rel="stylesheet" href="../public/adminlte/dist/css/adminlte.min.css">
 
   <?php foreach ($imports["global"]["css"] as $css): ?>
     <link rel="stylesheet" href="<?= $css ?>">
@@ -65,86 +59,88 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
   foreach ($imports as $key => $import) {
       if ($current_page === $key && isset($import["css"])) {
           foreach ($import["css"] as $css) {
-              echo '<link rel="stylesheet" href="' . $css . '">' . PHP_EOL;
+              echo '    <link rel="stylesheet" href="' . $css . '">' . PHP_EOL;
           }
       }
   }
   ?>
-
-  <link rel="stylesheet" href="../public/css/dark-theme.css">
-
-  <?php if ($temaAtual === 'dark') { ?>
-  <style>
-    body { background-color: #0f1117 !important; }
-  </style>
-  <?php } ?>
 </head>
 
-<body class="<?= $bodyClass ?>">
-<div class="wrapper">
+<body class="layout-fixed fixed-header sidebar-expand-lg bg-body-tertiary">
+<div class="app-wrapper">
 
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+  <nav class="app-header navbar navbar-expand bg-body shadow-sm">
     <div class="container-fluid">
-      <div class="row w-100 align-items-center">
-
-        <div class="col-3 col-sm-2 d-flex align-items-center pl-3">
-          <a class="nav-link" data-widget="pushmenu" href="#" role="button">
-            <i class="fas fa-bars"></i>
+      <ul class="navbar-nav align-items-center">
+        <li class="nav-item">
+          <a class="nav-link d-inline-flex align-items-center justify-content-center" data-lte-toggle="sidebar" href="#" role="button" aria-label="Alternar Menu">
+            <i class="bi bi-list fs-4"></i>
           </a>
-        </div>
+        </li>
+      </ul>
 
-        <div class="col-6 col-sm-8 text-center">
-          <span class="navbar-text text-dark" style="font-size:1.3rem;">
-            <?= htmlspecialchars($postoNome) ?>
-          </span>
-        </div>
+      <div class="mx-auto text-center px-2">
+        <span class="navbar-text fw-bold fs-5 text-body">
+          <?= htmlspecialchars((string) $postoNome) ?>
+        </span>
+      </div>
 
-        <div class="col-3 col-sm-2 text-right">
+      <ul class="navbar-nav align-items-center gap-1">
+        <li class="nav-item">
+          <a class="nav-link d-inline-flex align-items-center justify-content-center" href="#" data-lte-toggle="fullscreen" role="button" aria-label="Tela Cheia" title="Tela Cheia">
+            <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
+            <i data-lte-icon="minimize" class="bi bi-fullscreen-exit d-none"></i>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link d-inline-flex align-items-center justify-content-center" href="#" id="btnTemaToggle" role="button" aria-label="Alternar Modo Escuro/Claro" title="Alternar Modo Escuro/Claro">
+            <i id="navTemaIcon" class="bi bi-<?= $temaAtual === 'dark' ? 'sun-fill text-warning' : 'moon-stars-fill' ?>"></i>
+          </a>
+        </li>
+
+        <li class="nav-item">
           <button
             type="button"
-            class="btn btn-link nav-user-button p-0 text-decoration-none"
+            class="btn btn-link nav-link d-inline-flex align-items-center justify-content-center text-decoration-none border-0"
             data-bs-toggle="modal"
             data-bs-target="#modalUsuario"
-            aria-label="Abrir dados do usuário"
+            aria-label="Abrir Perfil"
+            title="Perfil: <?= htmlspecialchars($usuarioNome) ?>"
           >
-            <i class="fas fa-user-circle me-1"></i>
-            <span class="d-none d-sm-inline"><?= htmlspecialchars($usuarioNome) ?></span>
+            <i class="bi bi-person-circle"></i>
           </button>
-        </div>
-
-      </div>
+        </li>
+      </ul>
     </div>
   </nav>
 
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+    <div class="sidebar-brand">
+      <a href="menu" class="brand-link text-decoration-none">
+        <span class="brand-text fw-bold fs-4 text-white">ProjetoOS</span>
+      </a>
+    </div>
 
-    <a class="brand-link text-center">
-      <span class="brand-text">ProjetoOS</span>
-    </a>
-
-    <div class="sidebar">
-
-      <div class="form-inline p-2">
-        <div class="input-group" data-widget="sidebar-search">
+    <div class="sidebar-wrapper">
+      <div class="px-3 pt-3 pb-1">
+        <div class="input-group input-group-sm">
           <input
-            class="form-control form-control-sidebar"
             type="search"
-            placeholder="Buscar..."
-            aria-label="Search"
+            class="form-control"
             id="sidebarSearch"
+            placeholder="Filtrar menu..."
+            aria-label="Filtrar menu"
+            autocomplete="off"
           >
-          <div class="input-group-append">
-            <button class="btn btn-sidebar" id="sidebarSearchIcon">
-              <i class="fas fa-search"></i>
-            </button>
-          </div>
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
         </div>
       </div>
 
-      <nav class="mt-2">
+      <nav class="mt-2" aria-label="Navegação Principal">
         <ul
-          class="nav nav-pills nav-sidebar flex-column nav-legacy"
-          data-widget="treeview"
+          class="nav sidebar-menu flex-column"
+          data-lte-toggle="treeview"
           role="menu"
           data-accordion="false"
           id="menuSidebar"
@@ -158,19 +154,20 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                 </a>
               </li>
             <?php } else { ?>
-              <li class="nav-item has-treeview <?= in_array($current_page, array_column($menu['submenus'], 'link')) ? 'menu-open' : '' ?>">
-                <a href="#" class="nav-link <?= in_array($current_page, array_column($menu['submenus'], 'link')) ? 'active' : '' ?>">
+              <?php $isOpen = in_array($current_page, array_column($menu['submenus'], 'link')); ?>
+              <li class="nav-item <?= $isOpen ? 'menu-open' : '' ?>">
+                <a href="#" class="nav-link <?= $isOpen ? 'active' : '' ?>">
                   <i class="nav-icon <?= $menu['icone'] ?>"></i>
                   <p>
                     <?= $menu['titulo'] ?>
-                    <i class="right fas fa-angle-left"></i>
+                    <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
                   <?php foreach ($menu['submenus'] as $submenu) { ?>
                     <li class="nav-item">
                       <a href="<?= $submenu['link'] ?>" class="nav-link <?= ($current_page == $submenu['link']) ? 'active' : '' ?>">
-                        <i class="far fa-circle nav-icon"></i>
+                        <i class="nav-icon bi bi-circle fs-8 me-2"></i>
                         <p><?= $submenu['titulo'] ?></p>
                       </a>
                     </li>
@@ -179,36 +176,34 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
               </li>
             <?php } ?>
           <?php } ?>
-
-		  <!--
-          <li class="nav-item">
-            <a href="../logout.php" class="nav-link text-danger">
-              <i class="nav-icon fas fa-sign-out-alt"></i>
-              <p>Sair</p>
-            </a>
-          </li> -->
         </ul>
       </nav>
-
     </div>
   </aside>
 
-  <div class="content-wrapper">
-    <section class="content pt-4 px-3">
-      <?= $content ?? '' ?>
-    </section>
-  </div>
+  <main class="app-main">
+    <?php if (!empty($pageTitle) && 1==2) { ?>
+      <div class="app-content-header pt-3 px-3 pb-0">
+        <div class="container-fluid">
+          <div class="row align-items-center">
+            <div class="col-12">
+              <h4 class="mb-0 fw-bold text-body"><?= htmlspecialchars((string) $pageTitle) ?></h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    <?php } ?>
+    <div class="app-content py-3 px-3">
+      <div class="container-fluid">
+        <?= $content ?? '' ?>
+      </div>
+    </div>
+  </main>
 
 </div>
 
 <?php include __DIR__ . '/modal_perfil.php'; ?>
 <?php include __DIR__ . '/modal_log.php'; ?>
-
-<script src="../public/adminlte/plugins/jquery/jquery.min.js"></script>
-<script src="../public/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="../public/adminlte/dist/js/adminlte.min.js"></script>
-
-<script src="../public/js/dark-theme.js"></script>
 
 <?php foreach ($imports["global"]["js"] as $js): ?>
   <script src="<?= $js ?>"></script>

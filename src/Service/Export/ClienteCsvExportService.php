@@ -6,56 +6,46 @@ use App\Core\Db;
 
 class ClienteCsvExportService
 {
-    public function gerar($posto)
+    public function headers(): array
     {
-        $con = Db::getConnection();
-        $posto = intval($posto);
+        return ['Nome', 'CPF', 'CEP', 'Endereço', 'Bairro', 'Número', 'Cidade', 'Estado', 'Data Cadastro'];
+    }
 
-        $sqlVerifica = "SELECT COUNT(1) AS cliente FROM tbl_cliente WHERE posto = {$posto}";
-        $resVerifica = pg_query($con, $sqlVerifica);
+    public function temRegistros(int $posto): bool
+    {
+        $res = pg_query_params(
+            Db::getConnection(),
+            'SELECT 1 FROM tbl_cliente WHERE posto = $1 LIMIT 1',
+            [$posto]
+        );
+        return $res !== false && pg_num_rows($res) > 0;
+    }
 
-        if (pg_num_rows($resVerifica) === 0) {
-            header("Location: ../../view/cliente?alerta=true");exit;
+    public function linhas(int $posto): iterable
+    {
+        $res = pg_query_params(Db::getConnection(), "
+            SELECT nome, cpf, cep, endereco, bairro, numero, cidade, estado,
+                   to_char(data_input, 'DD/MM/YYYY') AS data_cadastro
+            FROM tbl_cliente
+            WHERE posto = $1
+            ORDER BY nome
+        ", [$posto]);
+
+        if ($res === false) {
+            throw new \RuntimeException('Erro ao consultar clientes.');
         }
 
-        $sql = "SELECT tbl_cliente.nome,
-                       tbl_cliente.cpf,
-                       tbl_cliente.cep,
-                       tbl_cliente.endereco,
-                       tbl_cliente.bairro,
-                       tbl_cliente.numero,
-                       tbl_cliente.cidade,
-                       tbl_cliente.estado,
-                       to_char(tbl_cliente.data_input, 'DD/MM/YYYY') as data_input
-                    FROM tbl_cliente
-                    WHERE posto = $posto
-                    ORDER BY tbl_cliente.nome ASC
-                ";
-        $res = pg_query($con, $sql);
+        return $this->iterar($res);
+    }
 
-        header('Content-Type: text/csv; charset=UTF-8');
-        header("Content-Disposition: attachment; filename=relatorio_cliente.csv");
-
-        $output = fopen('php://output', 'w');
-
-        $cabecalho = ['Nome', 'CPF', 'Endereço', 'Bairro', 'Número', 'Cidade', 'Estado', 'Data Cadastro'];
-        fputcsv($output, $cabecalho, ';');
-
+    private function iterar($res): \Generator
+    {
         while ($row = pg_fetch_assoc($res)) {
-
-            fputcsv($output, [
-                $row['nome'],
-                $row['cpf'],
-                $row['endereco'],
-                $row['bairro'],
-                $row['numero'],
-                $row['cidade'],
-                $row['estado'],
-                $row['data_input']
-            ], ';');
+            yield [
+                $row['nome'], $row['cpf'], $row['cep'], $row['endereco'],
+                $row['bairro'], $row['numero'], $row['cidade'], $row['estado'],
+                $row['data_cadastro'],
+            ];
         }
-
-        fclose($output);
-        exit;
     }
 }

@@ -1,60 +1,67 @@
 $(document).ready(function () {
+    let editandoId = null;
+
     function carregarServicoRealizado() {
         let usa_modulo_estoque = $("#usa_modulo_estoque").val();
-        if ($.fn.DataTable.isDataTable('#servicoRealizadoTable')) {
-            $('#servicoRealizadoTable').DataTable().destroy();
-        }
+        MiniDataTable.destroy('#servicoRealizadoTable');
+
         $.ajax({
             url: '../public/servico_realizado/listar.php',
             method: 'GET',
             dataType: 'json',
             success: function (data) {
                 $('#servicoRealizadoTable tbody').empty();
-                coluna_estoque = "";
-                if (usa_modulo_estoque == "true") {
-                    coluna_estoque = "<td class='text-center'>${usa_estoque}</td>";
-                }
-                if (data.length > 0) {
+                if (Array.isArray(data) && data.length > 0) {
                     data.forEach(function (servico_realizado) {
-                        var ativo = servico_realizado.ativo == 't' ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>';
-                        var usa_estoque = servico_realizado.usa_estoque == 't' ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>';
+                        var ativo = servico_realizado.ativo == 't' || servico_realizado.ativo === true
+                            ? '<i class="bi bi-check-circle-fill text-success"></i>'
+                            : '<i class="bi bi-x-circle-fill text-danger"></i>';
+                        var usa_estoque = servico_realizado.usa_estoque == 't' || servico_realizado.usa_estoque === true
+                            ? '<i class="bi bi-check-circle-fill text-success"></i>'
+                            : '<i class="bi bi-x-circle-fill text-danger"></i>';
+
+                        let coluna_estoque = "";
+                        if (usa_modulo_estoque == "true") {
+                            coluna_estoque = `<td class='text-center'>${usa_estoque}</td>`;
+                        }
+
                         $('#servicoRealizadoTable tbody').append(`
                             <tr data-descricao="${servico_realizado.descricao}">
                                 <td class='text-center'>${servico_realizado.descricao}</td>
                                 <td class='text-center'>${ativo}</td>
-                                `+coluna_estoque+`
-                                <td class='text-center'>
-                                    <button class='btn btn-warning btn-sm editar-servico_realizado' data-servico='${servico_realizado.servico_realizado}'><i class="bi bi-pencil-square"></i> Editar</button>
-                                    <button class='btn btn-danger btn-sm excluir-servico_realizado' data-servico='${servico_realizado.servico_realizado}'><i class="bi bi-trash3-fill"></i> Excluir</button>
-                                    <button class='btn btn-info btn-sm btn-log-auditor' data-id='${servico_realizado.servico_realizado}'data-tabela='tbl_servico_realizado'><i class="bi bi-clock-history"></i> Ver Log</button>
+                                ${coluna_estoque}
+                                <td class="coluna-acoes text-center">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-warning btn-sm btn-acoes dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" title="Ações">
+                                            <i class="bi bi-list"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a href="javascript:void(0)" class="dropdown-item editar-servico_realizado" data-servico="${servico_realizado.servico_realizado}">
+                                                    <i class="bi bi-pencil-square text-warning me-1"></i> Editar
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)" class="dropdown-item excluir-servico_realizado" data-servico="${servico_realizado.servico_realizado}">
+                                                    <i class="bi bi-trash3-fill text-danger me-1"></i> Excluir
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)" class="dropdown-item btn-log-auditor" data-id="${servico_realizado.servico_realizado}" data-tabela="tbl_servico_realizado">
+                                                    <i class="bi bi-clock-history text-info me-1"></i> Ver Log
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </td>
                             </tr>
                         `);
                     });
-                } else {
-                    $('#servicoRealizadoTable tbody').append(`
-                        <tr>
-                            <td colspan="9" class="text-center">NENHUM SERVIÇO REALIZADO CADASTRADO</td>
-                        </tr>
-                    `);
                 }
-                if (data.length > 0) {
-                    $('#servicoRealizadoTable').DataTable({
-                        responsive: true,
-                        scrollX: true,
-                        autoWidth: false,
-                        language: {
-                            url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-                        }
-                    });
-                }
+                new MiniDataTable('#servicoRealizadoTable');
             },
             error: function () {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erro!',
-                    text: 'Erro ao listar as Serviço Realizado.',
-                });
+                Alerta.error('Erro ao listar os Serviços Realizados.');
             }
         });
     }
@@ -64,43 +71,59 @@ $(document).ready(function () {
     $('#servicoRealizadoForm').on('submit', function (e) {
         e.preventDefault();
 
-        var formData = {
-            descricao: $('#descricao').val(),
-            ativo: $('#ativo').is(':checked') ? 't' : 'f',
-            usa_estoque: $('#usa_estoque').is(':checked') ? 't' : 'f'
-        };
+        var descricao = $('#descricao').val();
+        var ativo = $('#ativo').is(':checked') ? 't' : 'f';
+        var usa_estoque = $('#usa_estoque').is(':checked') ? 't' : 'f';
 
-        $.ajax({
-            url: '../public/servico_realizado/cadastrar.php',
-            method: 'POST',
-            data: formData,
-            success: function (response) {
-
-                if (response.status === 'error') {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erro!',
-                        text: response.message,
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Sucesso!',
-                        text: response.message,
-                    }).then(() => {
+        if (editandoId) {
+            $.ajax({
+                url: '../public/servico_realizado/editar.php',
+                method: 'POST',
+                data: {
+                    servico_realizado: editandoId,
+                    descricao: descricao,
+                    ativo: ativo,
+                    usa_estoque: usa_estoque
+                },
+                success: function (response) {
+                    let res = typeof response === 'string' ? JSON.parse(response) : response;
+                    if (res.status === 'error') {
+                        Alerta.error(res.message);
+                    } else {
+                        Alerta.success(res.message || 'Serviço atualizado com sucesso.');
+                        $('#servicoRealizadoForm')[0].reset();
+                        editandoId = null;
+                        carregarServicoRealizado();
+                    }
+                },
+                error: function () {
+                    Alerta.error('Erro ao editar Serviço Realizado.');
+                }
+            });
+        } else {
+            $.ajax({
+                url: '../public/servico_realizado/cadastrar.php',
+                method: 'POST',
+                data: {
+                    descricao: descricao,
+                    ativo: ativo,
+                    usa_estoque: usa_estoque
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === 'error') {
+                        Alerta.error(response.message);
+                    } else {
+                        Alerta.success(response.message || 'Serviço Realizado cadastrado com sucesso.');
                         $('#servicoRealizadoForm')[0].reset();
                         carregarServicoRealizado();
-                    });
+                    }
+                },
+                error: function () {
+                    Alerta.error('Erro ao cadastrar Serviço Realizado.');
                 }
-            },
-            error: function () {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erro!',
-                    text: 'Erro ao cadastrar Serviço Realizado.',
-                });
-            }
-        });
+            });
+        }
     });
 
     $(document).on('click', '.editar-servico_realizado', function () {
@@ -111,54 +134,15 @@ $(document).ready(function () {
             method: 'GET',
             data: { servico: servico },
             dataType: 'json',
-            success: function (servico_realizado) {
+            success: function (res) {
                 $("html, body").animate({ scrollTop: 0 }, "slow");
-                $('#descricao').val(servico_realizado.descricao);
-                $('#ativo').prop('checked', servico_realizado.ativo == 't');
-                $('#usa_estoque').prop('checked', servico_realizado.usa_estoque == 't');
-
-                var servico_realizado = servico_realizado.servico_realizado;
-
-                $('#servicoRealizadoForm').off('submit').on('submit', function (e) {
-                    e.preventDefault();
-                    $.ajax({
-                        url: '../public/servico_realizado/editar.php',
-                        method: 'POST',
-                        data: {
-                            servico_realizado: servico_realizado,
-                            descricao: $('#descricao').val(),
-                            ativo: $('#ativo').is(':checked') ? 't' : 'f',
-                            usa_estoque: $('#usa_estoque').is(':checked') ? 't' : 'f'
-                        },
-                        success: function (response) {
-                            let res = JSON.parse(response);
-
-                            if (res.status === 'error') {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Erro!',
-                                    text: res.message,
-                                });
-                            } else {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Sucesso!',
-                                    text: res.message,
-                                }).then(() => {
-                                    $('#servicoRealizadoForm')[0].reset();
-                                    carregarServicoRealizado();
-                                });
-                            }
-                        },
-                        error: function () {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Erro!',
-                                text: 'Erro ao editar Serviço Realizado.',
-                            });
-                        }
-                    });
-                });
+                $('#descricao').val(res.descricao);
+                $('#ativo').prop('checked', res.ativo == 't' || res.ativo === true);
+                $('#usa_estoque').prop('checked', res.usa_estoque == 't' || res.usa_estoque === true);
+                editandoId = res.servico_realizado;
+            },
+            error: function () {
+                Alerta.error('Erro ao buscar dados do serviço.');
             }
         });
     });
@@ -166,13 +150,11 @@ $(document).ready(function () {
     $(document).on('click', '.excluir-servico_realizado', function () {
         let servico_realizado = $(this).data('servico');
 
-        Swal.fire({
-            title: `Deseja excluir o Serviço Realizado?`,
+        Alerta.confirm({
+            title: 'Excluir Serviço Realizado?',
             text: 'Essa ação não pode ser desfeita.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sim, excluir!',
-            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Sim, excluir',
+            cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
@@ -182,36 +164,17 @@ $(document).ready(function () {
                     dataType: 'json',
                     success: function (response) {
                         if (response.status === 'success') {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Sucesso!',
-                                text: response.message,
-                            }).then(() => {
-                                carregarServicoRealizado();
-                            });
+                            Alerta.success(response.message || 'Serviço excluído com sucesso.');
+                            carregarServicoRealizado();
                         } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Atenção!',
-                                text: response.message,
-                            });
+                            Alerta.error(response.message || 'Erro ao excluir serviço.');
                         }
+                    },
+                    error: function () {
+                        Alerta.error('Erro ao comunicar com o servidor.');
                     }
                 });
             }
         });
     });
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const alerta = urlParams.get('alerta');
-
-    if (alerta === 'true') {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Atenção',
-            text: 'Nenhum Serviço Realizado cadastrado!',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#007bff'
-        });
-    }
 });

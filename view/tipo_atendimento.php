@@ -50,10 +50,10 @@ ob_start();
         <table class="table table-bordered table-striped" id="tipoAtendimentoTable">
             <thead>
                 <tr>
-                    <th>Código</th>
-                    <th>Descrição</th>
-                    <th>Ativo</th>
-                    <th>Ações</th>
+                    <th class="text-center">Código</th>
+                    <th class="text-center">Descrição</th>
+                    <th class="text-center">Ativo</th>
+                    <th class="text-center">Ações</th>
                 </tr>
             </thead>
             <tbody></tbody>

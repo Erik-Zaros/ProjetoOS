@@ -6,6 +6,8 @@ use App\Model\Cliente;
 use App\Repository\ClienteRepository;
 use App\Service\ClienteService;
 use App\Service\Export\CsvExporter;
+use App\Service\Export\ClienteCsvExportService;
+use App\Service\Export\RelatorioClienteCsvExportService;
 
 class ClienteController
 {
@@ -45,27 +47,47 @@ class ClienteController
         return $service->relatorio($filtros, false);
     }
 
-    public function exportarCsv(array $filtros): void
+    public static function exportarCsv(array $filtros, int $posto): void
     {
-        $service = new ClienteService();
-        $dados = $service->relatorio($filtros, true);
+        $service = new RelatorioClienteCsvExportService();
 
-        if (isset($dados['status'])) {
+        try {
+            $linhas = $service->linhas($filtros, $posto);
+        } catch (\InvalidArgumentException $e) {
             http_response_code(400);
             header('Content-Type: text/plain; charset=UTF-8');
-            echo $dados['message'];
-            exit;
+            echo $e->getMessage();
+            return;
+        } catch (\Throwable $e) {
+            error_log($e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
+            http_response_code(500);
+            header('Content-Type: text/plain; charset=UTF-8');
+            echo 'Não foi possível gerar o arquivo.';
+            return;
         }
 
-        $headers = ['Nome','CPF','CEP','Endereço','Bairro','Número','Cidade','Estado','Data Cadastro','OS'];
+        (new CsvExporter())->stream('relatorio_cliente.csv', $service->headers(), $linhas);
+    }
 
-        $linhas = array_map(fn($row) => [
-            $row['nome'], $row['cpf'], $row['cep'], $row['endereco'],
-            $row['numero'], $row['bairro'], $row['cidade'], $row['estado'],
-            $row['data_cadastro'], $row['oss'],
-        ], $dados);
+    public static function exportarListagemCsv(int $posto): void
+    {
+        $service = new ClienteCsvExportService();
 
-        $csv = new CsvExporter();
-        $csv->stream('relatorio_cliente.csv', $headers, $linhas);
+        try {
+            if (!$service->temRegistros($posto)) {
+                header('Location: ../../view/cliente?alerta=true');
+                exit;
+            }
+
+            $linhas = $service->linhas($posto);
+        } catch (\Throwable $e) {
+            error_log($e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
+            http_response_code(500);
+            header('Content-Type: text/plain; charset=UTF-8');
+            echo 'Não foi possível gerar o arquivo.';
+            return;
+        }
+
+        (new CsvExporter())->stream('clientes.csv', $service->headers(), $linhas);
     }
 }

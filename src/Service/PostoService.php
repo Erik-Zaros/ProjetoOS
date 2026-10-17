@@ -47,11 +47,6 @@ class PostoService
         );
     }
 
-    public function usaModuloEstoque(): bool
-    {
-        return $this->usaModulo('estoque');
-    }
-
     public function listarTodos(): array
     {
         return $this->repository->listarTodos();

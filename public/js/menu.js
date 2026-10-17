@@ -1,23 +1,422 @@
 $(document).ready(function () {
+    let dashboardData = null;
+    let chartInstances = {};
+
+    function isDarkMode() {
+        return document.documentElement.getAttribute('data-bs-theme') === 'dark';
+    }
+
+    function getChartTheme() {
+        const dark = isDarkMode();
+        return {
+            textColor: dark ? '#cbd5e1' : '#495057',
+            gridColor: dark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)',
+            borderColor: dark ? '#373b3e' : '#dee2e6'
+        };
+    }
+
     $.ajax({
         url: '../public/menu/menu.php',
         method: 'GET',
         dataType: 'json',
         success: function (response) {
+            dashboardData = response;
             preencherKPIs(response);
-            carregarOsTimeline(response);
-            carregarGraficoPizzaStatusOS(response);
-            carregarOsPorTecnico(response);
-            carregarEstoqueMensal(response);
-            carregarPecasMaisUsadas(response);
-            carregarGraficoPizzaStatusProduto(response);
-            carregarGraficoPizzaStatusPeca(response);
-            carregarGraficoColunas(response);
+            renderAllCharts(response);
         },
         error: function () {
             console.error('Erro ao carregar dados do dashboard.');
+            if (window.Alerta) {
+                Alerta.error('Erro ao carregar os dados do painel.');
+            }
         }
     });
+
+    const observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.attributeName === 'data-bs-theme' && dashboardData) {
+                renderAllCharts(dashboardData);
+            }
+        });
+    });
+    observer.observe(document.documentElement, { attributes: true });
+
+    function destroyChart(key) {
+        if (chartInstances[key]) {
+            chartInstances[key].destroy();
+            delete chartInstances[key];
+        }
+    }
+
+    function renderAllCharts(response) {
+        carregarOsTimeline(response);
+        carregarGraficoPizzaStatusOS(response);
+        carregarOsPorTecnico(response);
+        carregarEstoqueMensal(response);
+        carregarPecasMaisUsadas(response);
+        carregarGraficoPizzaStatusProduto(response);
+        carregarGraficoPizzaStatusPeca(response);
+    }
+
+    function preencherKPIs(d) {
+        function animCount(el, target) {
+            if (!el) return;
+            var start = 0;
+            var val = Number(target) || 0;
+            var step = Math.ceil(val / 30) || 1;
+            var timer = setInterval(function () {
+                start = Math.min(start + step, val);
+                el.textContent = start.toLocaleString('pt-BR');
+                if (start >= val) clearInterval(timer);
+            }, 25);
+        }
+
+        animCount(document.getElementById('kpi-os'),         d.ordens_servico);
+        animCount(document.getElementById('kpi-os-abertas'), d.os_abertas);
+        animCount(document.getElementById('kpi-clientes'),   d.clientes);
+        animCount(document.getElementById('kpi-produtos'),   d.produtos);
+        animCount(document.getElementById('kpi-pecas'),      d.pecas);
+        animCount(document.getElementById('kpi-usuarios'),   d.usuarios);
+
+        $('#kpi-os').closest('.kpi-card').css('cursor', 'pointer').off('click').on('click', function () { abrirModal('os'); });
+        $('#kpi-os-abertas').closest('.kpi-card').css('cursor', 'pointer').off('click').on('click', function () { abrirModal('os_abertas'); });
+        $('#kpi-clientes').closest('.kpi-card').css('cursor', 'pointer').off('click').on('click', function () { abrirModal('clientes'); });
+        $('#kpi-produtos').closest('.kpi-card').css('cursor', 'pointer').off('click').on('click', function () { abrirModal('produtos'); });
+        $('#kpi-pecas').closest('.kpi-card').css('cursor', 'pointer').off('click').on('click', function () { abrirModal('pecas'); });
+        $('#kpi-usuarios').closest('.kpi-card').css('cursor', 'pointer').off('click').on('click', function () { abrirModal('usuarios'); });
+    }
+
+    function carregarOsTimeline(dados) {
+        var canvas = document.getElementById('grafico-os-timeline');
+        if (!canvas || !window.Chart) return;
+        destroyChart('os_timeline');
+
+        var timeline = dados.os_timeline || [];
+        var labels = timeline.map(function (d) { return d.dia; });
+        var valores = timeline.map(function (d) { return Number(d.total) || 0; });
+        var theme = getChartTheme();
+
+        chartInstances['os_timeline'] = new Chart(canvas, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'OS Abertas',
+                    data: valores,
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                    fill: true,
+                    tension: 0.35,
+                    borderWidth: 2,
+                    pointBackgroundColor: '#3b82f6',
+                    pointRadius: 3,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                onClick: function (evt, elements) {
+                    if (elements && elements.length > 0) {
+                        abrirModal('os_abertas');
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: theme.textColor, font: { size: 10 } },
+                        grid: { display: false }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: theme.textColor,
+                            precision: 0,
+                            font: { size: 10 }
+                        },
+                        grid: { color: theme.gridColor }
+                    }
+                }
+            }
+        });
+    }
+
+    function carregarGraficoPizzaStatusOS(dados) {
+        var canvas = document.getElementById('grafico-pizza-os-status');
+        if (!canvas || !window.Chart) return;
+        destroyChart('os_status');
+
+        var labels = ['Abertas', 'Finalizadas', 'Canceladas'];
+        var valores = [
+            Number(dados.os_abertas) || 0,
+            Number(dados.os_finalizadas) || 0,
+            Number(dados.os_canceladas) || 0
+        ];
+        var theme = getChartTheme();
+
+        chartInstances['os_status'] = new Chart(canvas, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: valores,
+                    backgroundColor: ['#f59e0b', '#10b981', '#ef4444'],
+                    borderWidth: 2,
+                    borderColor: theme.borderColor
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                onClick: function (evt, elements) {
+                    if (elements && elements.length > 0) {
+                        var idx = elements[0].index;
+                        var status = labels[idx];
+                        if (status) abrirModal('os_status', status);
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: theme.textColor, boxWidth: 12, font: { size: 11 } }
+                    }
+                }
+            }
+        });
+    }
+
+    function carregarOsPorTecnico(dados) {
+        var canvas = document.getElementById('grafico-os-tecnico');
+        if (!canvas || !window.Chart) return;
+        destroyChart('os_tecnico');
+
+        var tecnicos = dados.os_por_tecnico || [];
+        var nomes = tecnicos.map(function (t) { return t.nome; });
+        var totais = tecnicos.map(function (t) { return Number(t.total) || 0; });
+        var theme = getChartTheme();
+
+        chartInstances['os_tecnico'] = new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels: nomes,
+                datasets: [{
+                    label: 'OS',
+                    data: totais,
+                    backgroundColor: ['#3b82f6', '#0ea5e9', '#6366f1', '#8b5cf6', '#ec4899', '#14b8a6'],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                onClick: function (evt, elements) {
+                    if (elements && elements.length > 0) {
+                        var idx = elements[0].index;
+                        var tecnico = nomes[idx];
+                        if (tecnico) abrirModal('os_tecnico', tecnico);
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: { color: theme.textColor, precision: 0, font: { size: 10 } },
+                        grid: { color: theme.gridColor }
+                    },
+                    y: {
+                        ticks: { color: theme.textColor, font: { size: 11 } },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    }
+
+    function carregarEstoqueMensal(dados) {
+        var canvas = document.getElementById('grafico-estoque-mensal');
+        if (!canvas || !window.Chart) return;
+        destroyChart('estoque_mensal');
+
+        var meses = (dados.estoque_mensal || []).map(function (d) { return d.mes; });
+        var entradas = (dados.estoque_mensal || []).map(function (d) { return Number(d.entradas) || 0; });
+        var saidas = (dados.estoque_mensal || []).map(function (d) { return Number(d.saidas) || 0; });
+        var theme = getChartTheme();
+
+        chartInstances['estoque_mensal'] = new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels: meses,
+                datasets: [
+                    { label: 'Entradas', data: entradas, backgroundColor: '#10b981', borderRadius: 3 },
+                    { label: 'Saídas', data: saidas, backgroundColor: '#ef4444', borderRadius: 3 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { color: theme.textColor, boxWidth: 12, font: { size: 11 } }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: theme.textColor, font: { size: 10 } },
+                        grid: { display: false }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: theme.textColor, precision: 0, font: { size: 10 } },
+                        grid: { color: theme.gridColor }
+                    }
+                }
+            }
+        });
+    }
+
+    function carregarPecasMaisUsadas(dados) {
+        var canvas = document.getElementById('grafico-pecas-usadas');
+        if (!canvas || !window.Chart) return;
+        destroyChart('pecas_usadas');
+
+        var pecas = dados.pecas_mais_usadas || [];
+        var nomes = pecas.map(function (p) { return p.descricao; });
+        var totais = pecas.map(function (p) { return Number(p.total) || 0; });
+        var theme = getChartTheme();
+
+        chartInstances['pecas_usadas'] = new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels: nomes,
+                datasets: [{
+                    label: 'Qtd. Utilizada',
+                    data: totais,
+                    backgroundColor: '#4f46e5',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                onClick: function (evt, elements) {
+                    if (elements && elements.length > 0) {
+                        var idx = elements[0].index;
+                        var peca = nomes[idx];
+                        if (peca) abrirModal('pecas_usadas', peca);
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: { color: theme.textColor, precision: 0, font: { size: 10 } },
+                        grid: { color: theme.gridColor }
+                    },
+                    y: {
+                        ticks: { color: theme.textColor, font: { size: 11 } },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    }
+
+    function carregarGraficoPizzaStatusProduto(dados) {
+        var canvas = document.getElementById('grafico-pizza-status-produto');
+        if (!canvas || !window.Chart) return;
+        destroyChart('status_produto');
+
+        var inativo = Number(dados.produto_inativo) || 0;
+        var ativo   = Number(dados.produto_ativo)   || 0;
+        if (ativo === 0 && inativo === 0) return;
+
+        var labels = ['Inativos', 'Ativos'];
+        var valores = [inativo, ativo];
+        var theme = getChartTheme();
+
+        chartInstances['status_produto'] = new Chart(canvas, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: valores,
+                    backgroundColor: ['#ef4444', '#10b981'],
+                    borderWidth: 2,
+                    borderColor: theme.borderColor
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                onClick: function (evt, elements) {
+                    if (elements && elements.length > 0) {
+                        var idx = elements[0].index;
+                        var status = labels[idx];
+                        if (status) abrirModal('produtos', status);
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: theme.textColor, boxWidth: 12, font: { size: 11 } }
+                    }
+                }
+            }
+        });
+    }
+
+    function carregarGraficoPizzaStatusPeca(dados) {
+        var canvas = document.getElementById('grafico-pizza-status-peca');
+        if (!canvas || !window.Chart) return;
+        destroyChart('status_peca');
+
+        var inativa = Number(dados.peca_inativa) || 0;
+        var ativa   = Number(dados.peca_ativa)   || 0;
+        if (ativa === 0 && inativa === 0) return;
+
+        var labels = ['Inativas', 'Ativas'];
+        var valores = [inativa, ativa];
+        var theme = getChartTheme();
+
+        chartInstances['status_peca'] = new Chart(canvas, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: valores,
+                    backgroundColor: ['#ef4444', '#10b981'],
+                    borderWidth: 2,
+                    borderColor: theme.borderColor
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                onClick: function (evt, elements) {
+                    if (elements && elements.length > 0) {
+                        var idx = elements[0].index;
+                        var status = labels[idx];
+                        if (status) abrirModal('pecas', status);
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: theme.textColor, boxWidth: 12, font: { size: 11 } }
+                    }
+                }
+            }
+        });
+    }
 });
 
 function abrirModal(tipo, filtro) {
@@ -50,12 +449,12 @@ function abrirModal(tipo, filtro) {
 
             var thead = '<thead><tr>';
             res.colunas.forEach(function (col) {
-                thead += '<th>' + col + '</th>';
+                thead += '<th class="text-center">' + col + '</th>';
             });
             thead += '</tr></thead>';
 
             var tbody = '<tbody>';
-            if (res.dados.length === 0) {
+            if (!res.dados || res.dados.length === 0) {
                 tbody += '<tr><td colspan="' + res.colunas.length + '" class="text-center text-muted py-4">Nenhum registro encontrado.</td></tr>';
             } else {
                 res.dados.forEach(function (row) {
@@ -77,10 +476,10 @@ function abrirModal(tipo, filtro) {
                             var cor = mapa[val] || 'secondary';
                             val = '<span class="badge bg-' + cor + '">' + val + '</span>';
                         }
-						if (campo === 'os') {
-							val = '<a class="link" target="_blank" href="os_press?os='+val+'">'+val+'</a>';
-						}
-                        tbody += '<td>' + val + '</td>';
+                        if (campo === 'os') {
+                            val = '<a class="link" target="_blank" href="os_press?os=' + val + '">' + val + '</a>';
+                        }
+                        tbody += '<td class="text-center">' + val + '</td>';
                     });
                     tbody += '</tr>';
                 });
@@ -99,465 +498,5 @@ function abrirModal(tipo, filtro) {
         error: function () {
             $('#modalCorpo').html('<div class="alert alert-danger m-3">Erro ao buscar dados.</div>');
         }
-    });
-}
-
-var THEME = {
-    font: "'Nunito', 'Segoe UI', sans-serif",
-    title: { fontSize: '12px', fontWeight: '700', color: '#2d3748', textTransform: 'uppercase', letterSpacing: '0.07em' },
-    subtitle: { fontSize: '11px', color: '#a0aec0', fontWeight: '500' },
-    grid: '#f0f3f6',
-    axis: '#a0aec0',
-    label: '#4a5568',
-    bg: 'transparent',
-    anim: 700,
-    colors: {
-        os:     ['#f6c90e', '#27ae60', '#e74c3c'],
-        status: ['#e74c3c', '#27ae60'],
-        bar:    ['#4a6fa5', '#5b8dd9', '#3a5a8a', '#2d4a7a', '#1a3060', '#7c9dc5', '#2c5282', '#1a365d'],
-        entrada:'#27ae60',
-        saida:  '#e74c3c',
-        line:   '#4a6fa5'
-    }
-};
-
-var TOOLTIP_BASE = {
-    backgroundColor: '#2d3748',
-    borderWidth: 0,
-    borderRadius: 6,
-    shadow: false,
-    style: { color: '#fff', fontSize: '12px', fontFamily: THEME.font }
-};
-
-function preencherKPIs(d) {
-    function animCount(el, target) {
-        var start = 0;
-        var step = Math.ceil(target / 40);
-        var timer = setInterval(function () {
-            start = Math.min(start + step, target);
-            el.textContent = start.toLocaleString('pt-BR');
-            if (start >= target) clearInterval(timer);
-        }, 20);
-    }
-
-    animCount(document.getElementById('kpi-os'),         d.ordens_servico);
-    animCount(document.getElementById('kpi-os-abertas'), d.os_abertas);
-    animCount(document.getElementById('kpi-clientes'),   d.clientes);
-    animCount(document.getElementById('kpi-produtos'),   d.produtos);
-    animCount(document.getElementById('kpi-pecas'),      d.pecas);
-    animCount(document.getElementById('kpi-usuarios'),   d.usuarios);
-
-    $('#kpi-os').closest('.kpi-card').css('cursor', 'pointer').on('click', function () { abrirModal('os'); });
-    $('#kpi-os-abertas').closest('.kpi-card').css('cursor', 'pointer').on('click', function () { abrirModal('os_abertas'); });
-    $('#kpi-clientes').closest('.kpi-card').css('cursor', 'pointer').on('click', function () { abrirModal('clientes'); });
-    $('#kpi-produtos').closest('.kpi-card').css('cursor', 'pointer').on('click', function () { abrirModal('produtos'); });
-    $('#kpi-pecas').closest('.kpi-card').css('cursor', 'pointer').on('click', function () { abrirModal('pecas'); });
-    $('#kpi-usuarios').closest('.kpi-card').css('cursor', 'pointer').on('click', function () { abrirModal('usuarios'); });
-}
-
-function buildPizza(elementId, titulo, subtitulo, dados, cores, tipoModal) {
-    Highcharts.chart(elementId, {
-        chart: {
-            type: 'pie',
-            backgroundColor: THEME.bg,
-            style: { fontFamily: THEME.font },
-            animation: { duration: THEME.anim },
-            margin: [24, 8, 8, 8]
-        },
-        title:    { text: titulo,    style: THEME.title,    margin: 14 },
-        subtitle: { text: subtitulo, style: THEME.subtitle },
-        colors: cores,
-        tooltip: {
-            backgroundColor: TOOLTIP_BASE.backgroundColor,
-            borderWidth: TOOLTIP_BASE.borderWidth,
-            borderRadius: TOOLTIP_BASE.borderRadius,
-            shadow: TOOLTIP_BASE.shadow,
-            style: TOOLTIP_BASE.style,
-            headerFormat: '',
-            pointFormat: '<span style="color:{point.color}">●</span> <b>{point.name}</b>: {point.y} ({point.percentage:.1f}%)'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                borderWidth: 0,
-                borderRadius: 3,
-                cursor: 'pointer',
-                innerSize: '48%',
-                size: '82%',
-                dataLabels: {
-                    enabled: true,
-                    format: '<b style="color:{point.color}">{point.name}</b><br><span style="color:#718096">{point.y} ({point.percentage:.1f}%)</span>',
-                    distance: 16,
-                    style: { fontSize: '10.5px', fontWeight: '600', fontFamily: THEME.font, textOutline: 'none' }
-                },
-                states: { hover: { halo: { size: 5 } } },
-                point: {
-                    events: {
-                        click: function () {
-                            abrirModal(tipoModal, this.name);
-                        }
-                    }
-                }
-            }
-        },
-        series: [{ animation: { duration: THEME.anim }, colorByPoint: true, data: dados }],
-        credits: { enabled: false },
-        legend:  { enabled: false },
-        accessibility: { enabled: false }
-    });
-}
-
-function carregarOsTimeline(dados) {
-    var timeline = dados.os_timeline || [];
-    var dias     = timeline.map(function (d) { return d.dia; });
-    var totais   = timeline.map(function (d) { return d.total; });
-
-    Highcharts.chart('grafico-os-timeline', {
-        chart: {
-            type: 'areaspline',
-            backgroundColor: THEME.bg,
-            style: { fontFamily: THEME.font },
-            animation: { duration: THEME.anim }
-        },
-        title:    { text: 'OS Abertas — Últimos 30 Dias', style: THEME.title, margin: 16 },
-        subtitle: { text: 'Clique em um ponto para ver as OS do dia', style: THEME.subtitle },
-        xAxis: {
-            categories: dias,
-            lineColor: THEME.grid,
-            tickColor: THEME.grid,
-            labels: { step: Math.ceil(dias.length / 10), style: { fontSize: '11px', color: THEME.label, fontFamily: THEME.font } }
-        },
-        yAxis: {
-            title: { text: null },
-            gridLineColor: THEME.grid,
-            min: 0,
-            allowDecimals: false,
-            labels: { style: { fontSize: '11px', color: THEME.axis, fontFamily: THEME.font } }
-        },
-        tooltip: {
-            backgroundColor: TOOLTIP_BASE.backgroundColor,
-            borderWidth: TOOLTIP_BASE.borderWidth,
-            borderRadius: TOOLTIP_BASE.borderRadius,
-            shadow: TOOLTIP_BASE.shadow,
-            style: TOOLTIP_BASE.style,
-            pointFormat: '<b>{point.y}</b> OS abertas'
-        },
-        plotOptions: {
-            areaspline: {
-                color: THEME.colors.line,
-                fillColor: {
-                    linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
-                    stops: [[0, 'rgba(74,111,165,0.25)'], [1, 'rgba(74,111,165,0.02)']]
-                },
-                lineWidth: 2.5,
-                cursor: 'pointer',
-                marker: { enabled: false, symbol: 'circle', radius: 4, states: { hover: { enabled: true } } },
-                states: { hover: { lineWidth: 3 } },
-                point: {
-                    events: {
-                        click: function () {
-                            abrirModal('os_abertas');
-                        }
-                    }
-                }
-            }
-        },
-        series: [{ name: 'OS Abertas', animation: { duration: THEME.anim }, data: totais }],
-        credits: { enabled: false },
-        legend:  { enabled: false },
-        accessibility: { enabled: false }
-    });
-}
-
-function carregarGraficoPizzaStatusOS(dados) {
-    buildPizza(
-        'grafico-pizza-os-status',
-        'Status das OS',
-        'Clique em uma fatia para ver detalhes',
-        [
-            { name: 'Abertas',     y: Number(dados.os_abertas)     || 0 },
-            { name: 'Finalizadas', y: Number(dados.os_finalizadas) || 0 },
-            { name: 'Canceladas',  y: Number(dados.os_canceladas)  || 0 }
-        ],
-        THEME.colors.os,
-        'os_status'
-    );
-}
-
-function carregarOsPorTecnico(dados) {
-    var tecnicos = dados.os_por_tecnico || [];
-    var nomes    = tecnicos.map(function (t) { return t.nome; });
-    var totais   = tecnicos.map(function (t) { return t.total; });
-
-    Highcharts.chart('grafico-os-tecnico', {
-        chart: {
-            type: 'bar',
-            backgroundColor: THEME.bg,
-            style: { fontFamily: THEME.font },
-            animation: { duration: THEME.anim }
-        },
-        title:    { text: 'OS por Técnico', style: THEME.title, margin: 16 },
-        subtitle: { text: 'Clique em uma barra para ver as OS do técnico', style: THEME.subtitle },
-        xAxis: {
-            categories: nomes,
-            lineColor: THEME.grid,
-            tickColor: THEME.grid,
-            labels: { style: { fontSize: '11px', color: THEME.label, fontFamily: THEME.font } }
-        },
-        yAxis: {
-            title: { text: null },
-            gridLineColor: THEME.grid,
-            allowDecimals: false,
-            labels: { style: { fontSize: '11px', color: THEME.axis, fontFamily: THEME.font } }
-        },
-        tooltip: {
-            backgroundColor: TOOLTIP_BASE.backgroundColor,
-            borderWidth: TOOLTIP_BASE.borderWidth,
-            borderRadius: TOOLTIP_BASE.borderRadius,
-            shadow: TOOLTIP_BASE.shadow,
-            style: TOOLTIP_BASE.style,
-            pointFormat: '<b>{point.y}</b> ordens de serviço'
-        },
-        plotOptions: {
-            bar: {
-                borderWidth: 0,
-                borderRadius: 4,
-                colorByPoint: true,
-                colors: THEME.colors.bar,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    style: { fontSize: '11px', fontWeight: '700', fontFamily: THEME.font, color: THEME.label, textOutline: 'none' }
-                },
-                states: { hover: { brightness: 0.08 } },
-                point: {
-                    events: {
-                        click: function () {
-                            abrirModal('os_tecnico', this.category);
-                        }
-                    }
-                }
-            }
-        },
-        series: [{ name: 'OS', animation: { duration: THEME.anim }, data: totais }],
-        credits: { enabled: false },
-        legend:  { enabled: false },
-        accessibility: { enabled: false }
-    });
-}
-
-function carregarEstoqueMensal(dados) {
-    var meses    = (dados.estoque_mensal || []).map(function (d) { return d.mes; });
-    var entradas = (dados.estoque_mensal || []).map(function (d) { return d.entradas; });
-    var saidas   = (dados.estoque_mensal || []).map(function (d) { return d.saidas; });
-
-    Highcharts.chart('grafico-estoque-mensal', {
-        chart: {
-            type: 'column',
-            backgroundColor: THEME.bg,
-            style: { fontFamily: THEME.font },
-            animation: { duration: THEME.anim }
-        },
-        title:    { text: 'Movimentação de Estoque', style: THEME.title, margin: 16 },
-        subtitle: { text: 'Entradas e saídas nos últimos 6 meses', style: THEME.subtitle },
-        xAxis: {
-            categories: meses,
-            lineColor: THEME.grid,
-            tickColor: THEME.grid,
-            labels: { style: { fontSize: '11px', color: THEME.label, fontFamily: THEME.font } }
-        },
-        yAxis: {
-            title: { text: null },
-            gridLineColor: THEME.grid,
-            allowDecimals: false,
-            labels: { style: { fontSize: '11px', color: THEME.axis, fontFamily: THEME.font } }
-        },
-        tooltip: {
-            backgroundColor: TOOLTIP_BASE.backgroundColor,
-            borderWidth: TOOLTIP_BASE.borderWidth,
-            borderRadius: TOOLTIP_BASE.borderRadius,
-            shadow: TOOLTIP_BASE.shadow,
-            style: TOOLTIP_BASE.style,
-            shared: true,
-            pointFormat: '<span style="color:{series.color}">●</span> {series.name}: <b>{point.y}</b><br>'
-        },
-        plotOptions: {
-            column: {
-                borderWidth: 0,
-                borderRadius: 3,
-                groupPadding: 0.12,
-                dataLabels: { enabled: false },
-                states: { hover: { brightness: 0.08 } }
-            }
-        },
-        legend: {
-            enabled: true,
-            align: 'right',
-            verticalAlign: 'top',
-            itemStyle: { fontSize: '11px', fontWeight: '600', color: THEME.label, fontFamily: THEME.font }
-        },
-        series: [
-            { name: 'Entradas', color: THEME.colors.entrada, animation: { duration: THEME.anim },       data: entradas },
-            { name: 'Saídas',   color: THEME.colors.saida,   animation: { duration: THEME.anim + 100 }, data: saidas }
-        ],
-        credits: { enabled: false },
-        accessibility: { enabled: false }
-    });
-}
-
-function carregarPecasMaisUsadas(dados) {
-    var pecas  = dados.pecas_mais_usadas || [];
-    var nomes  = pecas.map(function (p) { return p.descricao; });
-    var totais = pecas.map(function (p) { return p.total; });
-
-    Highcharts.chart('grafico-pecas-usadas', {
-        chart: {
-            type: 'bar',
-            backgroundColor: THEME.bg,
-            style: { fontFamily: THEME.font },
-            animation: { duration: THEME.anim }
-        },
-        title:    { text: 'Peças Mais Utilizadas', style: THEME.title, margin: 16 },
-        subtitle: { text: 'Clique em uma barra para ver as OS com essa peça', style: THEME.subtitle },
-        xAxis: {
-            categories: nomes,
-            lineColor: THEME.grid,
-            tickColor: THEME.grid,
-            labels: { style: { fontSize: '11px', color: THEME.label, fontFamily: THEME.font } }
-        },
-        yAxis: {
-            title: { text: null },
-            gridLineColor: THEME.grid,
-            allowDecimals: false,
-            labels: { style: { fontSize: '11px', color: THEME.axis, fontFamily: THEME.font } }
-        },
-        tooltip: {
-            backgroundColor: TOOLTIP_BASE.backgroundColor,
-            borderWidth: TOOLTIP_BASE.borderWidth,
-            borderRadius: TOOLTIP_BASE.borderRadius,
-            shadow: TOOLTIP_BASE.shadow,
-            style: TOOLTIP_BASE.style,
-            pointFormat: '<b>{point.y}</b> unidades utilizadas'
-        },
-        plotOptions: {
-            bar: {
-                borderWidth: 0,
-                borderRadius: 4,
-                color: '#3a5a8a',
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    style: { fontSize: '11px', fontWeight: '700', fontFamily: THEME.font, color: THEME.label, textOutline: 'none' }
-                },
-                states: { hover: { brightness: 0.08 } },
-                point: {
-                    events: {
-                        click: function () {
-                            abrirModal('pecas_usadas', this.category);
-                        }
-                    }
-                }
-            }
-        },
-        series: [{ name: 'Peças', animation: { duration: THEME.anim }, data: totais }],
-        credits: { enabled: false },
-        legend:  { enabled: false },
-        accessibility: { enabled: false }
-    });
-}
-
-function carregarGraficoPizzaStatusProduto(dados) {
-    var inativo = Number(dados.produto_inativo) || 0;
-    var ativo   = Number(dados.produto_ativo)   || 0;
-    if (ativo === 0 && inativo === 0) return;
-    buildPizza(
-        'grafico-pizza-status-produto',
-        'Produtos',
-        'Ativos · Inativos',
-        [{ name: 'Inativos', y: inativo }, { name: 'Ativos', y: ativo }],
-        THEME.colors.status,
-        'produtos'
-    );
-}
-
-function carregarGraficoPizzaStatusPeca(dados) {
-    var inativa = Number(dados.peca_inativa) || 0;
-    var ativa   = Number(dados.peca_ativa)   || 0;
-    if (ativa === 0 && inativa === 0) return;
-    buildPizza(
-        'grafico-pizza-status-peca',
-        'Peças',
-        'Ativas · Inativas',
-        [{ name: 'Inativas', y: inativa }, { name: 'Ativas', y: ativa }],
-        THEME.colors.status,
-        'pecas'
-    );
-}
-
-function carregarGraficoColunas(dados) {
-    var mapTipo  = ['usuarios', 'clientes', 'produtos', 'pecas', 'os'];
-    var categorias = ['Usuários', 'Clientes', 'Produtos', 'Peças', 'Ordens de Serviço'];
-    var valores = [
-        Number(dados.usuarios)       || 0,
-        Number(dados.clientes)       || 0,
-        Number(dados.produtos)       || 0,
-        Number(dados.pecas)          || 0,
-        Number(dados.ordens_servico) || 0
-    ];
-
-    Highcharts.chart('grafico-colunas', {
-        chart: {
-            type: 'column',
-            backgroundColor: THEME.bg,
-            style: { fontFamily: THEME.font },
-            animation: { duration: THEME.anim }
-        },
-        title:    { text: 'Resumo Geral de Cadastros', style: THEME.title, margin: 16 },
-        subtitle: { text: 'Clique em uma coluna para ver os registros', style: THEME.subtitle },
-        xAxis: {
-            categories: categorias,
-            lineColor: THEME.grid,
-            tickColor: THEME.grid,
-            labels: { style: { fontSize: '12px', color: THEME.label, fontFamily: THEME.font } }
-        },
-        yAxis: {
-            title: { text: null },
-            gridLineColor: THEME.grid,
-            allowDecimals: false,
-            labels: { style: { fontSize: '11px', color: THEME.axis, fontFamily: THEME.font } }
-        },
-        tooltip: {
-            backgroundColor: TOOLTIP_BASE.backgroundColor,
-            borderWidth: TOOLTIP_BASE.borderWidth,
-            borderRadius: TOOLTIP_BASE.borderRadius,
-            shadow: TOOLTIP_BASE.shadow,
-            style: TOOLTIP_BASE.style,
-            pointFormat: '<b>{point.y}</b> registros'
-        },
-        plotOptions: {
-            column: {
-                borderWidth: 0,
-                borderRadius: 5,
-                colorByPoint: true,
-                colors: THEME.colors.bar,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    style: { fontSize: '12px', fontWeight: '700', fontFamily: THEME.font, color: THEME.label, textOutline: 'none' }
-                },
-                states: { hover: { brightness: 0.08 } },
-                point: {
-                    events: {
-                        click: function () {
-                            abrirModal(mapTipo[this.index]);
-                        }
-                    }
-                }
-            }
-        },
-        series: [{ name: 'Registros', animation: { duration: THEME.anim }, data: valores }],
-        credits: { enabled: false },
-        legend:  { enabled: false },
-        accessibility: { enabled: false }
     });
 }

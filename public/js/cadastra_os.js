@@ -2,21 +2,37 @@ $(document).ready(function () {
   const urlParams = new URLSearchParams(window.location.search);
   const osParam = urlParams.get("os");
 
-    const CONTEXTO_OS = 1;
-    TdocsWidget.init({
-      container:      '#secaoAnexos',
-      contextoAnexo:  CONTEXTO_OS,
-      referenciaId:   osParam || null,
-    });
+  const CONTEXTO_OS = 1;
+  TdocsWidget.init({
+    container: '#secaoAnexos',
+    contextoAnexo: CONTEXTO_OS,
+    referenciaId: osParam || null,
+  });
 
-    if (osParam) {
-      carregarDadosOS(osParam);
-    } else {
-      carregaTipoAtendimento();
-	    carregaTecnico();
-      carregarProdutos();
-      carregarServicosRealizados();
+  if (window.flatpickr) {
+    const daEl = document.getElementById('data_abertura');
+    if (daEl) {
+      daEl.type = 'text';
+      daEl.placeholder = 'dd/mm/aaaa';
     }
+
+    flatpickr('#data_abertura', {
+      locale: 'pt',
+      dateFormat: 'Y-m-d',
+      altInput: true,
+      altFormat: 'd/m/Y',
+      allowInput: true
+    });
+  }
+
+  if (osParam) {
+    carregarDadosOS(osParam);
+  } else {
+    carregaTipoAtendimento();
+    carregaTecnico();
+    carregarProdutos();
+    carregarServicosRealizados();
+  }
 
   function carregarDadosOS(os) {
     $.ajax({
@@ -35,7 +51,12 @@ $(document).ready(function () {
         }
 
         $("#os").val(data.os);
-        $("#data_abertura").val(data.data_abertura);
+        const da = document.getElementById('data_abertura');
+        if (da && da._flatpickr && data.data_abertura) {
+          da._flatpickr.setDate(data.data_abertura, true);
+        } else {
+          $("#data_abertura").val(data.data_abertura);
+        }
         $("#nome_consumidor").val(data.nome_consumidor);
         $("#cpf_consumidor").val(data.cpf_consumidor);
         $("#cep_consumidor").val(data.cep_consumidor);
@@ -377,90 +398,91 @@ $(document).ready(function () {
 
   $(document).on("click", ".removerPeca", function () {
 
-      let botao = $(this);
-      let os_item = $(this).data('os_item');
+    let botao = $(this);
+    let os_item = $(this).data('os_item');
 
-      if (os_item) {
+    if (os_item) {
 
-        Swal.fire({
-            title: `Deseja remover a peça?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sim',
-            cancelButtonText: 'Cancelar',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: '../public/os_item/remover.php',
-                    method: 'POST',
-                    data: { os_item: os_item,
-                            os: osParam
-                    },
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.status === 'success') {
-                            Swal.fire({
-                                icon: 'success',  
-                                title: 'Sucesso!',
-                                text: response.message,
-                            }).then(() => {
-                                botao.closest("tr").remove()
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Atenção!',
-                                text: response.message,
-                            });
-                        }
-                    }
+      Swal.fire({
+        title: `Deseja remover a peça?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sim',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: '../public/os_item/remover.php',
+            method: 'POST',
+            data: {
+              os_item: os_item,
+              os: osParam
+            },
+            dataType: 'json',
+            success: function (response) {
+              if (response.status === 'success') {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Sucesso!',
+                  text: response.message,
+                }).then(() => {
+                  botao.closest("tr").remove()
                 });
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Atenção!',
+                  text: response.message,
+                });
+              }
             }
-        });
-      } else {
-        botao.closest("tr").remove()
-      }
+          });
+        }
+      });
+    } else {
+      botao.closest("tr").remove()
+    }
   });
 
   $('#cep_consumidor').on('blur', function () {
-      if ($(this).val().length === 0) {
-        return;
-      }
-      const cep = $('#cep_consumidor').val().replace('-', '');
-      if (cep.length === 8) {
-          $.ajax({
-              url: '../public/cep/buscar.php',
-              method: 'POST',
-              data: { cep: cep },
-              success: function (data) {
-                  const endereco = JSON.parse(data);
-                  if (!endereco.erro) {
-                      $('#endereco_consumidor').val(endereco.logradouro || '');
-                      $('#bairro_consumidor').val(endereco.bairro || '');
-                      $('#cidade_consumidor').val(endereco.localidade || '');
-                      $('#estado_consumidor').val(endereco.uf || '');
-                  } else {
-                      Swal.fire({
-                          icon: 'error',
-                          title: 'Erro!',
-                          text: 'CEP inválido!',
-                      });
-                  }
-              },
-              error: function (xhr, status, error) {
-                  Swal.fire({
-                      icon: 'error',
-                      title: 'Erro!',
-                      text: 'Erro ao buscar CEP.',
-                  });
-              }
-          });
-      } else {
-          Swal.fire({
+    if ($(this).val().length === 0) {
+      return;
+    }
+    const cep = $('#cep_consumidor').val().replace('-', '');
+    if (cep.length === 8) {
+      $.ajax({
+        url: '../public/cep/buscar.php',
+        method: 'POST',
+        data: { cep: cep },
+        success: function (data) {
+          const endereco = JSON.parse(data);
+          if (!endereco.erro) {
+            $('#endereco_consumidor').val(endereco.logradouro || '');
+            $('#bairro_consumidor').val(endereco.bairro || '');
+            $('#cidade_consumidor').val(endereco.localidade || '');
+            $('#estado_consumidor').val(endereco.uf || '');
+          } else {
+            Swal.fire({
               icon: 'error',
               title: 'Erro!',
-              text: 'CEP deve ter 8 dígitos.',
+              text: 'CEP inválido!',
+            });
+          }
+        },
+        error: function (xhr, status, error) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Erro!',
+            text: 'Erro ao buscar CEP.',
           });
-      }
+        }
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro!',
+        text: 'CEP deve ter 8 dígitos.',
+      });
+    }
   });
 });

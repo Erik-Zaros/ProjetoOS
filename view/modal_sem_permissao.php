@@ -14,7 +14,7 @@
       <div class="modal-body text-center py-5">
         <i class="fas fa-triangle-exclamation text-warning mb-4" style="font-size: 4.5rem;"></i>
         <p class="mb-2" style="font-size: 1.25rem;">
-          Seu usuário não possui acesso a este módulo.
+          Seu usuário não possui acesso a esta tela.
         </p>
         <p class="text-muted mb-0" style="font-size: 1rem;">
           Você será redirecionado em <span id="contadorRedirect" class="fw-bold text-primary">5</span> segundos...

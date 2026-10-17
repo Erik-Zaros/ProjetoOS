@@ -2,16 +2,14 @@
   aria-labelledby="modalLogAuditorLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content shadow border-0">
 
       <div class="modal-header py-2 px-3">
         <h6 class="modal-title mb-0" id="modalLogAuditorLabel">
-          <i class="fas fa-history me-2 text-primary"></i>Histórico de Alterações
+          <i class="bi bi-clock-history me-2 text-primary"></i>Histórico de Alterações
         </h6>
-        <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Fechar">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Fechar"></button>
       </div>
 
       <div class="modal-body p-0" style="max-height: 65vh; overflow-y: auto;">
@@ -42,7 +40,7 @@
 
       <div class="modal-footer py-2 px-3">
         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
-          <i class="fas fa-times me-1"></i>Fechar
+          <i class="bi bi-x-lg me-1"></i>Fechar
         </button>
       </div>
 

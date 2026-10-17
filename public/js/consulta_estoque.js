@@ -17,19 +17,26 @@ $(document).ready(function () {
   }
   function montarAcoes(row) {
     return `
-      <button id='ver-mov' class="btn btn-outline-secondary"
-              data-kind="${row.kind}"
-              data-id="${row.id}"
-              data-descricao="${row.descricao}">
-        Movimentação
-      </button>
+      <div class="btn-group">
+        <button type="button" class="btn btn-outline-warning btn-sm btn-acoes dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" title="Ações">
+          <i class="bi bi-list"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+            <a href="javascript:void(0)" class="dropdown-item ver-mov"
+               data-kind="${row.kind}"
+               data-id="${row.id}"
+               data-descricao="${row.descricao}">
+              <i class="bi bi-clock-history text-info me-1"></i> Movimentação
+            </a>
+          </li>
+        </ul>
+      </div>
     `;
   }
 
   function carregarTabela() {
-    if ($.fn.DataTable.isDataTable('#estoqueTable')) {
-      $('#estoqueTable').DataTable().destroy();
-    }
+    MiniDataTable.destroy('#estoqueTable');
 
     $.ajax({
       url: '../public/estoque/consultar.php',
@@ -38,7 +45,7 @@ $(document).ready(function () {
       data: parametros(),
       success: function (resp) {
         if (resp.status !== 'success') {
-          Swal.fire({ icon: 'error', title: 'Erro', text: resp.message || 'Falha ao consultar estoque.' });
+          Alerta.error(resp.message || 'Falha ao consultar estoque.');
           return;
         }
 
@@ -46,34 +53,25 @@ $(document).ready(function () {
         const $tbody = $('#estoqueTable tbody').empty();
         const dados = Array.isArray(resp.rows) ? resp.rows : [];
 
-        if (!dados.length) {
-          $tbody.append('<tr><td colspan="7" class="text-center">Nenhum item encontrado</td></tr>');
-        } else {
+        if (dados.length > 0) {
           dados.forEach(function (row) {
             $tbody.append(`
               <tr>
-                <td>${row.tipo_item}</td>
-                <td>${row.codigo}</td>
-                <td>${row.descricao}</td>
-                <td class="text-end">${row.saldo}</td>
-                <td>${row.ult_entrada ?? '—'}</td>
-                <td>${row.ult_saida ?? '—'}</td>
-                <td>${montarAcoes(row)}</td>
+                <td class='text-center'>${row.tipo_item}</td>
+                <td class='text-center'>${row.codigo}</td>
+                <td class='text-center'>${row.descricao}</td>
+                <td class="text-center">${row.saldo}</td>
+                <td class='text-center'>${row.ult_entrada ?? '—'}</td>
+                <td class='text-center'>${row.ult_saida ?? '—'}</td>
+                <td class="coluna-acoes text-center">${montarAcoes(row)}</td>
               </tr>
             `);
           });
         }
-
-        if (dados.length > 0) {
-          $('#estoqueTable').DataTable({
-            language: { url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json" },
-            order: [[2, "asc"]],
-            stripeClasses: ['stripe1', 'stripe2']
-          });
-        }
+        new MiniDataTable('#estoqueTable');
       },
       error: function () {
-        Swal.fire({ icon: 'error', title: 'Erro', text: 'Erro ao carregar o estoque.' });
+        Alerta.error('Erro ao carregar o estoque.');
       }
     });
   }
@@ -84,7 +82,7 @@ $(document).ready(function () {
   });
   $('#tpAmbos, #tpProduto, #tpPeca').on('change', carregarTabela);
 
-  $(document).on('click', '#ver-mov', function () {
+  $(document).on('click', '.ver-mov', function () {
     const kind = $(this).data('kind');
     const id   = $(this).data('id');
     const desc = $(this).data('descricao');
@@ -119,7 +117,7 @@ $(document).ready(function () {
         new bootstrap.Modal(document.getElementById('movModal')).show();
       },
       error: function () {
-        Swal.fire({ icon: 'error', title: 'Erro', text: 'Erro ao buscar movimentações.' });
+        Alerta.error('Erro ao buscar movimentações.');
       }
     });
   });
